@@ -1,11 +1,11 @@
 #!/bin/bash
 BLUE='\033[0;36m'
 NC='\033[0m' # No Color
-echo
+echo -
 echo "-----------------------------------------------"
 echo -e "| Buat ${BLUE}Docker untuk Wordpress${NC} berbasis domain |"
 echo "------------------------------created by Andi--"
-echo
+echo -
 read -p "Masukkan nama domain: " path
 cp -r /home/template/ /home/$path/
 pathtanpatitik=$(echo "${path}" | sed 's/\.//g')
