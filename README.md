@@ -1,6 +1,5 @@
 # docker-wp
-docker-wp
-Docker + Wordpress + Let's Encrypt
+Docker + Wordpress + Let's Encrypt + Disk, CPU dan RAM Quota
 
 1. Install Almalinux 8
 2. Pastikan `/home` adalah partisi yang berbeda
