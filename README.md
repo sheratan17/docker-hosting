@@ -5,7 +5,7 @@ Docker + Wordpress + Let's Encrypt + Disk, CPU dan RAM Quota
 2. Pastikan `/home` adalah partisi yang berbeda
 3. Update OS
 4. `yum install quota wget nano curl vim lsof`
-4. Aktifkan quota, edit `/etc/fstab` pada bagian home tambahkan `',usrquota,grpquota'` setelah `defaults`
+4. Aktifkan quota, edit `/etc/fstab` pada bagian home tambahkan `usrjquota=aquota.user,grpjquota=aquota.group,jqfmt=vfsv1` setelah `defaults`
 5. Reboot
 6. Aktifkan quota `quotaon -u /home/` dan `quotaon -g /home/`
 7. Cek quota `quotaon -ap`
