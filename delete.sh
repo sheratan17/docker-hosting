@@ -23,7 +23,9 @@ if [ "$answer" == "y" ]; then
 	docker network rm $(docker network ls -q --filter name=${PREFIX}_*)
 	docker volume prune -f
 	userdel -r ${domain}
-	quotacheck -avu
+	quotaoff -v /home
+	quotacheck -cum /home
+	quotaon -v /home
 else
 	echo "Input salah"
 fi
