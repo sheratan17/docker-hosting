@@ -87,8 +87,11 @@ rm /home/$path/nginx-conf/nginx.conf
 wget https://raw.githubusercontent.com/sheratan17/nginx-docker-config/main/nginx.conf -P /home/$path/nginx-conf/
 sed -i "s/_domain/$path/g" /home/$path/nginx-conf/nginx.conf
 
-# fix docker-compose.yml
-sed -i '44a\      - "443:443"' /home/$path/docker-compose.yml
+# fix port agar random docker-compose.yml
+number443=$(( $RANDOM % 720 + 81 ))
+number80=$(( $RANDOM % 1200 + 801 ))
+sed -i '44a\      - "$number443:443"' /home/$path/docker-compose.yml
+sed -i "s/80:80/$number80:80/g" /home/$path/docker-compose.yml
 
 # start docker, final version
 chown -R $path:$path /home/$path/certbot
