@@ -20,7 +20,9 @@ useradd -m $path
 
 # set disk/quota
 setquota -u $path 277865 277865 0 0 /home
-quotacheck -avum
+quotaoff -v /home
+quotacheck -cum /home
+quotaon -v /home
 
 # create user folder
 mkdir /home/$path/dbdata
@@ -98,4 +100,6 @@ chown -R $path:$path /home/$path/certbot
 cd /home/$path/
 docker compose up -d --force-recreate --no-deps webserver
 #docker compose up --force-recreate --no-deps certbot
-quotacheck -avum
+quotaoff -v /home
+quotacheck -cum /home
+quotaon -v /home
