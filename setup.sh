@@ -71,23 +71,6 @@ case $choice in
     *) echo "Invalid option" ;;
 esac
 
-# start docker
-#cd /home/$path/
-#docker compose up -d
-
-# Ask for SSL
-#sed -i "s/--staging/--force-renewal/g" /home/$path/docker-compose.yml
-#sed -i "s/_domain/$path/g" /home/$path/docker-compose.yml
-#cd /home/$path/
-#docker compose up --force-recreate --no-deps certbot
-
-# update config nginx
-#docker compose stop webserver
-#wget https://raw.githubusercontent.com/certbot/certbot/master/certbot-nginx/certbot_nginx/_internal/tls_configs/options-ssl-nginx.conf -P /home/$path/nginx-conf/
-#rm /home/$path/nginx-conf/nginx.conf
-#wget https://raw.githubusercontent.com/sheratan17/nginx-docker-config/main/nginx.conf -P /home/$path/nginx-conf/
-#sed -i "s/_domain/$path/g" /home/$path/nginx-conf/nginx.conf
-
 # fix port agar random docker-compose.yml
 #number443=$(( $RANDOM % 720 + 81 ))
 number80=$(shuf -i 1000-3000 -n 1)
