@@ -12,8 +12,6 @@ read -p "Masukkan nama domain yang ingin dihapus: " domain
 PREFIX=$(echo "${domain}" | sed 's/\.//g')
 
 # Stop all containers that use volumes with the specified prefix
-#docker ps -a --filter "name=${PREFIX}_*" --format '{{.NAME}}' | xargs docker stop | xargs docker rm
-
 list_docker=$(docker container ls -q --filter "name=${PREFIX}_*" --format '{{.Names}}')
 echo Berikut docker yang akan dihapus semua data file, database, etc dan networknya:
 echo $list_docker
