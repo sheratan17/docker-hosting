@@ -12,5 +12,5 @@ Docker + Wordpress + Let's Encrypt + Disk, CPU dan RAM Quota
 8. Cek quota `quotaon -ap`
 9. Install docker `dnf config-manager --add-repo=https://download.docker.com/linux/centos/docker-ce.repo` `dnf install docker-ce docker-ce-cli containerd.io docker-compose-plugin git`
 10. Enable service `systemctl enable docker` `systemctl start docker`
-10. Jalankan `/home/setup.sh` untuk install dan `delete.sh` untuk hapus
+10. Jalankan `.setup.sh` untuk install dan `delete.sh` untuk hapus
 11. JANGAN HAPUS FOLDER TEMPLATE
