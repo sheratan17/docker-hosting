@@ -13,7 +13,7 @@ PREFIX=$(echo "${domain}" | sed 's/\.//g')
 
 # Stop all containers that use volumes with the specified prefix
 list_docker=$(docker container ls -q --filter "name=${PREFIX}_*" --format '{{.Names}}')
-echo Berikut docker yang akan dihapus semua data file, database, etc dan networknya:
+echo Berikut docker yang akan dihapus semua data file, database, dan networknya:
 echo $list_docker
 read -p "Cek lagi apa sudah benar? (y/n): " answer
 if [ "$answer" == "y" ]; then
