@@ -12,7 +12,7 @@ Docker + Wordpress + Let's Encrypt + Disk, CPU dan RAM Quota
 8. Cek quota `quotaon -ap`
 9. Install docker `dnf config-manager --add-repo=https://download.docker.com/linux/centos/docker-ce.repo` `dnf install docker-ce docker-ce-cli containerd.io docker-compose-plugin git`
 10. Enable service `systemctl enable docker` `systemctl start docker`
-10. Jalankan `.setup.sh` untuk install dan `delete.sh` untuk hapus
+10. Jalankan `setup.sh` untuk install dan `delete.sh` untuk hapus
 11. JANGAN HAPUS FOLDER TEMPLATE
 12. Tambahkan berikut ini pada `/etc/ssh/ssd_config`
 ```
@@ -25,3 +25,6 @@ Match User qw-*
         ForceCommand internal-sftp
 ```
 13. File `template.inc.conf` diletakkan di `/etc/nginx/conf.d` server proxy
+
+## Pengembangan
+1. Script untuk update paket
