@@ -21,7 +21,6 @@ read -p "Cek lagi apa sudah benar? (y/n): " answer
 if [ "$answer" == "y" ]; then
 	docker container stop $(docker container ls -q --filter name=${PREFIX}_*)
 	docker container rm $(docker ps -a -q --filter name=${PREFIX}_*)
-	#docker volume rm $(docker volume ls -q --filter name=${PREFIX}_*)
 	docker network rm $(docker network ls -q --filter name=${PREFIX}_*)
 	docker volume prune -f
 	userdel qw-${domain}
