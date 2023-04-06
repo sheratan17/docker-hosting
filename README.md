@@ -27,5 +27,5 @@ Match user qw-*
     AllowAgentForwarding no
     ForceCommand internal-sftp
 ```
-12. Jalankan `.setup.sh` untuk install dan `delete.sh` untuk hapus
+12. Restart SSH. Jalankan `.setup.sh` untuk install dan `delete.sh` untuk hapus
 13. JANGAN HAPUS FOLDER TEMPLATE
