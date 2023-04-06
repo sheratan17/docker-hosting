@@ -3,7 +3,9 @@ RED='\033[0;31m'
 NC='\033[0m' # No Color
 echo
 echo -e "${RED}-----PERINGATAN-----${NC}"
-echo "INI UNTUK DELETE DOCKER!!! JANGAN SALAH NAMA DOMAIN!!! DOCKER YANG DIHAPUS TIDAK DAPAT KEMBALI!!!"
+echo "INI UNTUK DELETE DOCKER!!!" 
+echo "JANGAN SALAH NAMA DOMAIN!!!"
+echo "DOCKER YANG DIHAPUS TIDAK DAPAT KEMBALI!!!"
 echo -e "${RED}-----PERINGATAN-----${NC}"
 echo
 read -p "Masukkan nama domain yang ingin dihapus: " domain
