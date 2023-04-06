@@ -29,7 +29,7 @@ services:
       - WORDPRESS_DB_PASSWORD=$MYSQL_PASSWORD
       - WORDPRESS_DB_NAME=wordpress
     ports:
-      - "10.89.1.120:_random80:80"
+      - "10.89.1.3:_random80:80"
     volumes:
       - /home/qw-_userdomain/wpdata:/var/www/html
     networks:

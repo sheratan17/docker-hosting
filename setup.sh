@@ -114,3 +114,15 @@ echo "Domain: ${path}"
 echo "Username: qw-${path}"
 echo "Password: ${passwd_user}"
 echo
+
+# buat reverse proxy
+user="root"
+server="103.102.153.32"
+
+# Set the text block to write to the file
+
+#Use SSH to log in to the remote server and write the text block to the file
+ssh "$user@$server" "cp /etc/nginx/conf.d/template.conf.inc /etc/nginx/conf.d/$path.conf"
+ssh "$user@$server" "sed -i "s/_domain/$path/g" /etc/nginx/conf.d/$path.conf"
+ssh "$user@$server" "sed -i "s/_random80/$number80/g" /etc/nginx/conf.d/$path.conf"
+ssh "$user@$server" "systemctl restart nginx"
