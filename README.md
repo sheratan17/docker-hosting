@@ -14,5 +14,14 @@ Docker + Wordpress + Let's Encrypt + Disk, CPU dan RAM Quota
 10. Enable service `systemctl enable docker` `systemctl start docker`
 10. Jalankan `.setup.sh` untuk install dan `delete.sh` untuk hapus
 11. JANGAN HAPUS FOLDER TEMPLATE
-
-template.inc.conf diletakkan di /etc/nginx/conf.d server proxy
+12. Tambahkan berikut ini pada `/etc/ssh/ssd_config`
+```
+Match User qw-*
+        ChrootDirectory /home/%u
+        X11Forwarding no
+        AllowTcpForwarding no
+        PermitTunnel no
+        AllowAgentForwarding no
+        ForceCommand internal-sftp
+```
+13. File `template.inc.conf` diletakkan di `/etc/nginx/conf.d` server proxy
