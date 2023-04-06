@@ -14,11 +14,8 @@ echo "2. WP2 (2 Core, 2GB RAM, 10GB)"
 echo
 read -p "Pilih Paket (1/2): " choice
 
-# setting path
+# setting path & add user
 pathtanpatitik=$(echo "${path}" | sed 's/\.//g')
-#useradd -m $path
-#adduser --home /home/$path $path
-#useradd -s /bin/rbash -d /home/$path $path
 useradd --shell /bin/false qw-$path
 
 # set disk/quota
@@ -27,7 +24,6 @@ quotacheck -cugm /home
 quotaon -v /home
 
 # create user folder
-#mkdir /home/$path
 mkdir /home/qw-$path/dbdata
 mkdir /home/qw-$path/wpdata
 user_id=$(id -u qw-${path})
@@ -99,23 +95,20 @@ number80=$(shuf -i 1000-3000 -n 1)
 sed -i "s/_random80/$number80/g" /home/qw-$path/docker-compose.yml
 
 # start docker, final version
-#chown -R $path:$path /home/$path/certbot
-#cd /home/$path/
-#docker compose up -d --force-recreate --no-deps webserver
-#docker compose up --force-recreate --no-deps certbot
-
 cd /home/qw-$path/
 docker compose up -d
 
+# bersih-bersih + fix
 rm /home/qw-$path/docker-compose.yml
-
 cd /home/qw-$path/dbdata
-
 touch JANGAN_HAPUS_FILE_ATAU_FOLDER_DISINI
 
+# update quota
 quotaoff -v /home
 quotacheck -cugm /home
 quotaon -v /home
+
+# print
 echo
 echo "Domain: ${path}"
 echo "Username: qw-${path}"
