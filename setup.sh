@@ -16,7 +16,7 @@ read -p "Pilih Paket (1/2): " choice
 
 # setting path & add user
 pathtanpatitik=$(echo "${path}" | sed 's/\.//g')
-useradd --shell /bin/false qw-$path
+useradd -m qw-$path
 
 # set disk/quota
 quotaoff -v /home
@@ -30,8 +30,6 @@ user_id=$(id -u qw-${path})
 group_id=$(id -g qw-${path})
 chown -R $user_id:$group_id /home/qw-$path/dbdata
 chown -R $user_id:$group_id /home/qw-$path/wpdata
-chown root:root /home/qw-$path
-chmod 755 /home/qw-$path
 
 # copy file compose from template
 cp /home/template/docker-compose.yml /home/qw-$path/
@@ -92,20 +90,20 @@ quotacheck -cugm /home
 quotaon -v /home
 
 # print
-echo
-echo "Domain: ${path}"
-echo "Username: qw-${path}"
-echo "Password: ${passwd_user}"
-echo
+#echo
+#echo "Domain: ${path}"
+#echo "Username: qw-${path}"
+#echo "Password: ${passwd_user}"
+#echo
 
 # buat reverse proxy
-user="root"
-server="103.102.153.32"
+#user="root"
+#server="103.102.153.32"
 
 # Set the text block to write to the file
 
 #Use SSH to log in to the remote server and write the text block to the file
-ssh "$user@$server" "cp /etc/nginx/conf.d/template.conf.inc /etc/nginx/conf.d/$path.conf"
-ssh "$user@$server" "sed -i "s/_domain/$path/g" /etc/nginx/conf.d/$path.conf"
-ssh "$user@$server" "sed -i "s/_random80/$number80/g" /etc/nginx/conf.d/$path.conf"
-ssh "$user@$server" "systemctl restart nginx"
+#ssh "$user@$server" "cp /etc/nginx/conf.d/template.conf.inc /etc/nginx/conf.d/$path.conf"
+#ssh "$user@$server" "sed -i "s/_domain/$path/g" /etc/nginx/conf.d/$path.conf"
+#ssh "$user@$server" "sed -i "s/_random80/$number80/g" /etc/nginx/conf.d/$path.conf"
+#ssh "$user@$server" "systemctl restart nginx"
