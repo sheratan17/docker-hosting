@@ -25,15 +25,15 @@ if [ "$answer" == "y" ]; then
 	rm -rf qw-${domain}
 	rm -rf /var/spool/mail/qw-${domain}
 	#rm /etc/nginx/conf.d/$domain.conf
-	quotaoff -v /home
-	quotacheck -cum /home
-	quotaon -v /home
+	#quotaoff -v /home
+	quotacheck -cugfm /home
+	#quotaon -v /home
 else
 	echo "Input salah"
 fi
 
-user="root"
-server="103.102.153.32"
+#user="root"
+#server="103.102.153.32"
 
-ssh "$user@$server" "rm -f /etc/nginx/conf.d/$domain.conf"
-ssh "$user@$server" "systemctl restart nginx"
+#ssh "$user@$server" "rm -f /etc/nginx/conf.d/$domain.conf"
+#ssh "$user@$server" "systemctl restart nginx"

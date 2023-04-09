@@ -9,8 +9,8 @@ echo
 read -p "Masukkan nama domain: " path
 echo
 echo "Paket yang tersedia:"
-echo "1. WP1 (1 Core, 1GB RAM, 5GB)"
-echo "2. WP2 (2 Core, 2GB RAM, 10GB)"
+echo "1. WP1 (1 Core, 1GB RAM, 1GB SSD)"
+echo "2. WP2 (2 Core, 2GB RAM, 2GB SSD)"
 echo
 read -p "Pilih Paket (1/2): " choice
 
@@ -19,15 +19,17 @@ pathtanpatitik=$(echo "${path}" | sed 's/\.//g')
 useradd -m qw-$path
 
 # 2. set disk/quota
-quotacheck -cugf /home
+#quotacheck -cugf /home
 
 # 3. create user folder
 mkdir /home/qw-$path/dbdata
 mkdir /home/qw-$path/wpdata
+#mkdir /home/qw-$path/config
 user_id=$(id -u qw-${path})
 group_id=$(id -g qw-${path})
 chown -R $user_id:$group_id /home/qw-$path/dbdata
 chown -R $user_id:$group_id /home/qw-$path/wpdata
+#chown -R $user_id:$group_id /home/qw-$path/config
 
 # 4. copy file compose from template
 cp /home/template/docker-compose.yml /home/qw-$path/
@@ -45,6 +47,7 @@ echo "MYSQL_USER=$db_user" >>/home/qw-$path/.env
 echo "MYSQL_PASSWORD=$db_password" >> /home/qw-$path/.env
 echo "WP_DOMAIN_db=${pathtanpatitik}_db" >> /home/qw-$path/.env
 echo "WP_DOMAIN_wp=${pathtanpatitik}_wp" >> /home/qw-$path/.env
+echo "WP_DOMAIN_filebrowser=${pathtanpatitik}_filebrowser" >> /home/qw-$path/.env
 
 # 7. fix docker-compose.yml
 sed -i "s/_userdomain/$path/g" /home/qw-$path/docker-compose.yml
@@ -69,14 +72,16 @@ esac
 
 # 9. Fix port so it will generate random port in docker-compose.yml
 number80=$(shuf -i 1000-3000 -n 1)
+number81=$(shuf -i 3001-4000 -n 1)
 sed -i "s/_random80/$number80/g" /home/qw-$path/docker-compose.yml
+sed -i "s/_random81/$number81/g" /home/qw-$path/docker-compose.yml
 
 # 10. Start docker, final version
 cd /home/qw-$path/
 docker compose up -d
 
 # bersih-bersih + fix
-rm /home/qw-$path/docker-compose.yml
+#rm /home/qw-$path/docker-compose.yml
 
 # update quota
 quotacheck -cugf /home
