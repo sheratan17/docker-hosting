@@ -14,16 +14,14 @@ echo "2. WP2 (2 Core, 2GB RAM, 10GB)"
 echo
 read -p "Pilih Paket (1/2): " choice
 
-# setting path & add user
+# 1. setting path & add user
 pathtanpatitik=$(echo "${path}" | sed 's/\.//g')
 useradd -m qw-$path
 
-# set disk/quota
-quotaoff -v /home
-quotacheck -cugm /home
-quotaon -v /home
+# 2. set disk/quota
+quotacheck -cugf /home
 
-# create user folder
+# 3. create user folder
 mkdir /home/qw-$path/dbdata
 mkdir /home/qw-$path/wpdata
 user_id=$(id -u qw-${path})
@@ -31,63 +29,57 @@ group_id=$(id -g qw-${path})
 chown -R $user_id:$group_id /home/qw-$path/dbdata
 chown -R $user_id:$group_id /home/qw-$path/wpdata
 
-# copy file compose from template
+# 4. copy file compose from template
 cp /home/template/docker-compose.yml /home/qw-$path/
 
-# generate a random password
+# 5. generate a random password
 passwd_user=$(openssl rand -base64 12)
 echo "qw-${path}:${passwd_user}" | chpasswd
 db_root_password=$(openssl rand -base64 9 | tr -dc 'a-zA-Z0-9!^()_' | head -c12)
 db_user=$(openssl rand -base64 9 | tr -dc 'a-zA-Z0-9!^()_' | head -c12)
 db_password=$(openssl rand -base64 9 | tr -dc 'a-zA-Z0-9!^()_' | head -c12)
 
-# print MYSQL_ROOT_PASSWORD line with the generated password to .env file
+# 6. print MYSQL_ROOT_PASSWORD line with the generated password to .env file
 echo "MYSQL_ROOT_PASSWORD=$db_root_password" >> /home/qw-$path/.env
 echo "MYSQL_USER=$db_user" >>/home/qw-$path/.env
 echo "MYSQL_PASSWORD=$db_password" >> /home/qw-$path/.env
 echo "WP_DOMAIN_db=${pathtanpatitik}_db" >> /home/qw-$path/.env
 echo "WP_DOMAIN_wp=${pathtanpatitik}_wp" >> /home/qw-$path/.env
 
-# fix docker-compose.yml
+# 7. fix docker-compose.yml
 sed -i "s/_userdomain/$path/g" /home/qw-$path/docker-compose.yml
 sed -i "s/_userid/$user_id/g" /home/qw-$path/docker-compose.yml
 sed -i "s/_groupid/$group_id/g" /home/qw-$path/docker-compose.yml
 
-# case paket
+# 8. Case choice
 case $choice in
     1)
 	$wp1
 	sed -i "s/_memlimit/1G/g" /home/qw-$path/docker-compose.yml
 	sed -i "s/_cpulimit/1.0/g" /home/qw-$path/docker-compose.yml
-	setquota -u qw-$path 0 1024000 0 0 /home
+	setquota -u qw-$path 0 1024000 0 0 -a /home
         ;;
     2) $wp2
 	sed -i "s/_memlimit/2G/g" /home/qw-$path/docker-compose.yml
 	sed -i "s/_cpulimit/2.0/g" /home/qw-$path/docker-compose.yml
-	setquota -u qw-$path 0 2048000 0 0 /home
+	setquota -u qw-$path 0 2048000 0 0 -a /home
 	;;
     *) echo "Invalid option" ;;
 esac
 
-# fix port agar random docker-compose.yml
-#number443=$(( $RANDOM % 720 + 81 ))
+# 9. Fix port so it will generate random port in docker-compose.yml
 number80=$(shuf -i 1000-3000 -n 1)
-#sed -i '44a\      - "$number443:443"' /home/$path/docker-compose.yml
 sed -i "s/_random80/$number80/g" /home/qw-$path/docker-compose.yml
 
-# start docker, final version
+# 10. Start docker, final version
 cd /home/qw-$path/
 docker compose up -d
 
 # bersih-bersih + fix
 rm /home/qw-$path/docker-compose.yml
-cd /home/qw-$path/dbdata
-touch JANGAN_HAPUS_FILE_ATAU_FOLDER_DISINI
 
 # update quota
-quotaoff -v /home
-quotacheck -cugm /home
-quotaon -v /home
+quotacheck -cugf /home
 
 # print
 #echo
