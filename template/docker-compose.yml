@@ -4,7 +4,7 @@ services:
   db:
     image: mysql:8.0
     container_name: $WP_DOMAIN_db
-    restart: unless-stopped
+    restart: always
     env_file: .env
     environment:
       - MYSQL_DATABASE=wordpress
@@ -21,7 +21,7 @@ services:
       - db
     image: wordpress:6.2-php8.2
     container_name: $WP_DOMAIN_wp
-    restart: unless-stopped
+    restart: always
     env_file: .env
     environment:
       - WORDPRESS_DB_HOST=db:3306
@@ -38,6 +38,9 @@ services:
     mem_limit: _memlimit
     cpus: _cpulimit
   filebrowser:
+    depends_on:
+      - wordpress
+    restart: always
     container_name: $WP_DOMAIN_filebrowser
     image: filebrowser/filebrowser
     networks:
@@ -47,7 +50,6 @@ services:
     volumes:
       - /home/qw-_userdomain/wpdata:/srv
       - ./config:/config
-    restart: always 
 
 volumes:
   wordpress:
