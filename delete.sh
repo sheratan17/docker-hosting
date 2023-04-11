@@ -21,12 +21,12 @@ if [ "$answer" == "y" ]; then
 	docker container rm $(docker ps -a -q --filter name=${PREFIX}_*)
 	docker network rm $(docker network ls -q --filter name=${PREFIX}_*)
 	docker volume prune -f
-	userdel qw-${domain}
+	userdel -r qw-${domain}
 	rm -rf qw-${domain}
 	rm -rf /var/spool/mail/qw-${domain}
 	#rm /etc/nginx/conf.d/$domain.conf
 	#quotaoff -v /home
-	quotacheck -cugf /home
+	quotacheck -ugmf /home
 	#quotaon -v /home
 else
 	echo "Input salah"

@@ -35,8 +35,8 @@ chown -R $user_id:$group_id /home/qw-$path/wpdata
 cp /home/template/docker-compose.yml /home/qw-$path/
 
 # 5. generate a random password
-passwd_user=$(openssl rand -base64 12)
-echo "qw-${path}:${passwd_user}" | chpasswd
+#passwd_user=$(openssl rand -base64 12)
+#echo "qw-${path}:${passwd_user}" | chpasswd
 db_root_password=$(openssl rand -base64 9 | tr -dc 'a-zA-Z0-9!^()_' | head -c12)
 db_user=$(openssl rand -base64 9 | tr -dc 'a-zA-Z0-9!^()_' | head -c12)
 db_password=$(openssl rand -base64 9 | tr -dc 'a-zA-Z0-9!^()_' | head -c12)
@@ -84,23 +84,24 @@ docker compose up -d
 #rm /home/qw-$path/docker-compose.yml
 
 # update quota
-quotacheck -cugf /home
+quotacheck -ugmf /home
 
 # print
 #echo
-#echo "Domain: ${path}"
-#echo "Username: qw-${path}"
+echo "Domain: ${path}"
+echo "Username: qw-${path}"
 #echo "Password: ${passwd_user}"
 #echo
 
 # buat reverse proxy
-#user="root"
-#server="103.102.153.32"
+user="root"
+server="103.102.153.32"
 
 # Set the text block to write to the file
 
 #Use SSH to log in to the remote server and write the text block to the file
-#ssh "$user@$server" "cp /etc/nginx/conf.d/template.conf.inc /etc/nginx/conf.d/$path.conf"
-#ssh "$user@$server" "sed -i "s/_domain/$path/g" /etc/nginx/conf.d/$path.conf"
-#ssh "$user@$server" "sed -i "s/_random80/$number80/g" /etc/nginx/conf.d/$path.conf"
-#ssh "$user@$server" "systemctl restart nginx"
+ssh "$user@$server" "cp /etc/nginx/conf.d/template.conf.inc /etc/nginx/conf.d/$path.conf"
+ssh "$user@$server" "sed -i "s/_domain/$path/g" /etc/nginx/conf.d/$path.conf"
+ssh "$user@$server" "sed -i "s/_random80/$number80/g" /etc/nginx/conf.d/$path.conf"
+ssh "$user@$server" "sed -i "s/_random81/$number81/g" /etc/nginx/conf.d/$path.conf"
+ssh "$user@$server" "systemctl restart nginx"
