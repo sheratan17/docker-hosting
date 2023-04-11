@@ -4,24 +4,27 @@ services:
   db:
     image: mysql:8.0
     container_name: $WP_DOMAIN_db
-    restart: unless-stopped
+    restart: always
     env_file: .env
     environment:
       - MYSQL_DATABASE=wordpress
+      - MYSQL_ROOT_PASSWORD=$MYSQL_ROOT_PASSWORD
     volumes: 
-      - /home/qw-_userdomain/dbdata:/var/lib/mysql
+      - /home/_userdomain/dbdata:/var/lib/mysql
     command: '--default-authentication-plugin=mysql_native_password'
     networks:
       backend:
     user: "_userid:_groupid"
     mem_limit: _memlimit
     cpus: _cpulimit
+ #   labels:
+ #     io.portainer.accesscontrol.teams: admin
   wordpress:
     depends_on: 
       - db
     image: wordpress:6.2-php8.2
     container_name: $WP_DOMAIN_wp
-    restart: unless-stopped
+    restart: always
     env_file: .env
     environment:
       - WORDPRESS_DB_HOST=db:3306
@@ -31,13 +34,18 @@ services:
     ports:
       - "10.89.1.2:_random80:80"
     volumes:
-      - /home/qw-_userdomain/wpdata:/var/www/html
+      - /home/_userdomain/wpdata:/var/www/html
     networks:
       backend:
     user: "_userid:_groupid"
     mem_limit: _memlimit
     cpus: _cpulimit
+#    labels:
+#      io.portainer.accesscontrol.teams: admin
   filebrowser:
+    depends_on:
+      - wordpress
+    restart: always
     container_name: $WP_DOMAIN_filebrowser
     image: filebrowser/filebrowser
     networks:
@@ -45,13 +53,31 @@ services:
     ports:
       - "10.89.1.2:_random81:80"
     volumes:
-      - /home/qw-_userdomain/wpdata:/srv
+      - /home/_userdomain/wpdata:/srv
       - ./config:/config
-    restart: always 
+#    labels:
+#      io.portainer.accesscontrol.teams: admin
+  phpmyadmin:
+    depends_on:
+      - db
+    restart: always
+    image: phpmyadmin/phpmyadmin
+    container_name: $WP_DOMAIN_pma
+    environment:
+       - PMA_HOST=db
+    restart: always
+    ports:
+      - "10.89.1.2:_random82:80"
+    networks:
+      backend:
+#    user: "_userid:_groupid"
+#    labels:
+#      io.portainer.accesscontrol.teams: admin
 
 volumes:
   wordpress:
   dbdata:
+  pma:
 
 networks:
   backend:
