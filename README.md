@@ -26,6 +26,15 @@ Docker + Wordpress + Let's Encrypt + Disk, CPU dan RAM Quota
 23. Update php exec time ke 600
 24. Update apache directory index tambahkan index.php
 
+##Setup server nginx reverse
+1. Install Almalinux
+2. Install nginx
+3. Install epel-release
+4. Install certbot python3-certbot-nginx
+5. download 1template.conf.inc1 dan 1template-mandiri.conf.inc1 letakkan di `/etc/nginx/conf.d`
+6. Restart nginx
+
+
 ## Pengembangan
 1. Script untuk update paket
 2. Script untuk update ssl dari le ke mandiri atau sebaliknya
