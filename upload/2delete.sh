@@ -27,4 +27,6 @@ sudo ssh "$user@$server" "rm /etc/nginx/conf.d/$path.conf"
 sudo ssh "$user@$server" "rm -rf /home/$path/"
 sudo ssh "$user@$server" "systemctl restart nginx"
 echo "reverse proxy dihapus"
+systemctl restart php-fpm
+systemctl restart httpd
 exit 1
