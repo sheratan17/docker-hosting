@@ -31,7 +31,7 @@ Docker + Wordpress + Let's Encrypt + Disk, CPU dan RAM Quota
 2. Install nginx
 3. Install epel-release
 4. Install certbot python3-certbot-nginx
-5. download 1template.conf.inc1 dan 1template-mandiri.conf.inc1 letakkan di `/etc/nginx/conf.d`
+5. download `template.conf.inc` dan `template-mandiri.conf.inc` letakkan di `/etc/nginx/conf.d`
 6. Restart nginx
 
 
