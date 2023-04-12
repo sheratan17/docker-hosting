@@ -4,7 +4,7 @@ Docker + Wordpress + Let's Encrypt + Disk, CPU dan RAM Quota
 1. Instal Almalinux 8
 2. Pastikan semua partisi pakai ext4 dan /home memiliki partisi yang berbeda (tidak disatukan sama / )
 3. Update OS
-4. Install: yum install quota wget nano curl vim lsof git
+4. Install: `yum install quota wget nano curl vim lsof git`
 5. Aktifkan quota, edit /etc/fstab tambahkan usrjquota=aquota.user,grpjquota=aquota.group,jqfmt=vfsv1 pada defaults bagian /home sehingga hasil akhrinya ….. /home ….. defaults,usrjquota=aquota.user,grpjquota=aquota.group,jqfmt=vfsv1
 6. Reboot
 7. Buat index: quotacheck -cugm /home
