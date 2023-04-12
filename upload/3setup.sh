@@ -15,20 +15,21 @@ NC='\033[0m' # No Color
 #echo
 #read -p "Pilih Paket (1/2): " choice
 
-if [ $# -ne 2 ]; then
-	echo
-    	echo "Input: $0 <path> <p1|p2>"
-	echo
-	echo "Dimana path adalah domain dan paket adalah p1 atau p2"
-	echo
-	echo "Contoh: /2setup.sh qwords.com p1"
-    	exit 1
-fi
+#if [ $# -ne 3 ]; then
+#	echo
+#    	echo "Input: $0 <path> <p1|p2>"
+#	echo
+#	echo "Dimana path adalah domain dan paket adalah p1 atau p2"
+#	echo
+#	echo "Contoh: /2setup.sh qwords.com p1"
+#    	exit 1
+#fi
 
 path=$1
 paket=$2
+ssl=$3
 
-echo "Input domain: $path, paket: $paket"
+echo "Input domain: $path, paket: $paket, ssl: $ssl"
 
 # 1. setting path & add user
 pathtanpatitik=$(echo "${path}" | sed 's/\.//g')
@@ -94,12 +95,12 @@ if [ "$paket" == "p1" ]; then
 	sudo sed -i "s/_memlimit/1G/g" /home/$path/docker-compose.yml
 	sudo sed -i "s/_cpulimit/1.0/g" /home/$path/docker-compose.yml
 	sudo setquota -u $path 0 1024000 0 0 -a /home
-	sudo echo "User $path udah ditambahkan $paket"
+	sudo echo "User $path sudah menggunakan $paket"
 elif [ "$paket" == "p2" ]; then
 	sudo sed -i "s/_memlimit/2G/g" /home/$path/docker-compose.yml
 	sudo sed -i "s/_cpulimit/2.0/g" /home/$path/docker-compose.yml
 	sudo setquota -u $path 0 2048000 0 0 -a /home
-	sudo echo "User $path sudah ditambahkan $paket"
+	sudo echo "User $path sudah menggunakan $paket"
 else
 	sudo echo "Paket salah. Masukkan p1 atau p2."
 	sudo exit 1
@@ -154,6 +155,27 @@ sudo ssh "$user@$server" "sed -i "s/_domain/$path/g" /etc/nginx/conf.d/$path.con
 sudo ssh "$user@$server" "sed -i "s/_random80/$number80/g" /etc/nginx/conf.d/$path.conf"
 sudo ssh "$user@$server" "sed -i "s/_random81/$number81/g" /etc/nginx/conf.d/$path.conf"
 sudo ssh "$user@$server" "sed -i "s/_random82/$number82/g" /etc/nginx/conf.d/$path.conf"
+
+if [ "$ssl" == "le" ]; then
+        sudo ssh "$user@$server" "certbot --nginx --agree-tos --redirect --staging --hsts --staple-ocsp --must-staple --reinstall --email andi.triyadi@qwords.co.id -d $path -d www.$path -d file.$path -d www.file.$path -d pma.$path -d www.$path"
+elif [ "$ssl" == "mandiri" ]; then
+	sudo ssh "$user@$server" "mkdir /home/$path"
+	sudo scp /var/www/html/$path-crt.crt ${user}@${server}:/home/$path
+	sudo scp /var/www/html/$path-key.key ${user}@${server}:/home/$path
+	sudo rm -f /var/www/html/$path-crt.crt
+	sudo rm -f /var/www/html/$path-key.key
+        sudo openssl dhparam -out /home/$path/ssl-dhparams.pem 2048
+        sudo scp /home/$path/ssl-dhparams.pem ${user}@${server}:/home/$path
+	sudo ssh "$user@$server" "cp /etc/nginx/conf.d/template-mandiri.conf.inc /etc/nginx/conf.d/$path.conf"
+	sudo ssh "$user@$server" "sed -i "s/_domain/$path/g" /etc/nginx/conf.d/$path.conf"
+	sudo ssh "$user@$server" "sed -i "s/_random80/$number80/g" /etc/nginx/conf.d/$path.conf"
+	sudo ssh "$user@$server" "sed -i "s/_random81/$number81/g" /etc/nginx/conf.d/$path.conf"
+	sudo ssh "$user@$server" "sed -i "s/_random82/$number82/g" /etc/nginx/conf.d/$path.conf"
+else
+	sudo sh -c echo '"no ssl" >> /home/'$path'/info.txt'
+        sudo exit 1
+fi
+
 sudo ssh "$user@$server" "systemctl restart nginx"
 echo "Selesai. Docker aktif"
 exit 1

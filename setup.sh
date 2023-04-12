@@ -105,7 +105,7 @@ echo "Password root MySQL: ${db_root_password}"
 echo
 echo "Catatan:"
 echo -e "Gunakan username: ${BLUE}root${NC} dan password root MySQL untuk login ke phpMyAdmin"
-echo
+echo "Password root MySQL: ${db_root_password}" >> /home/$path/info.txt
 
 # buat reverse proxy
 echo "Buat reverse proxy"
