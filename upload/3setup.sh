@@ -158,6 +158,7 @@ sudo ssh "$user@$server" "sed -i "s/_random82/$number82/g" /etc/nginx/conf.d/$pa
 
 if [ "$ssl" == "le" ]; then
         sudo ssh "$user@$server" "certbot --nginx --agree-tos --redirect --staging --hsts --staple-ocsp --must-staple --reinstall --email andi.triyadi@qwords.co.id -d $path -d www.$path -d file.$path -d www.file.$path -d pma.$path -d www.$path"
+		sudo ssh "$user@$server" "systemctl restart nginx"
 elif [ "$ssl" == "mandiri" ]; then
 	sudo ssh "$user@$server" "mkdir /home/$path"
 	sudo scp /var/www/html/$path-crt.crt ${user}@${server}:/home/$path
@@ -171,11 +172,13 @@ elif [ "$ssl" == "mandiri" ]; then
 	sudo ssh "$user@$server" "sed -i "s/_random80/$number80/g" /etc/nginx/conf.d/$path.conf"
 	sudo ssh "$user@$server" "sed -i "s/_random81/$number81/g" /etc/nginx/conf.d/$path.conf"
 	sudo ssh "$user@$server" "sed -i "s/_random82/$number82/g" /etc/nginx/conf.d/$path.conf"
+	sudo ssh "$user@$server" "systemctl restart nginx"
 else
 	sudo sh -c echo '"no ssl" >> /home/'$path'/info.txt'
         sudo exit 1
 fi
 
-sudo ssh "$user@$server" "systemctl restart nginx"
+sudo systemctl restart php-fpm
+sudo systemctl restart httpd
 echo "Selesai. Docker aktif"
 exit 1
