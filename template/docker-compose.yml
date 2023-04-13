@@ -55,6 +55,11 @@ services:
     volumes:
       - /home/_userdomain/wpdata:/srv
       - ./config:/config
+    mem_limit: _memlimit
+    cpus: _cpulimit
+#    environment:
+#      - PUID=_userid
+#      - PGID=_groupid
 #    labels:
 #      io.portainer.accesscontrol.teams: admin
   phpmyadmin:
@@ -69,6 +74,8 @@ services:
       - "10.89.1.2:_random82:80"
     networks:
       backend:
+    mem_limit: _memlimit
+    cpus: _cpulimit
 #    user: "_userid:_groupid"
 #    labels:
 #      io.portainer.accesscontrol.teams: admin

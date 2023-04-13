@@ -10,7 +10,7 @@
 		const keytext = document.getElementById("keytext");
 		const checkbox = document.getElementById("checkbox");
 		const submitBtn = document.getElementById("submitBtn");
-		
+
 		dropdown.addEventListener("change", function() {
 			if (dropdown.value === "mandiri") {
 			crttext.disabled = false;
@@ -33,8 +33,9 @@
 			}
 		});
 	});
+
 </script>
-	
+
 <body>
 <h1>Buat WP Docker baru</h1>
     <form action="create.php" method="POST">
@@ -47,6 +48,7 @@
         </select><br><br>
 	<label for="tipessl">SSL:</label>
 	<select name="tipessl" id="tipessl">
+		<option value="" selected disabled hidden>Choose here</option>
 		<option value="le">le</option>
 		<option value="mandiri">mandiri</option>
 		<option value="nossl">nossl</option>

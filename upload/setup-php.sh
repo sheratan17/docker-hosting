@@ -111,6 +111,8 @@ server="103.102.153.32"
 if [ "$ssl" == "le" ]; then
 	sudo ssh "$user@$server" "cp /etc/nginx/conf.d/template.conf.inc /etc/nginx/conf.d/$path.conf && sed -i "s/_domain/$path/g" /etc/nginx/conf.d/$path.conf && sed -i "s/_random80/$number80/g" /etc/nginx/conf.d/$path.conf && sed -i "s/_random81/$number81/g" /etc/nginx/conf.d/$path.conf && sed -i "s/_random82/$number82/g" /etc/nginx/conf.d/$path.conf && exit"
         sudo ssh "$user@$server" "certbot --nginx --agree-tos --redirect --staging --hsts --staple-ocsp --must-staple --reinstall --email andi.triyadi@qwords.co.id -d $path -d www.$path -d file.$path -d www.file.$path -d pma.$path -d www.$path && systemctl restart nginx" 
+	sudo ssh "$user@$server" "sed -i 's/listen 443 ssl;/listen 443 ssl http2;/g' /etc/nginx/conf.d/$path.conf && exit"
+	sudo ssh "$user@$server" "systemctl restart nginx && exit"
 elif [ "$ssl" == "mandiri" ]; then
 	sudo ssh "$user@$server" "mkdir /home/$path && exit"
 	sudo scp /var/www/html/$path-crt.crt ${user}@${server}:/home/$path || exit 1
