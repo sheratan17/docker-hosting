@@ -9,7 +9,7 @@
 		const crttext = document.getElementById("crttext");
 		const keytext = document.getElementById("keytext");
 		const checkbox = document.getElementById("checkbox");
-		const submitBtn = document.getElementById("submitBtn");\
+		const submitBtn = document.getElementById("submitBtn");
 		
 		dropdown.addEventListener("change", function() {
 			if (dropdown.value === "mandiri") {
