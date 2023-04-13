@@ -1,6 +1,11 @@
 #!/bin/bash
 export PATH="$PATH:/usr/sbin/"
 
+if [ $# -ne 3 ]; then
+  echo "Error. Input tidak lengkap"
+  exit 1
+fi
+
 path=$1
 paket=$2
 ssl=$3

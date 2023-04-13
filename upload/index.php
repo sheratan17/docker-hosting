@@ -48,15 +48,15 @@
         </select><br><br>
 	<label for="tipessl">SSL:</label>
 	<select name="tipessl" id="tipessl">
-		<option value="" selected disabled hidden>Choose here</option>
+		<option value="" selected disabled>Pilih tipe</option>
 		<option value="le">le</option>
 		<option value="mandiri">mandiri</option>
 		<option value="nossl">nossl</option>
 	</select><br><br>
 	<label for="crt">SSL Mandiri. Input CRT</label><br>
-	<textarea name="crttext" id="crttext"></textarea><br><br>
+	<textarea name="crttext" id="crttext" required></textarea><br><br>
 	<label for="crt">SSL Mandiri. Input key</label><br>
-        <textarea name="keytext" id="keytext"></textarea><br>
+        <textarea name="keytext" id="keytext" required></textarea><br>
   	<input type="submit" value="Submit">
 	</form>
 <br>
@@ -69,6 +69,6 @@
     <input type="checkbox" id="checkbox" name="checkbox">
     <label for="checkbox">Saya 100% yakin domain sudah benar</label>
     <br><br>
-    <button type="submit" id="submitBtn" name="submitButton">Submit</button>
+    <button type="submit" id="submitBtn" name="submitButton" disabled>Submit</button>
   </form>
 </html>
