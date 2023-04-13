@@ -22,7 +22,7 @@ server {
 	proxy_read_timeout                 60s;
 	}
 
-    listen 443 ssl; # managed by Certbot
+    listen 443 ssl http2; # managed by Certbot
     ssl_certificate /home/_domain/_domain-crt.crt; 
     ssl_certificate_key /home/_domain/_domain-key.key; 
     include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
@@ -65,7 +65,7 @@ server {
         proxy_read_timeout                 60s;
         }
 
-    listen 443 ssl; # managed by Certbot
+    listen 443 ssl http2; # managed by Certbot
     ssl_certificate /home/_domain/_domain-crt.crt;
     ssl_certificate_key /home/_domain/_domain-key.key;
     include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
@@ -108,7 +108,7 @@ server {
         proxy_read_timeout                 60s;
         }
 
-    listen 443 ssl; # managed by Certbot
+    listen 443 ssl http2; # managed by Certbot
     ssl_certificate /home/_domain/_domain-crt.crt;
     ssl_certificate_key /home/_domain/_domain-key.key;
     include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
