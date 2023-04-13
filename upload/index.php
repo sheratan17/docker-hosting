@@ -3,7 +3,45 @@
 <head>
 <title>WP Docker</title>
 </head>
+	<script>
+	document.addEventListener("DOMContentLoaded", function() {
+		const dropdown = document.getElementById("tipessl");
+		const crttext = document.getElementById("crttext");
+		const keytext = document.getElementById("keytext");
+		const checkbox = document.getElementById("checkbox");
+		const submitBtn = document.getElementById("submitBtn");\
+		
+		dropdown.addEventListener("change", function() {
+			if (dropdown.value === "mandiri") {
+			crttext.disabled = false;
+			keytext.disabled = false;
+			crttext.style.backgroundColor = "white";
+			keytext.style.backgroundColor = "white";
+			} else {
+			crttext.disabled = true;
+			keytext.disabled = true;
+			crttext.style.backgroundColor = "lightgray";
+			keytext.style.backgroundColor = "lightgray";
+			}
+		});
 
+		checkbox.addEventListener("change", function() {
+			if (checkbox.checked) {
+			submitBtn.disabled = false;
+			} else {
+			submitBtn.disabled = true;
+			}
+		});
+	});
+	(function () {
+	window.onpageshow = function(event) {
+	if (event.persisted) {
+		window.location.reload();
+		}
+	};
+})();
+</script>
+	
 <body>
 <h1>Buat WP Docker baru</h1>
     <form action="create.php" method="POST">
@@ -21,9 +59,9 @@
 		<option value="nossl">nossl</option>
 	</select><br><br>
 	<label for="crt">SSL Mandiri. Input CRT</label><br>
-	<textarea name="crttext"></textarea><br><br>
+	<textarea name="crttext" id="crttext"></textarea><br><br>
 	<label for="crt">SSL Mandiri. Input key</label><br>
-        <textarea name="keytext"></textarea><br>
+        <textarea name="keytext" id="keytext"></textarea><br>
   	<input type="submit" value="Submit">
 	</form>
 <br>
@@ -33,9 +71,9 @@
     <label for="inputDomain">Domain:</label>
     <input type="text" id="inputDomain" name="inputDomain" required>
     <br><br>
-    <input type="checkbox" id="myCheckbox" name="myCheckbox">
-    <label for="myCheckbox">Saya 100% yakin domain sudah benar</label>
+    <input type="checkbox" id="checkbox" name="checkbox">
+    <label for="checkbox">Saya 100% yakin domain sudah benar</label>
     <br><br>
-    <button type="submit" id="submitButton" name="submitButton">Submit</button>
+    <button type="submit" id="submitBtn" name="submitButton">Submit</button>
   </form>
 </html>
