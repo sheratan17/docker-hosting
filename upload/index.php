@@ -2,30 +2,6 @@
 <html>
 <head>
 <title>WP Docker</title>
-  <script type="text/javascript">
-    window.addEventListener('DOMContentLoaded', function() {
-      const inputDomain = document.getElementById('inputDomain');
-      const checkbox = document.getElementById('myCheckbox');
-      const submitButton = document.getElementById('submitButton');
-      const crttext = document.getElementById('crttext');
-
-      inputDomain.addEventListener('input', function() {
-        if (inputDomain.value !== '' && checkbox.checked) {
-          submitButton.disabled = false;
-        } else {
-          submitButton.disabled = true;
-        }
-      });
-
-      checkbox.addEventListener('change', function() {
-        if (inputDomain.value !== '' && checkbox.checked) {
-          submitButton.disabled = false;
-        } else {
-          submitButton.disabled = true;
-        }
-      });
-    });
-  </script>
 </head>
 
 <body>
@@ -53,12 +29,12 @@
 <br>
 <br>
 <h1>Hapus WP Docker</h1>
-	<form method="post" action="delete.php">
+	<form action="delete.php" method="POST">
     <label for="inputDomain">Domain:</label>
     <input type="text" id="inputDomain" name="inputDomain" required>
     <br><br>
     <input type="checkbox" id="myCheckbox" name="myCheckbox">
     <label for="myCheckbox">Saya 100% yakin domain sudah benar</label>
     <br><br>
-    <button type="submit" id="submitButton" name="submitButton" disabled>Submit</button>
+    <button type="submit" id="submitButton" name="submitButton">Submit</button>
   </form>

@@ -25,7 +25,6 @@ NC='\033[0m' # No Color
 #    	exit 1
 #fi
 
-#sudo service php-fpm restart
 path=$1
 paket=$2
 ssl=$3
@@ -151,36 +150,32 @@ server="103.102.153.32"
 # Set the text block to write to the file
 
 #Use SSH to log in to the remote server and write the text block to the file
-sudo ssh "$user@$server" "cp /etc/nginx/conf.d/template.conf.inc /etc/nginx/conf.d/$path.conf"
-sudo ssh "$user@$server" "sed -i "s/_domain/$path/g" /etc/nginx/conf.d/$path.conf"
-sudo ssh "$user@$server" "sed -i "s/_random80/$number80/g" /etc/nginx/conf.d/$path.conf"
-sudo ssh "$user@$server" "sed -i "s/_random81/$number81/g" /etc/nginx/conf.d/$path.conf"
-sudo ssh "$user@$server" "sed -i "s/_random82/$number82/g" /etc/nginx/conf.d/$path.conf"
+#sudo ssh "$user@$server" "cp /etc/nginx/conf.d/template.conf.inc /etc/nginx/conf.d/$path.conf"
+#sudo ssh "$user@$server" "sed -i "s/_domain/$path/g" /etc/nginx/conf.d/$path.conf"
+#sudo ssh "$user@$server" "sed -i "s/_random80/$number80/g" /etc/nginx/conf.d/$path.conf"
+#sudo ssh "$user@$server" "sed -i "s/_random81/$number81/g" /etc/nginx/conf.d/$path.conf"
+#sudo ssh "$user@$server" "sed -i "s/_random82/$number82/g" /etc/nginx/conf.d/$path.conf"
 
 if [ "$ssl" == "le" ]; then
-        sudo ssh "$user@$server" "certbot --nginx --agree-tos --redirect --staging --hsts --staple-ocsp --must-staple --reinstall --email andi.triyadi@qwords.co.id -d $path -d www.$path -d file.$path -d www.file.$path -d pma.$path -d www.$path"
-	sudo ssh "$user@$server" "systemctl restart nginx"
+        sudo ssh -t "$user@$server" "certbot --nginx --agree-tos --redirect --staging --hsts --staple-ocsp --must-staple --reinstall --email andi.triyadi@qwords.co.id -d $path -d www.$path -d file.$path -d www.file.$path -d pma.$path -d www.$path && systemctl restart nginx" 
 elif [ "$ssl" == "mandiri" ]; then
-	sudo ssh "$user@$server" "mkdir /home/$path"
-	sudo scp /var/www/html/$path-crt.crt ${user}@${server}:/home/$path
-	sudo scp /var/www/html/$path-key.key ${user}@${server}:/home/$path
+	sudo ssh "$user@$server" "mkdir /home/$path && exit"
+	sudo scp /var/www/html/$path-crt.crt ${user}@${server}:/home/$path || exit 1
+	sudo scp /var/www/html/$path-key.key ${user}@${server}:/home/$path || exit 1
 	sudo rm -f /var/www/html/$path-crt.crt
 	sudo rm -f /var/www/html/$path-key.key
         sudo openssl dhparam -out /home/$path/ssl-dhparams.pem 2048
-        sudo scp /home/$path/ssl-dhparams.pem ${user}@${server}:/home/$path
-	sudo ssh "$user@$server" "cp /etc/nginx/conf.d/template-mandiri.conf.inc /etc/nginx/conf.d/$path.conf"
-	sudo ssh "$user@$server" "sed -i "s/_domain/$path/g" /etc/nginx/conf.d/$path.conf"
-	sudo ssh "$user@$server" "sed -i "s/_random80/$number80/g" /etc/nginx/conf.d/$path.conf"
-	sudo ssh "$user@$server" "sed -i "s/_random81/$number81/g" /etc/nginx/conf.d/$path.conf"
-	sudo ssh "$user@$server" "sed -i "s/_random82/$number82/g" /etc/nginx/conf.d/$path.conf"
-	sudo ssh "$user@$server" "systemctl restart nginx"
+        sudo scp /home/$path/ssl-dhparams.pem ${user}@${server}:/home/$path || exit 1
+	sudo ssh "$user@$server" "cp /etc/nginx/conf.d/template-mandiri.conf.inc /etc/nginx/conf.d/$path.conf && exit"
+	sudo ssh "$user@$server" "sed -i "s/_domain/$path/g" /etc/nginx/conf.d/$path.conf && sed -i "s/_random80/$number80/g" /etc/nginx/conf.d/$path.conf && sed -i "s/_random81/$number81/g" /etc/nginx/conf.d/$path.conf && sed -i "s/_random82/$number82/g" /etc/nginx/conf.d/$path.conf && exit"
+	sudo ssh "$user@$server" "systemctl restart nginx && exit"
 else
 	sudo sh -c echo '"no ssl" >> /home/'$path'/info.txt'
-	sudo ssh "$user@$server" "systemctl restart nginx"
-        exit 1
+	sudo ssh "$user@$server" "cp /etc/nginx/conf.d/template.conf.inc /etc/nginx/conf.d/$path.conf && exit"
+	sudo ssh "$user@$server" "sed -i "s/_domain/$path/g" /etc/nginx/conf.d/$path.conf && sed -i "s/_random80/$number80/g" /etc/nginx/conf.d/$path.conf && sed -i "s/_random81/$number81/g" /etc/nginx/conf.d/$path.conf && sed -i "s/_random82/$number82/g" /etc/nginx/conf.d/$path.conf && exit"
+	sudo ssh "$user@$server" "systemctl restart nginx && exit"
 fi
 
-sudo systemctl restart php-fpm
-sudo systemctl restart httpd
+#sudo systemctl restart php-fpm
+#sudo systemctl restart httpd
 echo "Selesai. Docker aktif"
-exit 1
