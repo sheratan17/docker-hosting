@@ -25,6 +25,7 @@ Docker + Wordpress + Let's Encrypt + Disk, CPU dan RAM Quota
 22. Edit visudo, allow apache
 23. Update php exec time ke 600
 24. Update apache directory index tambahkan index.php
+25. Tambah ProxyTimeout 600 di httpd.conf
 
 ##Setup server nginx reverse
 1. Install Almalinux
