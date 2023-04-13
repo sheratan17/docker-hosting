@@ -55,13 +55,13 @@ Untuk login ke file.domain, gunakan admin:admin lalu ubah password nya melalui m
 	<label for="tipessl">SSL:</label>
 	<select name="tipessl" id="tipessl">
 		<option value="" selected disabled>Pilih tipe</option>
-		<option value="le">le</option>
-		<option value="mandiri">mandiri</option>
-		<option value="nossl">nossl</option>
+		<option value="le">Let's Encrypt</option>
+		<option value="mandiri">Punya SSL sendiri</option>
+		<option value="nossl">Tidak pakai SSL</option>
 	</select><br><br>
-	<label for="crt">SSL Mandiri. Input CRT</label><br>
+	<label for="crt">Punya SSL sendiri. Input CRT:</label><br>
 	<textarea name="crttext" id="crttext" required></textarea><br><br>
-	<label for="crt">SSL Mandiri. Input key</label><br>
+	<label for="crt">Punya SSL sendiri. Input key:</label><br>
         <textarea name="keytext" id="keytext" required></textarea><br>
   	<input type="submit" value="Submit">
 	</form>
@@ -69,6 +69,7 @@ Untuk login ke file.domain, gunakan admin:admin lalu ubah password nya melalui m
 <br>
 <hr>
 <h1>Hapus WP Docker</h1>
+PERINGATAN! Pastikan input domain sudah benar<br><br>
 	<form action="delete.php" method="POST">
     <label for="inputDomain">Domain:</label>
     <input type="text" id="inputDomain" name="inputDomain" required>
