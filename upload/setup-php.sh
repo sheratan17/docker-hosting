@@ -1,29 +1,5 @@
 #!/bin/bash
 export PATH="$PATH:/usr/sbin/"
-BLUE='\033[0;36m'
-NC='\033[0m' # No Color
-#echo
-#echo "-----------------------------------------------"
-#echo -e "| Buat ${BLUE}Docker untuk Wordpress${NC} berbasis domain |"
-#echo "------------------------------created by Andi--"
-#echo
-#read -p "Masukkan nama domain: " path
-#echo
-#echo "Paket yang tersedia:"
-#echo "1. WP1 (1 Core, 1GB RAM, 1GB SSD)"
-#echo "2. WP2 (2 Core, 2GB RAM, 2GB SSD)"
-#echo
-#read -p "Pilih Paket (1/2): " choice
-
-#if [ $# -ne 3 ]; then
-#	echo
-#    	echo "Input: $0 <path> <p1|p2>"
-#	echo
-#	echo "Dimana path adalah domain dan paket adalah p1 atau p2"
-#	echo
-#	echo "Contoh: /2setup.sh qwords.com p1"
-#    	exit 1
-#fi
 
 path=$1
 paket=$2
@@ -53,8 +29,6 @@ echo "Membuat user selesai"
 sudo cp /home/template/docker-compose.yml /home/$path/
 
 # 5. generate a random password
-#passwd_user=$(openssl rand -base64 12)
-#echo "${path}:${passwd_user}" | chpasswd
 db_root_password=$(openssl rand -base64 9 | tr -dc 'a-zA-Z0-9!^()_' | head -c12)
 db_user=$(openssl rand -base64 9 | tr -dc 'a-zA-Z0-9!^()_' | head -c12)
 db_password=$(openssl rand -base64 9 | tr -dc 'a-zA-Z0-9!^()_' | head -c12)
@@ -74,22 +48,6 @@ echo "Membuat random password selesai"
 sudo sed -i "s/_userdomain/$path/g" /home/$path/docker-compose.yml
 sudo sed -i "s/_userid/$user_id/g" /home/$path/docker-compose.yml
 sudo sed -i "s/_groupid/$group_id/g" /home/$path/docker-compose.yml
-
-# 8. Case choice
-#case $choice in
-#    1)
-#	$wp1
-#	sed -i "s/_memlimit/1G/g" /home/$path/docker-compose.yml
-#	sed -i "s/_cpulimit/1.0/g" /home/$path/docker-compose.yml
-#	setquota -u $path 0 1024000 0 0 -a /home
-#        ;;
-#    2) $wp2
-#	sed -i "s/_memlimit/2G/g" /home/$path/docker-compose.yml
-#	sed -i "s/_cpulimit/2.0/g" /home/$path/docker-compose.yml
-#	setquota -u $path 0 2048000 0 0 -a /home
-#	;;
-#    *) echo "Invalid option" ;;
-#esac
 
 if [ "$paket" == "p1" ]; then
 	sudo sed -i "s/_memlimit/1G/g" /home/$path/docker-compose.yml
@@ -140,7 +98,7 @@ echo
 echo "Catatan:"
 echo "Gunakan username: root dan password root MySQL untuk login ke phpMyAdmin"
 sudo sh -c echo '"Password root MySQL: ${db_root_password}" >> /home/'$path'/info.txt'
-
+echo "Username dan password root MySQL bisa di cek di /home/namadomain/info.txt"
 
 # buat reverse proxy
 echo "Buat reverse proxy"
@@ -148,22 +106,17 @@ user="root"
 server="103.102.153.32"
 
 # Set the text block to write to the file
-
-#Use SSH to log in to the remote server and write the text block to the file
-#sudo ssh "$user@$server" "cp /etc/nginx/conf.d/template.conf.inc /etc/nginx/conf.d/$path.conf"
-#sudo ssh "$user@$server" "sed -i "s/_domain/$path/g" /etc/nginx/conf.d/$path.conf"
-#sudo ssh "$user@$server" "sed -i "s/_random80/$number80/g" /etc/nginx/conf.d/$path.conf"
-#sudo ssh "$user@$server" "sed -i "s/_random81/$number81/g" /etc/nginx/conf.d/$path.conf"
-#sudo ssh "$user@$server" "sed -i "s/_random82/$number82/g" /etc/nginx/conf.d/$path.conf"
+# Use SSH to log in to the remote server and write the text block to the file
 
 if [ "$ssl" == "le" ]; then
-        sudo ssh -t "$user@$server" "certbot --nginx --agree-tos --redirect --staging --hsts --staple-ocsp --must-staple --reinstall --email andi.triyadi@qwords.co.id -d $path -d www.$path -d file.$path -d www.file.$path -d pma.$path -d www.$path && systemctl restart nginx" 
+	sudo ssh "$user@$server" "cp /etc/nginx/conf.d/template.conf.inc /etc/nginx/conf.d/$path.conf && sed -i "s/_domain/$path/g" /etc/nginx/conf.d/$path.conf && sed -i "s/_random80/$number80/g" /etc/nginx/conf.d/$path.conf && sed -i "s/_random81/$number81/g" /etc/nginx/conf.d/$path.conf && sed -i "s/_random82/$number82/g" /etc/nginx/conf.d/$path.conf && exit"
+        sudo ssh "$user@$server" "certbot --nginx --agree-tos --redirect --staging --hsts --staple-ocsp --must-staple --reinstall --email andi.triyadi@qwords.co.id -d $path -d www.$path -d file.$path -d www.file.$path -d pma.$path -d www.$path && systemctl restart nginx" 
 elif [ "$ssl" == "mandiri" ]; then
 	sudo ssh "$user@$server" "mkdir /home/$path && exit"
 	sudo scp /var/www/html/$path-crt.crt ${user}@${server}:/home/$path || exit 1
 	sudo scp /var/www/html/$path-key.key ${user}@${server}:/home/$path || exit 1
-	sudo rm -f /var/www/html/$path-crt.crt
-	sudo rm -f /var/www/html/$path-key.key
+	#sudo rm -f /var/www/html/$path-crt.crt
+	#sudo rm -f /var/www/html/$path-key.key
         sudo openssl dhparam -out /home/$path/ssl-dhparams.pem 2048
         sudo scp /home/$path/ssl-dhparams.pem ${user}@${server}:/home/$path || exit 1
 	sudo ssh "$user@$server" "cp /etc/nginx/conf.d/template-mandiri.conf.inc /etc/nginx/conf.d/$path.conf && exit"
@@ -175,7 +128,6 @@ else
 	sudo ssh "$user@$server" "sed -i "s/_domain/$path/g" /etc/nginx/conf.d/$path.conf && sed -i "s/_random80/$number80/g" /etc/nginx/conf.d/$path.conf && sed -i "s/_random81/$number81/g" /etc/nginx/conf.d/$path.conf && sed -i "s/_random82/$number82/g" /etc/nginx/conf.d/$path.conf && exit"
 	sudo ssh "$user@$server" "systemctl restart nginx && exit"
 fi
-
-#sudo systemctl restart php-fpm
-#sudo systemctl restart httpd
+sudo rm -f /var/www/html/$path-crt.crt
+sudo rm -f /var/www/html/$path-key.key
 echo "Selesai. Docker aktif"
