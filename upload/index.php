@@ -38,6 +38,12 @@
 
 <body>
 <h1>Buat WP Docker baru</h1>
+Pastikan DNS: <br>
+- domain, www.domain<br>
+- pma.domain, www.pma.domain<br>
+- file.domain, www.file.domain<br><br>
+Mengarah ke IP: 103.102.153.32<br><br>
+Untuk login ke file.domain, gunakan admin:admin lalu ubah password nya melalui menu "Settings"<br><br>
     <form action="create.php" method="POST">
         <label for="domain">Domain:</label>
         <input type="text" name="domain" id="domain" required><br><br>
@@ -61,6 +67,7 @@
 	</form>
 <br>
 <br>
+<hr>
 <h1>Hapus WP Docker</h1>
 	<form action="delete.php" method="POST">
     <label for="inputDomain">Domain:</label>
