@@ -42,3 +42,4 @@ Docker + Wordpress + Let's Encrypt + Disk, CPU dan RAM Quota
 3. API untuk update paket
 4. `curl --header "Content-Type:application/json" --request POST --data '{"argument1": "namadomain", "argument2": "p1/p2", "argument3": "le/mandiri/nossl"}' http://docker.fastcloud.id/api-create.php`
 5. `curl --header "Content-Type:application/json" --request POST --data '{"argument1": "namadomain"}' http://docker.fastcloud.id/api-delete.php'`
+6. `curl --header "Content-Type:application/json" --request POST --data '{"argument1": "namadomain", "argument2": "p1/p2"}' http://docker.fastcloud.id/api-changepkg.php`
