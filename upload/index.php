@@ -44,6 +44,7 @@ Pastikan DNS: <br>
 - file.domain, www.file.domain<br><br>
 Mengarah ke IP: 103.102.153.32<br><br>
 Untuk login ke file.domain, gunakan admin:admin lalu ubah password nya melalui menu "Settings"<br><br>
+Apabila punya SSL sendiri, pastikan SSL nya wildcard atau memiliki hostname pma.domain dan file.domain di SSL nya.<br><br>
     <form action="create.php" method="POST">
         <label for="domain">Domain:</label>
         <input type="text" name="domain" id="domain" required><br><br>
