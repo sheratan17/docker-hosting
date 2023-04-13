@@ -39,3 +39,4 @@ Docker + Wordpress + Let's Encrypt + Disk, CPU dan RAM Quota
 ## Pengembangan
 1. Script untuk update paket
 2. Script untuk update ssl dari le ke mandiri atau sebaliknya
+`curl --header "Content-Type: application/json" request POST --data '{"argument1": "asd", "argument2": "p1", "argument3": "nossl"}' http://docker.fastcloud.id/api.php`
