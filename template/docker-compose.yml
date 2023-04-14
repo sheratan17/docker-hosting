@@ -70,6 +70,7 @@ services:
     container_name: $WP_DOMAIN_pma
     environment:
        - PMA_HOST=db
+       - UPLOAD_LIMIT=100M
     ports:
       - "10.89.1.2:_random82:80"
     networks:
