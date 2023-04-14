@@ -126,8 +126,8 @@ elif [ "$ssl" == "mandiri" ]; then
 	sudo scp /var/www/html/$path-key.key ${user}@${server}:/home/$path || exit 1
 	#sudo rm -f /var/www/html/$path-crt.crt
 	#sudo rm -f /var/www/html/$path-key.key
-        sudo openssl dhparam -out /home/$path/ssl-dhparams.pem 2048
-        sudo scp /home/$path/ssl-dhparams.pem ${user}@${server}:/home/$path || exit 1
+	sudo openssl dhparam -out /home/$path/ssl-dhparams.pem 2048
+	sudo scp /home/$path/ssl-dhparams.pem ${user}@${server}:/home/$path || exit 1
 	sudo ssh "$user@$server" "cp /etc/nginx/conf.d/template-mandiri.conf.inc /etc/nginx/conf.d/$path.conf && exit"
 	sudo ssh "$user@$server" "sed -i "s/_domain/$path/g" /etc/nginx/conf.d/$path.conf && sed -i "s/_random80/$number80/g" /etc/nginx/conf.d/$path.conf && sed -i "s/_random81/$number81/g" /etc/nginx/conf.d/$path.conf && sed -i "s/_random82/$number82/g" /etc/nginx/conf.d/$path.conf && exit"
 	sudo ssh "$user@$server" "systemctl restart nginx && exit"
