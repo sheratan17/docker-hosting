@@ -55,15 +55,14 @@ Apabila punya SSL sendiri, pastikan SSL nya wildcard atau memiliki hostname pma.
         </select><br><br>
 	<label for="tipessl">SSL:</label>
 	<select name="tipessl" id="tipessl">
-		<option value="" selected disabled>Pilih tipe</option>
-		<option value="le">Let's Encrypt</option>
 		<option value="mandiri">Punya SSL sendiri</option>
+		<option value="le">Let's Encrypt</option>
 		<option value="nossl">Tidak pakai SSL</option>
 	</select><br><br>
 	<label for="crt">Punya SSL sendiri. Input CRT:</label><br>
-	<textarea name="crttext" id="crttext" required></textarea><br><br>
+	<textarea name="crttext" id="crttext" required disabled></textarea><br><br>
 	<label for="crt">Punya SSL sendiri. Input key:</label><br>
-        <textarea name="keytext" id="keytext" required></textarea><br>
+        <textarea name="keytext" id="keytext" required disabled></textarea><br>
   	<input type="submit" value="Submit">
 	</form>
 <br>
