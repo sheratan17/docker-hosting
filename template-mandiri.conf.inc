@@ -26,7 +26,7 @@ server {
     ssl_certificate /home/_domain/_domain-crt.crt; 
     ssl_certificate_key /home/_domain/_domain-key.key; 
     include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
-    ssl_dhparam /home/_domain/ssl-dhparams.pem;
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
 
 
 
