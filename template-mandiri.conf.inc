@@ -23,8 +23,8 @@ server {
 	}
 
     listen 443 ssl http2; # managed by Certbot
-    ssl_certificate /home/_domain/_domain-crt.crt; 
-    ssl_certificate_key /home/_domain/_domain-key.key; 
+    ssl_certificate /home/_domain/_domain.crt; 
+    ssl_certificate_key /home/_domain/_domain.key; 
     include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
     ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
 
@@ -66,10 +66,10 @@ server {
         }
 
     listen 443 ssl http2; # managed by Certbot
-    ssl_certificate /home/_domain/_domain-crt.crt;
-    ssl_certificate_key /home/_domain/_domain-key.key;
+    ssl_certificate /home/_domain/_domain.crt;
+    ssl_certificate_key /home/_domain/_domain.key;
     include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
-    ssl_dhparam /home/_domain/ssl-dhparams.pem;
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
 
 
 
@@ -109,10 +109,10 @@ server {
         }
 
     listen 443 ssl http2; # managed by Certbot
-    ssl_certificate /home/_domain/_domain-crt.crt;
-    ssl_certificate_key /home/_domain/_domain-key.key;
+    ssl_certificate /home/_domain/_domain.crt;
+    ssl_certificate_key /home/_domain/_domain.key;
     include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
-    ssl_dhparam /home/_domain/ssl-dhparams.pem;
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
 
 
     add_header Strict-Transport-Security "max-age=31536000" always; # managed by Certbot
