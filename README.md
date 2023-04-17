@@ -20,8 +20,8 @@ Docker + Wordpress + Let's Encrypt + Disk, CPU dan RAM Quota
 17. Buat `ssh-keygen`
 18. `ssh-copy-id` ke server nginx reverse
 19. Matikan selinux
-20. Add apache ke grup wheel
-21. Add apache ke grup docker
+20. Add apache ke grup wheel `usermod -a -G wheel apache`
+21. Add apache ke grup docker `usermod -a -G docker apache`
 22. Edit visudo, allow apache
 23. Update php exec time ke 600
 24. Update apache directory index tambahkan index.php
