@@ -206,7 +206,7 @@ elif [ "$ssl" == "mandiri" ]; then
 	sudo ssh "$user@$server" "sed -i "s/_domain/$path/g" /etc/nginx/conf.d/$path.conf && sed -i "s/_random80/$number80/g" /etc/nginx/conf.d/$path.conf && sed -i "s/_random81/$number81/g" /etc/nginx/conf.d/$path.conf && sed -i "s/_random82/$number82/g" /etc/nginx/conf.d/$path.conf && exit"
 	sudo ssh "$user@$server" "systemctl restart nginx && exit"
 	echo "$path sudah terpasang SSL Mandiri (SSL Sendiri)"
-else
+elif [ "$ssl" == "nossl" ]; then
 	sudo sh -c echo '"no ssl" >> /home/'$path'/info.txt'
 	sudo ssh "$user@$server" "cp /etc/nginx/conf.d/template.conf.inc /etc/nginx/conf.d/$path.conf && exit"
 	sudo ssh "$user@$server" "sed -i "s/_domain/$path/g" /etc/nginx/conf.d/$path.conf && sed -i "s/_random80/$number80/g" /etc/nginx/conf.d/$path.conf && sed -i "s/_random81/$number81/g" /etc/nginx/conf.d/$path.conf && sed -i "s/_random82/$number82/g" /etc/nginx/conf.d/$path.conf && exit"
