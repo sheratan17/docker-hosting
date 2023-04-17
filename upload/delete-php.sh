@@ -1,21 +1,38 @@
 #!/bin/bash
-path=$1
 
+domain=""
 
-if [ -z "$1" ]; then
-  echo "Error: masukkan domain"
-  exit 1
+# Loop through all arguments
+while [[ $# -gt 0 ]]
+do
+    key="$1"
+    case $key in
+        --d=*)
+        domain="${key#*=}"
+        shift
+        ;;
+        *)
+        echo "Error: Unknown option '$key'"
+        exit 1
+        ;;
+    esac
+done
+
+# Check if domain is empty
+if [[ -z $domain ]]; then
+    echo "Error: --d option is required."
+    exit 1
 fi
 
 
-PREFIX=$(echo "${path}" | sed 's/\.//g')
+PREFIX=$(echo "${domain}" | sed 's/\.//g')
 
 docker container stop $(docker container ls -q --filter name=${PREFIX}_*)
 docker container rm $(docker ps -a -q --filter name=${PREFIX}_*)
 docker network rm $(docker network ls -q --filter name=${PREFIX}_*)
 docker volume prune -f
-sudo userdel -r $path
-#sudo rm -rf /var/spool/mail/$path
+sudo userdel -r $domain
+#sudo rm -rf /var/spool/mail/$domain
 sudo quotacheck -ugmf /home
 echo "Docker dan user dihapus"
 
@@ -23,8 +40,8 @@ echo "Hapus reverse proxy..."
 user="root"
 server="103.102.153.56"
 
-sudo ssh "$user@$server" "rm /etc/nginx/conf.d/$path.conf"
-sudo ssh "$user@$server" "rm -rf /home/$path/"
+sudo ssh "$user@$server" "rm /etc/nginx/conf.d/$domain.conf"
+sudo ssh "$user@$server" "rm -rf /home/$domain/"
 sudo ssh "$user@$server" "systemctl restart nginx"
 echo "Reverse proxy dihapus"
 systemctl restart php-fpm
