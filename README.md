@@ -13,8 +13,8 @@ Docker + Wordpress + Let's Encrypt + Disk, CPU dan RAM Quota
 10. Install docker: `dnf config-manager --add-repo=https://download.docker.com/linux/centos/docker-ce.repo && dnf install docker-ce docker-ce-cli containerd.io docker-compose-plugin`
 11. Aktifkan docker: `systemctl enable docker systemctl start docker`
 12. Copy git punya andi: https://github.com/sheratan17/docker-wp
-13. Pindahkan folder "template' ke `/home`
-14. Pindahkan semua file di docker-wp/upload ke `/var/www/html`
+13. Pindahkan folder `template` ke `/home`
+14. Pindahkan semua file di `docker-wp/upload` ke `/var/www/html`, file .sh nya di chmod +x
 15. Pastikan ip private sudah aktif, catat ip private nya
 16. Sesuaikan ip docker-compose.yml dengan ip private yang aktif
 17. Buat `ssh-keygen`
