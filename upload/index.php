@@ -68,6 +68,22 @@ Apabila punya SSL sendiri, pastikan SSL nya wildcard atau memiliki hostname pma.
 <br>
 <br>
 <hr>
+<h1>Update paket WP Docker</h1>
+
+<form action="change.php" method="POST">
+    <label for="domain">Domain:</label>
+    <input type="text" id="domain" name="domain" required>
+    <br><br>
+<label for="package">Pilih paket yang akan digunakan:</label>
+<select name="package" id="package">
+            <option value="p1">p1</option>
+            <option value="p2">p2</option>
+</select><br><br>
+    <button type="submit" id="button-change" name="button-change">Submit</button>
+  </form>
+<br>
+<br>
+<hr>
 <h1>Hapus WP Docker</h1>
 PERINGATAN! Pastikan input domain sudah benar<br><br>
 	<form action="delete.php" method="POST">
@@ -79,4 +95,10 @@ PERINGATAN! Pastikan input domain sudah benar<br><br>
     <br><br>
     <button type="submit" id="submitBtn" name="submitButton" disabled>Submit</button>
   </form>
+
+
+
+
+
+
 </html>
