@@ -7,6 +7,7 @@
 
 	$crtfile = "{$domain}.crt";
 	$keyfile = "{$domain}.key";
+
   	file_put_contents($crtfile, $crttext);
 	file_put_contents($keyfile, $keytext);
 

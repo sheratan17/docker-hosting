@@ -23,6 +23,7 @@ echo "Hapus reverse proxy"
 user="root"
 server="103.102.153.56"
 
+
 sudo ssh "$user@$server" "rm /etc/nginx/conf.d/$path.conf"
 sudo ssh "$user@$server" "rm -rf /home/$path/"
 sudo ssh "$user@$server" "systemctl restart nginx"

@@ -2,20 +2,23 @@ version: '3.8'
 
 services:
   db:
-    image: mysql:8.0
+    image: mysql:8.0.32
     container_name: $WP_DOMAIN_db
     restart: always
     env_file: .env
     environment:
       - MYSQL_DATABASE=wordpress
+      - MYSQL_ROOT_PASSWORD=$MYSQL_ROOT_PASSWORD
     volumes: 
-      - /home/qw-_userdomain/dbdata:/var/lib/mysql
+      - /home/_userdomain/dbdata:/var/lib/mysql
     command: '--default-authentication-plugin=mysql_native_password'
     networks:
       backend:
     user: "_userid:_groupid"
     mem_limit: _memlimit
     cpus: _cpulimit
+ #   labels:
+ #     io.portainer.accesscontrol.teams: admin
   wordpress:
     depends_on: 
       - db
@@ -31,12 +34,14 @@ services:
     ports:
       - "10.89.1.2:_random80:80"
     volumes:
-      - /home/qw-_userdomain/wpdata:/var/www/html
+      - /home/_userdomain/wpdata:/var/www/html
     networks:
       backend:
     user: "_userid:_groupid"
     mem_limit: _memlimit
     cpus: _cpulimit
+#    labels:
+#      io.portainer.accesscontrol.teams: admin
   filebrowser:
     depends_on:
       - wordpress
@@ -48,12 +53,38 @@ services:
     ports:
       - "10.89.1.2:_random81:80"
     volumes:
-      - /home/qw-_userdomain/wpdata:/srv
+      - /home/_userdomain/wpdata:/srv
       - ./config:/config
+    mem_limit: _memlimit
+    cpus: _cpulimit
+#    environment:
+#      - PUID=_userid
+#      - PGID=_groupid
+#    labels:
+#      io.portainer.accesscontrol.teams: admin
+  phpmyadmin:
+    depends_on:
+      - db
+    restart: always
+    image: phpmyadmin/phpmyadmin
+    container_name: $WP_DOMAIN_pma
+    environment:
+       - PMA_HOST=db
+       - UPLOAD_LIMIT=100M
+    ports:
+      - "10.89.1.2:_random82:80"
+    networks:
+      backend:
+    mem_limit: _memlimit
+    cpus: _cpulimit
+#    user: "_userid:_groupid"
+#    labels:
+#      io.portainer.accesscontrol.teams: admin
 
 volumes:
   wordpress:
   dbdata:
+  pma:
 
 networks:
   backend:
