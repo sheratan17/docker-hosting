@@ -27,7 +27,7 @@ Docker + Wordpress + Let's Encrypt + Disk, CPU dan RAM Quota
 24. Update apache directory index tambahkan index.php
 25. Tambah ProxyTimeout 600 di httpd.conf
 
-##Setup server nginx reverse
+# Setup server nginx reverse
 1. Install Almalinux
 2. Install nginx
 3. Install epel-release
@@ -36,10 +36,9 @@ Docker + Wordpress + Let's Encrypt + Disk, CPU dan RAM Quota
 6. Restart nginx
 
 
-## Pengembangan
+# Pengembangan
 1. Tambah GUI untuk update paket
 2. Script untuk update ssl dari le ke mandiri atau sebaliknya
 
-4. `curl --header "Content-Type:application/json" --request POST --data '{"argument1": "namadomain", "argument2": "p1/p2", "argument3": "le/mandiri/nossl"}' http://docker.fastcloud.id/api-create.php`
-5. `curl --header "Content-Type:application/json" --request POST --data '{"argument1": "namadomain"}' http://docker.fastcloud.id/api-delete.php'`
-6. `curl --header "Content-Type:application/json" --request POST --data '{"argument1": "namadomain", "argument2": "p1/p2"}' http://docker.fastcloud.id/api-changepkg.php`
+# curl JSON request example
+1. `curl -X POST -H 'Content-Type: application/json' -d '{"--d": "fikara.my.id", "--p": "p1", "--ssl": "mandiri", "--crtpath": "/var/www/html/fikara.my.id.crt", "--keypath": "/var/www/html/fikara.my.id.key"}' http://docker.fastcloud.id/api-create.php`
