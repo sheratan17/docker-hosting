@@ -13,10 +13,22 @@ echo "1. P1 (1 Core, 1GB RAM, 10GB SSD)"
 echo "2. P2 (2 Core, 2GB RAM, 20GB SSD)"
 echo
 
-#if [ $# -ne 3 ]; then
-#  echo "Error. Input tidak lengkap"
-#  exit 1
-#fi
+function show_help {
+    echo
+    echo "Perintah: ./setup-php.sh --d=<domain> --p=<package> --ssl=<ssl> --crtpath=<absolute path for crt> --keypath=<absolute path for key> [--h]"
+    echo
+    echo "Penjelasan:"
+    echo "  --d=<domain>            Nama domain"
+    echo "  --p=<package>           Paket WP"
+    echo "  --ssl=<ssl>             Status SSL, Gunakan "le" untuk Let's Encrypt, "mandiri" jika ada SSL sendiri, atau "nossl" jika tanpa SSL"
+    echo "                          --crtpath dan --keypath harus ada jika pakai --ssl=mandiri"
+    echo "  --crtpath=<alamat crt>  --crtpath dan --keypath haruslah alamat absolute, contoh /var/www/html/domain.crt"
+    echo "  --keypath=<alamat key>  dan namanya harus domain.crt, contoh qwords.co.id.crt | qwords.co.id.key"
+    echo "                          Untuk saat ini alamat yang diterima baru /var/www/html/domain.crt dan /var/www/html/key.crt"
+    echo "  --h                     Tampilkan menu ini"
+    echo
+    exit 1
+}
 
 #path=$1
 #paket=$2
@@ -43,7 +55,7 @@ do
         --p=*)
         paket="${key#*=}"
         if [[ $paket != "p1" && $paket != "p2" ]]; then
-            echo "Error: Invalid value for --p option. Only p1 or p2 are allowed."
+            echo "Error: Input salah untuk --p. Gunakan p1 atau p2."
             exit 1
         fi
         shift
@@ -52,7 +64,7 @@ do
         ssl="${key#*=}"
         if [[ $ssl == "mandiri" ]]; then
             if [[ $# -lt 3 || "${2:0:2}" != "--" || "${3:0:2}" != "--" ]]; then
-                echo "Error: --keypath and --crtpath are required when --ssl=mandiri."
+                echo "Error: --keypath dan --crtpath dibutuhkan saat --ssl=mandiri."
                 exit 1
             fi
             keypath="${2#*=}"
@@ -69,16 +81,22 @@ do
         crtpath="${key#*=}"
         shift
         ;;
+        --h)
+        show_help
+        shift
+        ;;
         *)
-        echo "Error: Unknown option '$key'"
+        echo "Error: Input tidak dikenali '$key'"
         exit 1
+	show_help
         ;;
     esac
 done
 
 # Check if required options are present
 if [[ -z $path || -z $paket || -z $ssl ]]; then
-    echo "Error: Options --d, --p, and --ssl are required."
+    echo "Error: --d, --p, dan --ssl harus ada dan lengkap."
+    show_help
     exit 1
 fi
 

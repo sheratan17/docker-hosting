@@ -13,20 +13,30 @@ do
         paket="${key#*=}"
         shift
         ;;
+        --h)
+	echo
+        echo "Error: --d dan --p tidak boleh kosong"
+	echo "Contoh: ./changepkg-php.sh --d=domain.com --p=p1"
+	echo
+        shift
+        ;;
         *)
-        echo "Invalid argument: $1"
+        echo
+        echo "Error: --d dan --p tidak boleh kosong"
+        echo "Contoh: ./changepkg-php.sh --d=domain.com --p=p1"
+        echo
         exit 1
         ;;
     esac
 done
 
 if [ -z "$path" ]; then
-    echo "Error: --d argument is required"
+    echo "Error: --d tidak boleh kosong"
     exit 1
 fi
 
 if [ -z "$paket" ]; then
-    echo "Error: --p argument is required"
+    echo "Error: --p tidak boleh kosong"
     exit 1
 fi
 

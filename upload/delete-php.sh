@@ -12,7 +12,10 @@ do
         shift
         ;;
         *)
-        echo "Error: Unknown option '$key'"
+	echo
+        echo "Error: Input --d tidak boleh kosong '$key'"
+	echo "Contoh: ./delete-php.sh --d=domain.com"
+	echo
         exit 1
         ;;
     esac
@@ -20,7 +23,10 @@ done
 
 # Check if domain is empty
 if [[ -z $domain ]]; then
-    echo "Error: --d option is required."
+    echo
+    echo "Error: --d tidak boleh kosong"
+    echo "Contoh: ./delete-php.sh --d=domain.com"
+    echo 
     exit 1
 fi
 
