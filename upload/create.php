@@ -8,11 +8,18 @@
 	$crtfile = "{$domain}.crt";
 	$keyfile = "{$domain}.key";
 
+	$filecrt_path = "/var/www/html/{$domain}.crt";
+	$filekey_path = "/var/www/html/{$domain}.key";
+
   	file_put_contents($crtfile, $crttext);
 	file_put_contents($keyfile, $keytext);
 
-	$command = "/var/www/html/setup-php.sh $domain $package $tipessl 2>&1";
-    	// Execute the command and display output
-    	$output = shell_exec($command); echo "<pre>$output</pre>";
+
+	if (file_exists($filecrt_path) && file_exists($filekey_path)) {
+		$command = shell_exec("sh /var/www/html/setup-php.sh --d=$domain --p=$package --ssl=mandiri --crtpath=$filecrt_path --keypath=$filekey_path 2>&1");
+	} else {
+		$command = shell_exec("sh /var/www/html/setup-php.sh --d=$domain --p=$package --ssl=$tipessl 2>&1");
+	}
 }
+echo "<pre>$command</pre>";
 ?>

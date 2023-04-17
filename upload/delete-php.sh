@@ -19,15 +19,14 @@ sudo userdel -r $path
 sudo quotacheck -ugmf /home
 echo "Docker dan user dihapus"
 
-echo "Hapus reverse proxy"
+echo "Hapus reverse proxy..."
 user="root"
 server="103.102.153.56"
-
 
 sudo ssh "$user@$server" "rm /etc/nginx/conf.d/$path.conf"
 sudo ssh "$user@$server" "rm -rf /home/$path/"
 sudo ssh "$user@$server" "systemctl restart nginx"
-echo "reverse proxy dihapus"
+echo "Reverse proxy dihapus"
 systemctl restart php-fpm
 systemctl restart httpd
 exit 1

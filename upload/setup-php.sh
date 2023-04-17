@@ -1,16 +1,90 @@
 #!/bin/bash
 export PATH="$PATH:/usr/sbin/"
 
-if [ $# -ne 3 ]; then
-  echo "Error. Input tidak lengkap"
-  exit 1
+BLUE='\033[0;36m'
+NC='\033[0m' # No Color
+echo
+echo "-----------------------------------------------"
+echo "| Buat Docker untuk Wordpress berbasis domain |"
+echo "------------------------------created by Andi--"
+echo
+echo "Paket yang tersedia:"
+echo "1. P1 (1 Core, 1GB RAM, 10GB SSD)"
+echo "2. P2 (2 Core, 2GB RAM, 20GB SSD)"
+echo
+
+#if [ $# -ne 3 ]; then
+#  echo "Error. Input tidak lengkap"
+#  exit 1
+#fi
+
+#path=$1
+#paket=$2
+#ssl=$3
+
+
+# Initialize variables
+
+path=""
+paket=""
+ssl=""
+keypath=""
+crtpath=""
+
+# Loop through all arguments
+while [[ $# -gt 0 ]]
+do
+    key="$1"
+    case $key in
+        --d=*)
+        path="${key#*=}"
+        shift
+        ;;
+        --p=*)
+        paket="${key#*=}"
+        if [[ $paket != "p1" && $paket != "p2" ]]; then
+            echo "Error: Invalid value for --p option. Only p1 or p2 are allowed."
+            exit 1
+        fi
+        shift
+        ;;
+        --ssl=*)
+        ssl="${key#*=}"
+        if [[ $ssl == "mandiri" ]]; then
+            if [[ $# -lt 3 || "${2:0:2}" != "--" || "${3:0:2}" != "--" ]]; then
+                echo "Error: --keypath and --crtpath are required when --ssl=mandiri."
+                exit 1
+            fi
+            keypath="${2#*=}"
+            crtpath="${3#*=}"
+            shift 2
+        fi
+        shift
+        ;;
+        --keypath=*)
+        keypath="${key#*=}"
+        shift
+        ;;
+        --crtpath=*)
+        crtpath="${key#*=}"
+        shift
+        ;;
+        *)
+        echo "Error: Unknown option '$key'"
+        exit 1
+        ;;
+    esac
+done
+
+# Check if required options are present
+if [[ -z $path || -z $paket || -z $ssl ]]; then
+    echo "Error: Options --d, --p, and --ssl are required."
+    exit 1
 fi
 
-path=$1
-paket=$2
-ssl=$3
-
-echo "Input domain: $path, paket: $paket, ssl: $ssl"
+echo "Input domain: $path, | paket: $paket, | ssl: $ssl"
+echo
+echo "Input crt: $crtpath | input key: $keypath"
 
 # 1. setting path & add user
 pathtanpatitik=$(echo "${path}" | sed 's/\.//g')
@@ -111,31 +185,34 @@ echo "Buat reverse proxy"
 user="root"
 server="103.102.153.56"
 
-
 # Set the text block to write to the file
 # Use SSH to log in to the remote server and write the text block to the file
 
 if [ "$ssl" == "le" ]; then
 	sudo ssh "$user@$server" "cp /etc/nginx/conf.d/template.conf.inc /etc/nginx/conf.d/$path.conf && sed -i "s/_domain/$path/g" /etc/nginx/conf.d/$path.conf && sed -i "s/_random80/$number80/g" /etc/nginx/conf.d/$path.conf && sed -i "s/_random81/$number81/g" /etc/nginx/conf.d/$path.conf && sed -i "s/_random82/$number82/g" /etc/nginx/conf.d/$path.conf && exit"
-        sudo ssh "$user@$server" "certbot --nginx --agree-tos --redirect --hsts --staple-ocsp --must-staple --staging --reinstall --email andi.triyadi@qwords.co.id -d $path -d www.$path -d file.$path -d www.file.$path -d pma.$path -d www.$path && systemctl restart nginx" 
- 	#sudo ssh "$user@$server" "certbot --nginx --agree-tos --redirect --hsts --staple-ocsp --must-staple --force-renewal --email andi.triyadi@qwords.co.id -d $path -d www.$path -d file.$path -d www.file.$path -d pma.$path -d www.$path && systemctl restart nginx"
+        #sudo ssh "$user@$server" "certbot --nginx --agree-tos --redirect --hsts --staple-ocsp --must-staple --force-renewal --email andi.triyadi@qwords.co.id -d $path -d www.$path -d file.$path -d www.file.$path -d pma.$path -d www.$path && systemctl restart nginx"
+	sudo ssh "$user@$server" "certbot --nginx --agree-tos --redirect --hsts --staple-ocsp --must-staple --staging --reinstall --email andi.triyadi@qwords.co.id -d $path -d www.$path -d file.$path -d www.file.$path -d pma.$path -d www.$path && systemctl restart nginx"
 	sudo ssh "$user@$server" "sed -i 's/listen 443 ssl;/listen 443 ssl http2;/g' /etc/nginx/conf.d/$path.conf && exit"
 	sudo ssh "$user@$server" "systemctl restart nginx && exit"
+	echo "$path sudah terpasang Let's Encrypt"
 elif [ "$ssl" == "mandiri" ]; then
+	echo "Membuat file config dan transfer key serta crt ke nginx reverse"
 	sudo ssh "$user@$server" "mkdir /home/$path && exit"
-	sudo scp /var/www/html/$path.crt ${user}@${server}:/home/$path || exit 1
-	sudo scp /var/www/html/$path.key ${user}@${server}:/home/$path || exit 1
-	sudo rm -f /var/www/html/$path.crt
-	sudo rm -f /var/www/html/$path.key
-	#sudo openssl dhparam -out /home/$path/ssl-dhparams.pem 2048
-	#sudo scp /home/$path/ssl-dhparams.pem ${user}@${server}:/home/$path || exit 1
-	sudo ssh "$user@$server" "cp /etc/nginx/conf.d/template-mandiri.conf.inc /etc/nginx/conf.d/$path.conf && exit"
+	sudo scp $crtpath ${user}@${server}:/home/$path || exit 1
+        sudo scp $keypath ${user}@${server}:/home/$path || exit 1
+	sudo rm -f $crtpath
+	sudo rm -f $keypath
+        sudo ssh "$user@$server" "cp /etc/nginx/conf.d/template-mandiri.conf.inc /etc/nginx/conf.d/$path.conf && exit"
 	sudo ssh "$user@$server" "sed -i "s/_domain/$path/g" /etc/nginx/conf.d/$path.conf && sed -i "s/_random80/$number80/g" /etc/nginx/conf.d/$path.conf && sed -i "s/_random81/$number81/g" /etc/nginx/conf.d/$path.conf && sed -i "s/_random82/$number82/g" /etc/nginx/conf.d/$path.conf && exit"
 	sudo ssh "$user@$server" "systemctl restart nginx && exit"
+	echo "$path sudah terpasang SSL Mandiri (SSL Sendiri)"
 else
 	sudo sh -c echo '"no ssl" >> /home/'$path'/info.txt'
 	sudo ssh "$user@$server" "cp /etc/nginx/conf.d/template.conf.inc /etc/nginx/conf.d/$path.conf && exit"
 	sudo ssh "$user@$server" "sed -i "s/_domain/$path/g" /etc/nginx/conf.d/$path.conf && sed -i "s/_random80/$number80/g" /etc/nginx/conf.d/$path.conf && sed -i "s/_random81/$number81/g" /etc/nginx/conf.d/$path.conf && sed -i "s/_random82/$number82/g" /etc/nginx/conf.d/$path.conf && exit"
 	sudo ssh "$user@$server" "systemctl restart nginx && exit"
+	sudo rm -f $crtpath.crt
+        sudo rm -f $keypath.key
+	echo "$path tidak menggunakan SSL"
 fi
 echo "Selesai. Docker aktif"
