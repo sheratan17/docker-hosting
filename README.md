@@ -41,7 +41,9 @@ Docker + Wordpress + Let's Encrypt + Disk, CPU dan RAM Quota
 2. Script untuk update ssl dari le ke mandiri atau sebaliknya
 
 # API
-1. curl JSON request create<br>
+1. curl JSON request create dengan SSL mandiri<br>
 `curl -X POST -H 'Content-Type: application/json' -d '{"--d": "fikara.my.id", "--p": "p1", "--ssl": "mandiri", "--crtpath": "/var/www/html/fikara.my.id.crt", "--keypath": "/var/www/html/fikara.my.id.key"}' http://docker.fastcloud.id/api-create.php`
+2. curl JSON request create dengan SSL Let's Encrypt<br> (ganti le dengan nossl kalau tidak mau pakai ssl)
+``curl -X POST -H 'Content-Type: application/json' -d '{"--d": "fikara.my.id", "--p": "p1", "--ssl": "le" http://docker.fastcloud.id/api-create.php`
 2. curl JSON request delete<br>
 `curl -X POST -H 'Content-Type: application/json' -d '{"--d": "fikara.my.id"}' http://docker.fastcloud.id/api-delete.php`
