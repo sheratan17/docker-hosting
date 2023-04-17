@@ -38,20 +38,20 @@
 
 <body>
 <h1>Buat WP Docker baru</h1>
-Pastikan DNS: <br>
+Pastikan DNS: <br><pre>
 - domain, www.domain<br>
 - pma.domain, www.pma.domain<br>
-- file.domain, www.file.domain<br><br>
-Mengarah ke IP: 103.102.153.56<br><br>
+- file.domain, www.file.domain</pre>
+Mengarah ke IP: <pre>103.102.153.56</pre>
 Untuk login ke file.domain, gunakan admin:admin lalu ubah password nya melalui menu "Settings"<br><br>
 Apabila punya SSL sendiri, pastikan SSL nya wildcard atau memiliki hostname pma.domain dan file.domain di SSL nya.<br><br>
     <form action="create.php" method="POST">
         <label for="domain">Domain:</label>
         <input type="text" name="domain" id="domain" required><br><br>
-        <label for="package">Package:</label>
+        <label for="package">Paket WP:</label>
         <select name="package" id="package">
-            <option value="p1">p1</option>
-            <option value="p2">p2</option>
+            <option value="p1">P1 (1 Core, 1 GB RAM, 10 GB SSD)</option>
+            <option value="p2">P2 (2 Core, 2 GB RAM, 20 GB SSD)</option>
         </select><br><br>
 	<label for="tipessl">SSL:</label>
 	<select name="tipessl" id="tipessl">
