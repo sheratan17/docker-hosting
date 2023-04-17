@@ -22,4 +22,5 @@
 	}
 }
 echo "<pre>$command</pre>";
+echo "<a href='http://docker.fastcloud.id'>Kembali</a>";
 ?>
