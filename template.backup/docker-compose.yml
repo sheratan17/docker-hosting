@@ -35,7 +35,7 @@ services:
       - "10.89.1.2:_random80:80"
     volumes:
       - /home/_userdomain/wpdata:/var/www/html
-      - /home/_userdomain/wordpress.ini:/usr/local/etc/php/conf.d/wordpress.ini
+      - ./wordpress.ini:/usr/local/etc/php/conf.d/wordpress.ini
     networks:
       backend:
     user: "_userid:_groupid"
@@ -71,6 +71,7 @@ services:
     container_name: $WP_DOMAIN_pma
     environment:
        - PMA_HOST=db
+       - UPLOAD_LIMIT=100M
     ports:
       - "10.89.1.2:_random82:80"
     networks:
