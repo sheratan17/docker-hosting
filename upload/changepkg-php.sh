@@ -31,12 +31,16 @@ do
 done
 
 if [ -z "$path" ]; then
+    echo
     echo "Error: --d tidak boleh kosong"
+    echo
     exit 1
 fi
 
 if [ -z "$paket" ]; then
+    echo
     echo "Error: --p tidak boleh kosong"
+    echo
     exit 1
 fi
 
