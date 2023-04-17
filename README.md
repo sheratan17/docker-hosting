@@ -40,5 +40,8 @@ Docker + Wordpress + Let's Encrypt + Disk, CPU dan RAM Quota
 1. Tambah GUI untuk update paket
 2. Script untuk update ssl dari le ke mandiri atau sebaliknya
 
-# curl JSON request example
-1. `curl -X POST -H 'Content-Type: application/json' -d '{"--d": "fikara.my.id", "--p": "p1", "--ssl": "mandiri", "--crtpath": "/var/www/html/fikara.my.id.crt", "--keypath": "/var/www/html/fikara.my.id.key"}' http://docker.fastcloud.id/api-create.php`
+# API
+1. curl JSON request create<br>
+`curl -X POST -H 'Content-Type: application/json' -d '{"--d": "fikara.my.id", "--p": "p1", "--ssl": "mandiri", "--crtpath": "/var/www/html/fikara.my.id.crt", "--keypath": "/var/www/html/fikara.my.id.key"}' http://docker.fastcloud.id/api-create.php`
+2. curl JSON request delete<br>
+`curl -X POST -H 'Content-Type: application/json' -d '{"--d": "fikara.my.id"}' http://docker.fastcloud.id/api-delete.php`
