@@ -45,5 +45,7 @@ Docker + Wordpress + Let's Encrypt + Disk, CPU dan RAM Quota
 `curl -X POST -H 'Content-Type: application/json' -d '{"--d": "fikara.my.id", "--p": "p1", "--ssl": "mandiri", "--crtpath": "/var/www/html/fikara.my.id.crt", "--keypath": "/var/www/html/fikara.my.id.key"}' http://docker.fastcloud.id/api-create.php`
 2. curl JSON request create dengan SSL Let's Encrypt (ganti le dengan nossl kalau tidak mau pakai ssl)<br>
 `curl -X POST -H 'Content-Type: application/json' -d '{"--d": "fikara.my.id", "--p": "p1", "--ssl": "le" http://docker.fastcloud.id/api-create.php`
-2. curl JSON request delete<br>
+3. curl JSON request delete<br>
 `curl -X POST -H 'Content-Type: application/json' -d '{"--d": "fikara.my.id"}' http://docker.fastcloud.id/api-delete.php`
+4. curl JSON request ganti paket<br>
+`curl -X POST -H 'Content-Type: application/json' -d '{"--d": "fikara.my.id", "--p": "p1"}' http://docker.fastcloud.id/api-changepkg.php`
