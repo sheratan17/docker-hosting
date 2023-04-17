@@ -37,8 +37,7 @@ Docker + Wordpress + Let's Encrypt + Disk, CPU dan RAM Quota
 
 
 # Pengembangan
-1. Tambah GUI untuk update paket
-2. Script untuk update ssl dari le ke mandiri atau sebaliknya
+1. Script untuk update ssl dari le ke mandiri atau sebaliknya
 
 # API
 1. curl JSON request create dengan SSL mandiri<br>
