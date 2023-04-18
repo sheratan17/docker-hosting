@@ -35,7 +35,7 @@ function show_help {
 #ssl=$3
 
 
-# Initialize variables
+# Deklarasi variabel
 
 path=""
 paket=""
@@ -43,7 +43,7 @@ ssl=""
 keypath=""
 crtpath=""
 
-# Loop through all arguments
+# Buat menu dan deteksi input
 while [[ $# -gt 0 ]]
 do
     key="$1"
@@ -93,7 +93,7 @@ do
     esac
 done
 
-# Check if required options are present
+# Cek input harus lengkap
 if [[ -z $path || -z $paket || -z $ssl ]]; then
     echo "Error: --d, --p, dan --ssl harus ada dan lengkap."
     show_help
@@ -104,35 +104,29 @@ echo "Input domain: $path, | paket: $paket, | ssl: $ssl"
 echo
 echo "Input crt: $crtpath | input key: $keypath"
 
-# 1. setting path & add user
+# Setting path & add user
 pathtanpatitik=$(echo "${path}" | sed 's/\.//g')
 sudo /usr/sbin/adduser -m $path
 
-# 2. set disk/quota
-#quotacheck -cugf /home
-
-# 3. create user folder
+# Buat folder
 sudo mkdir /home/$path/dbdata
 sudo mkdir /home/$path/wpdata
-#mkdir /home/$path/config
 user_id=$(id -u ${path})
 group_id=$(id -g ${path})
 sudo chown -R $user_id:$group_id /home/$path/dbdata
 sudo chown -R $user_id:$group_id /home/$path/wpdata
-#chown -R $user_id:$group_id /home/$path/config
 echo "Membuat user selesai"
 
-# 4. copy file compose from template
+# Copy file compose dari folder template
 sudo cp /home/template/docker-compose.yml /home/$path/
 sudo cp /home/template/wordpress.ini /home/$path/
 
-# 5. generate a random password
+# RNG FTW
 db_root_password=$(openssl rand -base64 9 | tr -dc 'a-zA-Z0-9!^()_' | head -c12)
 db_user=$(openssl rand -base64 9 | tr -dc 'a-zA-Z0-9!^()_' | head -c12)
 db_password=$(openssl rand -base64 9 | tr -dc 'a-zA-Z0-9!^()_' | head -c12)
 
-# 6. print MYSQL_ROOT_PASSWORD line with the generated password to .env file
-
+# Masukkan RNG ke .env
 sudo sh -c 'echo "MYSQL_ROOT_PASSWORD='$db_root_password'" >> /home/'$path'/.env'
 sudo sh -c 'echo "MYSQL_USER='$db_user'" >>/home/'$path'/.env'
 sudo sh -c 'echo "MYSQL_PASSWORD='$db_password'" >> /home/'$path'/.env'
@@ -142,7 +136,7 @@ sudo sh -c 'echo "WP_DOMAIN_filebrowser='${pathtanpatitik}_filebrowser'" >> /hom
 sudo sh -c 'echo "WP_DOMAIN_pma='${pathtanpatitik}_pma'" >> /home/'$path'/.env'
 echo "Membuat random password selesai"
 
-# 7. fix docker-compose.yml
+# Fix docker-compose.yml
 sudo sed -i "s/_userdomain/$path/g" /home/$path/docker-compose.yml
 sudo sed -i "s/_userid/$user_id/g" /home/$path/docker-compose.yml
 sudo sed -i "s/_groupid/$group_id/g" /home/$path/docker-compose.yml
@@ -162,7 +156,7 @@ else
 	sudo exit 1
 fi
 
-# 9. Fix port so it will generate random port in docker-compose.yml
+# Fix port di docker-compose.yml
 number80=$(shuf -i 1000-2000 -n 1)
 number81=$(shuf -i 2001-3000 -n 1)
 number82=$(shuf -i 3001-4000 -n 1)
@@ -171,15 +165,11 @@ sudo sed -i "s/_random81/$number81/g" /home/$path/docker-compose.yml
 sudo sed -i "s/_random82/$number82/g" /home/$path/docker-compose.yml
 echo "Setting docker compose selesai"
 
-# 10. Start docker, final version
-#sudo cd /home/$path/
+# Start docker, final version
 sudo docker compose -f /home/$path/docker-compose.yml up -d
 echo "Memulai kontainer"
 
-# bersih-bersih + fix
-#rm /home/$path/docker-compose.yml
-
-# update quota
+# update quota, tunggu 10 detik biar size nya ke update
 echo "Update Quota..."
 sleep 10s
 sudo quotacheck -ugmf /home
@@ -203,12 +193,11 @@ echo "Buat reverse proxy"
 user="root"
 server="103.102.153.56"
 
-# Set the text block to write to the file
-# Use SSH to log in to the remote server and write the text block to the file
-
+# SSL GAES
 if [ "$ssl" == "le" ]; then
 	sudo ssh "$user@$server" "cp /etc/nginx/conf.d/template.conf.inc /etc/nginx/conf.d/$path.conf && sed -i "s/_domain/$path/g" /etc/nginx/conf.d/$path.conf && sed -i "s/_random80/$number80/g" /etc/nginx/conf.d/$path.conf && sed -i "s/_random81/$number81/g" /etc/nginx/conf.d/$path.conf && sed -i "s/_random82/$number82/g" /etc/nginx/conf.d/$path.conf && exit"
-        #sudo ssh "$user@$server" "certbot --nginx --agree-tos --redirect --hsts --staple-ocsp --must-staple --force-renewal --email andi.triyadi@qwords.co.id -d $path -d www.$path -d file.$path -d www.file.$path -d pma.$path -d www.$path && systemctl restart nginx"
+        # dibawah ini adalah menu untuk aktifkan SSL yang staging vs beneran
+	#sudo ssh "$user@$server" "certbot --nginx --agree-tos --redirect --hsts --staple-ocsp --must-staple --force-renewal --email andi.triyadi@qwords.co.id -d $path -d www.$path -d file.$path -d www.file.$path -d pma.$path -d www.$path && systemctl restart nginx"
 	sudo ssh "$user@$server" "certbot --nginx --agree-tos --redirect --hsts --staple-ocsp --must-staple --staging --reinstall --email andi.triyadi@qwords.co.id -d $path -d www.$path -d file.$path -d www.file.$path -d pma.$path -d www.$path && systemctl restart nginx"
 	sudo ssh "$user@$server" "sed -i 's/listen 443 ssl;/listen 443 ssl http2;/g' /etc/nginx/conf.d/$path.conf && exit"
 	sudo ssh "$user@$server" "systemctl restart nginx && exit"
