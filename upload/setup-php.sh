@@ -30,11 +30,6 @@ function show_help {
     exit 1
 }
 
-#path=$1
-#paket=$2
-#ssl=$3
-
-
 # Deklarasi variabel
 
 path=""
