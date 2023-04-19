@@ -157,6 +157,14 @@ else
 fi
 
 # Fix port di docker-compose.yml
+#last80=999
+#for i in {1000..2000}
+#do
+#  last=$((last+1))
+#  echo $last80
+#done >> last80.txt
+# to do: port nya tidak bentrok
+
 number80=$(shuf -i 1000-2000 -n 1)
 number81=$(shuf -i 2001-3000 -n 1)
 number82=$(shuf -i 3001-4000 -n 1)
@@ -195,9 +203,26 @@ sudo sh -c 'echo "WP_DOMAIN_filebrowser='${pathtanpatitik}_filebrowser'" >> /hom
 sudo sh -c 'echo "WP_DOMAIN_pma='${pathtanpatitik}_pma'" >> /home/'$path'/dbdata/info.txt'
 
 # buat reverse proxy
+today=$(date +"%Y%m%d")01
 echo "Buat reverse proxy"
 user="root"
 server="103.102.153.56"
+sudo ssh "$user@$server" "cp /etc/named/_domain.db /etc/named/$path.db && exit"
+sudo ssh "$user@$server" "sed -i "s/_domain/$path/g" /etc/named/$path.db && exit"
+sudo ssh "$user@$server" "sed -i "s/_soa/$today/g" /etc/named/$path.db && exit"
+
+echo "Edit named"
+ssh "$user@$server" "cat << EOF >> /etc/named.conf
+# begin zone $path
+zone "$path" {
+      type master;
+      file \"/etc/named/$path.db\";
+      allow-query { any; };
+};
+# end zone $path
+EOF"
+
+
 
 # SSL GAES
 if [ "$ssl" == "le" ]; then
@@ -228,6 +253,7 @@ elif [ "$ssl" == "nossl" ]; then
         sudo rm -f $keypath.key
 	echo "$path tidak menggunakan SSL"
 fi
+sudo ssh "$user@$server" "systemctl restart named"
 sudo rm -f $path.crt
 sudo rm -f $path.key
 echo "Selesai. Docker aktif"

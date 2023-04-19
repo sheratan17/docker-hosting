@@ -62,3 +62,4 @@ else
         sudo echo "Paket salah. Masukkan p1 atau p2."
         sudo exit 1
 fi
+
