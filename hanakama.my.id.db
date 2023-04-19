@@ -1,0 +1,21 @@
+; BIND zonefile for hanakama.my.id
+
+$TTL    7200
+hanakama.my.id.         IN      SOA     ns1.hanakama.my.id. admin.hanakama.my.id. (
+                                        2023041701      ; Serial
+                                        7200            ; Refresh
+                                        3600            ; Retry
+                                        604800          ; Expire
+                                        7200)           ; NegativeCacheTTL
+
+@                       IN      NS      ns1.hanakama.my.id.
+@                       IN      NS      ns2.hanakama.my.id.
+
+hanakama.my.id.         IN      A       103.102.153.56
+www                     IN      CNAME   hanakama.my.id.
+ns1                     IN      A       103.102.153.56
+ns2                     IN      A       103.102.153.56
+pma			IN	A	103.102.153.56
+file			IN	A	103.102.153.56
+www.pma			IN	CNAME	pma.hanakama.my.id.
+www.file		IN	CNAME	file.hanakama.my.id.
