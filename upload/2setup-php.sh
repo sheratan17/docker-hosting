@@ -222,7 +222,7 @@ zone "$path" {
 };
 # end zone $path
 EOF"
-
+sudo ssh "$user@$servernamed" "systemctl restart named"
 
 
 # SSL GAES
@@ -238,10 +238,10 @@ elif [ "$ssl" == "mandiri" ]; then
 	echo "Membuat file config dan transfer key serta crt ke nginx reverse"
 	sudo ssh "$user@$servernginx" "mkdir /home/$path && exit"
 	sudo scp $crtpath ${user}@${servernginx}:/home/$path || exit 1
-        sudo scp $keypath ${user}@${servernginx}:/home/$path || exit 1
+	sudo scp $keypath ${user}@${servernginx}:/home/$path || exit 1
 	sudo rm -f $path.crt
 	sudo rm -f $path.key
-        sudo ssh "$user@$servernginx" "cp /etc/nginx/conf.d/template-mandiri.conf.inc /etc/nginx/conf.d/$path.conf && exit"
+	sudo ssh "$user@$servernginx" "cp /etc/nginx/conf.d/template-mandiri.conf.inc /etc/nginx/conf.d/$path.conf && exit"
 	sudo ssh "$user@$servernginx" "sed -i "s/_domain/$path/g" /etc/nginx/conf.d/$path.conf && sed -i "s/_random80/$number80/g" /etc/nginx/conf.d/$path.conf && sed -i "s/_random81/$number81/g" /etc/nginx/conf.d/$path.conf && sed -i "s/_random82/$number82/g" /etc/nginx/conf.d/$path.conf && exit"
 	sudo ssh "$user@$servernginx" "systemctl restart nginx && exit"
 	echo "$path sudah terpasang SSL Mandiri (SSL Sendiri)"
@@ -251,7 +251,7 @@ elif [ "$ssl" == "nossl" ]; then
 	sudo ssh "$user@$servernginx" "sed -i "s/_domain/$path/g" /etc/nginx/conf.d/$path.conf && sed -i "s/_random80/$number80/g" /etc/nginx/conf.d/$path.conf && sed -i "s/_random81/$number81/g" /etc/nginx/conf.d/$path.conf && sed -i "s/_random82/$number82/g" /etc/nginx/conf.d/$path.conf && exit"
 	sudo ssh "$user@$servernginx" "systemctl restart nginx && exit"
 	sudo rm -f $crtpath.crt
-        sudo rm -f $keypath.key
+	sudo rm -f $keypath.key
 	echo "$path tidak menggunakan SSL"
 fi
 sudo ssh "$user@$servernamed" "systemctl restart named"
