@@ -1,5 +1,6 @@
 #!/bin/bash
 
+echo
 echo "Deploy Node Docker, server harus kosong"
 echo "Pastikan server nginx reverse proxy dan named sudah tersedia dan dalam kondisi baru"
 echo "Pastikan IP private Node Docker dan nginx reverse proxy sudah aktif dan dapat berkomunikasi"
@@ -65,7 +66,7 @@ firewall-cmd --zone=public --add-service=https --permanent
 firewall-cmd --reload
 
 # buat ssh-keygen
-#ssh-keygen -t rsa -N '' -f ~/.ssh/id_rsa <<< y
+ssh-keygen -t rsa -N '' -f ~/.ssh/id_rsa <<< y
 
 echo "Selesai. Berikutnya download script lalu koneksikan server ini dengan nginx reverse proxy dan named..."
 sleep 3
@@ -73,6 +74,8 @@ sleep 3
 # deploy nginx
 echo "Memulai deploy nginx..."
 echo "Download script..."
+echo "Menunggu input key ke github"
+sleep 20
 ssh-keyscan -t rsa github.com >> /root/.ssh/known_hosts
 cd /home
 git clone git@github.com:sheratan17/docker-wp.git
@@ -104,6 +107,7 @@ scp /home/docker-wp/template.conf.inc root@$ip_nginx:/etc/nginx/conf.d || exit 1
 sed -i "s/_servernginx/$ip_nginx/g" /home/2setup-php.sh
 sed -i "s/_servernginx/$ip_nginx/g" /home/2delete-php.sh
 
+ssh root@$ip_nginx "systemctl enable nginx && exit"
 ssh root@$ip_nginx "service nginx restart && exit"
 
 echo "Nginx selesai"
@@ -141,6 +145,7 @@ ssh "root@$ip_named" "sed -i "s/_dns/$domaintanpans/g" /etc/named/_domain.db"
 sed -i "s/_servernamed/$ip_named/g" /home/2setup-php.sh
 sed -i "s/_servernamed/$ip_named/g" /home/2delete-php.sh
 
+ssh root@$ip_named "systemctl enable named && exit"
 ssh root@$ip_named "service named restart && exit"
 echo "Named selesai"
 echo
