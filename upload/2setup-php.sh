@@ -193,7 +193,7 @@ echo "Password root MySQL: ${db_root_password}"
 echo
 echo "Catatan:"
 echo "Gunakan username: root dan password root MySQL untuk login ke phpMyAdmin"
-echo "Username dan password root MySQL bisa di cek di /home/namadomain/dbdata/info.txt"
+echo "Username dan password root MySQL bisa di cek di /home/$path/dbdata/info.txt"
 sudo sh -c 'echo "MYSQL_ROOT_PASSWORD='$db_root_password'" >> /home/'$path'/dbdata/info.txt'
 sudo sh -c 'echo "MYSQL_USER='$db_user'" >>/home/'$path'/dbdata/info.txt'
 sudo sh -c 'echo "MYSQL_PASSWORD='$db_password'" >> /home/'$path'/dbdata/info.txt'
