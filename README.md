@@ -12,24 +12,24 @@ Docker + Wordpress + Let's Encrypt + Disk, CPU dan RAM Quota
 9. Cek apa sudah aktif: `quotaon -ap`
 10. Install docker: `dnf config-manager --add-repo=https://download.docker.com/linux/centos/docker-ce.repo && dnf install docker-ce docker-ce-cli containerd.io docker-compose-plugin`
 11. Aktifkan docker: `systemctl enable docker systemctl start docker`
-15. Pastikan ip private sudah aktif, catat ip private nya
-16. Sesuaikan ip docker-compose.yml dengan ip private yang aktif
-17. Buat `ssh-keygen`
-18. Matikan selinux
-19. Add apache ke grup wheel `usermod -a -G wheel apache`
-20. Add apache ke grup docker `usermod -a -G docker apache`
-21. Edit visudo, allow apache
-22. Update php exec time ke 600
-23. Update apache directory index tambahkan index.php
-24. Tambah ProxyTimeout 600 di httpd.conf
-25. Copy git punya andi: https://github.com/sheratan17/docker-wp
-26. Pindahkan folder `template` ke `/home`
-27. Pindahkan semua file di `docker-wp/upload` ke `/var/www/html`, file .sh nya di chmod +x
-28. `ssh-copy-id` ke server nginx reverse dan named
+12. Pastikan ip private sudah aktif, catat ip private nya
+13. Sesuaikan ip docker-compose.yml dengan ip private yang aktif
+14. Buat `ssh-keygen`
+15. Matikan selinux
+16. Add apache ke grup wheel `usermod -a -G wheel apache`
+17. Add apache ke grup docker `usermod -a -G docker apache`
+18. Edit visudo, allow apache
+19. Update php exec time ke 600
+20. Update apache directory index tambahkan index.php
+21. Tambah ProxyTimeout 600 di httpd.conf
+22. Copy git punya andi: https://github.com/sheratan17/docker-wp
+23. Pindahkan folder `template` ke `/home`
+24. Pindahkan semua file di `docker-wp/upload` ke `/var/www/html`, file .sh nya di chmod +x
+25. `ssh-copy-id` ke server nginx reverse dan named
 
 ATAU
 
-Jalankan `deploy_node.sh` untuk menjalankan semua perintah 1-24
+Jalankan `deploy_node.sh` untuk menjalankan semua perintah 1-21
 
 # Setup server nginx reverse
 1. Install Almalinux
