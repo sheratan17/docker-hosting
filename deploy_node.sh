@@ -3,10 +3,12 @@
 echo "Deploy Node Docker, server harus kosong"
 echo "Pastikan server nginx reverse proxy dan named sudah tersedia dan dalam kondisi baru"
 echo "Pastikan IP private Node Docker dan nginx reverse proxy sudah aktif dan dapat berkomunikasi"
+echo
 echo "CTRL + C jika:"
-echo "- Ini bukan server kosong," 
+echo "- Ini bukan server kosong" 
 echo "- Server nginx dan named belum ada"
 echo "- IP private belum bisa terhubung"
+echo
 sleep 5
 read -p "Masukkan IP private server Node Docker: " ipprivate_node
 echo
