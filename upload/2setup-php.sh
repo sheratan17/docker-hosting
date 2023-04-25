@@ -110,11 +110,11 @@ sudo /usr/sbin/adduser -m $path
 
 # Buat folder
 sudo mkdir /home/$path/dbdata
-sudo mkdir /home/$path/wpdata
+sudo mkdir /home/$path/sitedata
 user_id=$(id -u ${path})
 group_id=$(id -g ${path})
 sudo chown -R $user_id:$group_id /home/$path/dbdata
-sudo chown -R $user_id:$group_id /home/$path/wpdata
+sudo chown -R $user_id:$group_id /home/$path/sitedata
 echo "Membuat user selesai"
 
 # Copy file compose dari folder template
