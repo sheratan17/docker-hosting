@@ -157,6 +157,14 @@ else
 fi
 
 # Fix port di docker-compose.yml
+#last80=999
+#for i in {1000..2000}
+#do
+#  last=$((last+1))
+#  echo $last80
+#done >> last80.txt
+# to do: port nya tidak bentrok
+
 number80=$(shuf -i 1000-2000 -n 1)
 number81=$(shuf -i 2001-3000 -n 1)
 number82=$(shuf -i 3001-4000 -n 1)
@@ -185,7 +193,7 @@ echo "Password root MySQL: ${db_root_password}"
 echo
 echo "Catatan:"
 echo "Gunakan username: root dan password root MySQL untuk login ke phpMyAdmin"
-echo "Username dan password root MySQL bisa di cek di /home/namadomain/dbdata/info.txt"
+echo "Username dan password root MySQL bisa di cek di /home/$path/dbdata/info.txt"
 sudo sh -c 'echo "MYSQL_ROOT_PASSWORD='$db_root_password'" >> /home/'$path'/dbdata/info.txt'
 sudo sh -c 'echo "MYSQL_USER='$db_user'" >>/home/'$path'/dbdata/info.txt'
 sudo sh -c 'echo "MYSQL_PASSWORD='$db_password'" >> /home/'$path'/dbdata/info.txt'
@@ -195,39 +203,58 @@ sudo sh -c 'echo "WP_DOMAIN_filebrowser='${pathtanpatitik}_filebrowser'" >> /hom
 sudo sh -c 'echo "WP_DOMAIN_pma='${pathtanpatitik}_pma'" >> /home/'$path'/dbdata/info.txt'
 
 # buat reverse proxy
+today=$(date +"%Y%m%d")01
 echo "Buat reverse proxy"
 user="root"
-server="103.102.153.56"
+servernginx="_servernginx"
+servernamed="_servernamed"
+sudo ssh "$user@$servernamed" "cp /etc/named/_domain.db /etc/named/$path.db && exit"
+sudo ssh "$user@$servernamed" "sed -i "s/_domain/$path/g" /etc/named/$path.db && exit"
+sudo ssh "$user@$servernamed" "sed -i "s/_soa/$today/g" /etc/named/$path.db && exit"
+
+echo "Edit named"
+ssh "$user@$servernamed" "cat << EOF >> /etc/named.conf
+# begin zone $path
+zone "$path" {
+      type master;
+      file \"/etc/named/$path.db\";
+      allow-query { any; };
+};
+# end zone $path
+EOF"
+sudo ssh "$user@$servernamed" "systemctl restart named"
+
 
 # SSL GAES
 if [ "$ssl" == "le" ]; then
-	sudo ssh "$user@$server" "cp /etc/nginx/conf.d/template.conf.inc /etc/nginx/conf.d/$path.conf && sed -i "s/_domain/$path/g" /etc/nginx/conf.d/$path.conf && sed -i "s/_random80/$number80/g" /etc/nginx/conf.d/$path.conf && sed -i "s/_random81/$number81/g" /etc/nginx/conf.d/$path.conf && sed -i "s/_random82/$number82/g" /etc/nginx/conf.d/$path.conf && exit"
-        # dibawah ini adalah menu untuk aktifkan SSL yang staging vs beneran
-	#sudo ssh "$user@$server" "certbot --nginx --agree-tos --redirect --hsts --staple-ocsp --must-staple --force-renewal --email andi.triyadi@qwords.co.id -d $path -d www.$path -d file.$path -d www.file.$path -d pma.$path -d www.$path && systemctl restart nginx"
-	sudo ssh "$user@$server" "certbot --nginx --agree-tos --redirect --hsts --staple-ocsp --must-staple --staging --reinstall --email andi.triyadi@qwords.co.id -d $path -d www.$path -d file.$path -d www.file.$path -d pma.$path -d www.$path && systemctl restart nginx"
-	sudo ssh "$user@$server" "sed -i 's/listen 443 ssl;/listen 443 ssl http2;/g' /etc/nginx/conf.d/$path.conf && exit"
-	sudo ssh "$user@$server" "systemctl restart nginx && exit"
+	sudo ssh "$user@$servernginx" "cp /etc/nginx/conf.d/template.conf.inc /etc/nginx/conf.d/$path.conf && sed -i "s/_domain/$path/g" /etc/nginx/conf.d/$path.conf && sed -i "s/_random80/$number80/g" /etc/nginx/conf.d/$path.conf && sed -i "s/_random81/$number81/g" /etc/nginx/conf.d/$path.conf && sed -i "s/_random82/$number82/g" /etc/nginx/conf.d/$path.conf && exit"
+	# dibawah ini adalah menu untuk aktifkan SSL yang staging vs beneran
+	#sudo ssh "$user@$servernginx" "certbot --nginx --agree-tos --redirect --hsts --staple-ocsp --must-staple --no-eff-email --force-renewal --email andi.triyadi@qwords.co.id -d $path -d www.$path -d file.$path -d www.file.$path -d pma.$path -d www.$path && systemctl restart nginx"
+	sudo ssh "$user@$servernginx" "certbot --nginx --agree-tos --redirect --hsts --staple-ocsp --must-staple --no-eff-email --staging --reinstall --email andi.triyadi@qwords.co.id -d $path -d www.$path -d file.$path -d www.file.$path -d pma.$path -d www.$path && systemctl restart nginx"
+	sudo ssh "$user@$servernginx" "sed -i 's/listen 443 ssl;/listen 443 ssl http2;/g' /etc/nginx/conf.d/$path.conf && exit"
+	sudo ssh "$user@$servernginx" "systemctl restart nginx && exit"
 	echo "$path sudah terpasang Let's Encrypt"
 elif [ "$ssl" == "mandiri" ]; then
 	echo "Membuat file config dan transfer key serta crt ke nginx reverse"
-	sudo ssh "$user@$server" "mkdir /home/$path && exit"
-	sudo scp $crtpath ${user}@${server}:/home/$path || exit 1
-        sudo scp $keypath ${user}@${server}:/home/$path || exit 1
+	sudo ssh "$user@$servernginx" "mkdir /home/$path && exit"
+	sudo scp $crtpath ${user}@${servernginx}:/home/$path || exit 1
+	sudo scp $keypath ${user}@${servernginx}:/home/$path || exit 1
 	sudo rm -f $path.crt
 	sudo rm -f $path.key
-        sudo ssh "$user@$server" "cp /etc/nginx/conf.d/template-mandiri.conf.inc /etc/nginx/conf.d/$path.conf && exit"
-	sudo ssh "$user@$server" "sed -i "s/_domain/$path/g" /etc/nginx/conf.d/$path.conf && sed -i "s/_random80/$number80/g" /etc/nginx/conf.d/$path.conf && sed -i "s/_random81/$number81/g" /etc/nginx/conf.d/$path.conf && sed -i "s/_random82/$number82/g" /etc/nginx/conf.d/$path.conf && exit"
-	sudo ssh "$user@$server" "systemctl restart nginx && exit"
+	sudo ssh "$user@$servernginx" "cp /etc/nginx/conf.d/template-mandiri.conf.inc /etc/nginx/conf.d/$path.conf && exit"
+	sudo ssh "$user@$servernginx" "sed -i "s/_domain/$path/g" /etc/nginx/conf.d/$path.conf && sed -i "s/_random80/$number80/g" /etc/nginx/conf.d/$path.conf && sed -i "s/_random81/$number81/g" /etc/nginx/conf.d/$path.conf && sed -i "s/_random82/$number82/g" /etc/nginx/conf.d/$path.conf && exit"
+	sudo ssh "$user@$servernginx" "systemctl restart nginx && exit"
 	echo "$path sudah terpasang SSL Mandiri (SSL Sendiri)"
 elif [ "$ssl" == "nossl" ]; then
 	sudo sh -c echo '"no ssl" >> /home/'$path'/info.txt'
-	sudo ssh "$user@$server" "cp /etc/nginx/conf.d/template.conf.inc /etc/nginx/conf.d/$path.conf && exit"
-	sudo ssh "$user@$server" "sed -i "s/_domain/$path/g" /etc/nginx/conf.d/$path.conf && sed -i "s/_random80/$number80/g" /etc/nginx/conf.d/$path.conf && sed -i "s/_random81/$number81/g" /etc/nginx/conf.d/$path.conf && sed -i "s/_random82/$number82/g" /etc/nginx/conf.d/$path.conf && exit"
-	sudo ssh "$user@$server" "systemctl restart nginx && exit"
+	sudo ssh "$user@$servernginx" "cp /etc/nginx/conf.d/template.conf.inc /etc/nginx/conf.d/$path.conf && exit"
+	sudo ssh "$user@$servernginx" "sed -i "s/_domain/$path/g" /etc/nginx/conf.d/$path.conf && sed -i "s/_random80/$number80/g" /etc/nginx/conf.d/$path.conf && sed -i "s/_random81/$number81/g" /etc/nginx/conf.d/$path.conf && sed -i "s/_random82/$number82/g" /etc/nginx/conf.d/$path.conf && exit"
+	sudo ssh "$user@$servernginx" "systemctl restart nginx && exit"
 	sudo rm -f $crtpath.crt
-        sudo rm -f $keypath.key
+	sudo rm -f $keypath.key
 	echo "$path tidak menggunakan SSL"
 fi
+sudo ssh "$user@$servernamed" "systemctl restart named"
 sudo rm -f $path.crt
 sudo rm -f $path.key
 echo "Selesai. Docker aktif"
