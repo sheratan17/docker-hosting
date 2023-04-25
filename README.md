@@ -29,7 +29,7 @@ Docker + Wordpress + Let's Encrypt + Disk, CPU dan RAM Quota
 
 ATAU
 
-Jalankan `deploy_node.sh` untuk menjalankan semua perintah 3-21
+Jalankan `deploy_node.sh` untuk menjalankan semua (sepertinya sih) perintah diatas
 
 # Setup server nginx reverse
 1. Install Almalinux
@@ -41,7 +41,15 @@ Jalankan `deploy_node.sh` untuk menjalankan semua perintah 3-21
 
 ATAU
 
-Jalankan `deploy_nginx.sh` untuk download script dan koneksikan Node Docker ke nginx reverse proxy
+Jalankan `deploy_node.sh` untuk menjalankan semua (sepertinya sih) perintah diatas
+
+# Setup server named
+1. Install named
+2. Setup DNS nya
+
+ATAU
+
+Jalankan `deploy_node.sh` untuk menjalankan semua (sepertinya sih) perintah diatas
 
 # Pengembangan
 1. Script untuk update ssl dari le ke mandiri atau sebaliknya
