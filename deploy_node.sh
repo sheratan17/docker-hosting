@@ -75,7 +75,7 @@ sleep 3
 echo "Memulai deploy nginx..."
 echo "Download script..."
 echo "Menunggu input key ke github"
-sleep 20
+sleep 30
 ssh-keyscan -t rsa github.com >> /root/.ssh/known_hosts
 cd /home
 git clone git@github.com:sheratan17/docker-wp.git
