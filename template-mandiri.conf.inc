@@ -2,7 +2,7 @@ server {
 	server_name _domain  www._domain ;
 	
 	location / {
-	proxy_pass http://10.89.1.2:_random80/;
+	proxy_pass http://_ipprivate_node:_random80/;
 	proxy_http_version                 1.1;
 	proxy_cache_bypass                 $http_upgrade;
 
@@ -45,7 +45,7 @@ server {
         server_name file._domain  www.file._domain ;
 
         location / {
-        proxy_pass http://10.89.1.2:_random81/;
+        proxy_pass http://_ipprivate_node:_random81/;
         proxy_http_version                 1.1;
         proxy_cache_bypass                 $http_upgrade;
 
@@ -88,7 +88,7 @@ server {
         server_name pma._domain  www.pma._domain ;
 
         location / {
-        proxy_pass http://10.89.1.2:_random82/;
+        proxy_pass http://_ipprivate_node:_random82/;
         proxy_http_version                 1.1;
         proxy_cache_bypass                 $http_upgrade;
 
@@ -139,7 +139,7 @@ server {
 	server_name _domain  www._domain ;
 	
 	location / {
-	proxy_pass http://10.89.1.2:_random80/;
+	proxy_pass http://_ipprivate_node:_random80/;
 	proxy_http_version                 1.1;
 	proxy_cache_bypass                 $http_upgrade;
 
@@ -182,7 +182,7 @@ server {
         server_name file._domain  www.file._domain ;
 
         location / {
-        proxy_pass http://10.89.1.2:_random81/;
+        proxy_pass http://_ipprivate_node:_random81/;
         proxy_http_version                 1.1;
         proxy_cache_bypass                 $http_upgrade;
 
@@ -220,7 +220,7 @@ server {
         server_name pma._domain  www.pma._domain ;
 
         location / {
-        proxy_pass http://10.89.1.2:_random82/;
+        proxy_pass http://_ipprivate_node:_random82/;
         proxy_http_version                 1.1;
         proxy_cache_bypass                 $http_upgrade;
 
