@@ -1,15 +1,15 @@
 ; BIND zonefile for _domain
 
 $TTL    7200
-_domain.         IN      SOA     ns1.hanakama.my.id. admin.hanakama.my.id. (
+_domain.         IN      SOA     ns1._dns. admin._dns. (
                                         _soa      ; Serial
                                         7200            ; Refresh
                                         3600            ; Retry
                                         604800          ; Expire
                                         7200)           ; NegativeCacheTTL
 
-@                       IN      NS      ns1.hanakama.my.id.
-@                       IN      NS      ns2.hanakama.my.id.
+@                       IN      NS      ns1._dns.
+@                       IN      NS      ns2._dns.
 
 _domain.         IN      A       103.102.153.56
 www                     IN      CNAME   _domain.
