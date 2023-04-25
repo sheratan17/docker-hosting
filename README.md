@@ -30,6 +30,7 @@ Docker + Wordpress + Let's Encrypt + Disk, CPU dan RAM Quota
 ATAU
 
 Jalankan `deploy_node.sh` untuk menjalankan semua perintah 3-21
+Jalankan `deploy_nginx.sh` untuk download script dan koneksikan Node Docker ke nginx reverse proxy
 
 # Setup server nginx reverse
 1. Install Almalinux
