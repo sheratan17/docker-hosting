@@ -22,7 +22,7 @@ ssh-keyscan -t rsa $ip_nginx >> /root/.ssh/known_hosts
 
 sshpass -p "$pass_nginx" ssh-copy-id root@$ip_nginx
 ssh root@$ip_nginx "yum install epel-release -y && exit"
-ssh root@$ip_nginx "yum install nginx certbot python3-certbot-nginx -y && exit"
+ssh root@$ip_nginx "yum install nginx nano certbot python3-certbot-nginx -y && exit"
 
 # download script dan update config di nginx reverse dan named
 sed -i "s/_ipprivate_node/$ipprivate_node/g" /home/docker-wp/template-mandiri.conf.inc
@@ -33,6 +33,6 @@ scp /home/docker-wp/template.conf.inc root@$ip_nginx:/etc/nginx/conf.d || exit 1
 
 # ubah bash script agar menggunakan IP nginx
 sed -i "s/_servernginx/$ip_nginx/g" /home/2setup-php.sh
-sed -i "s/_iservernamed/$ip_named/g" /home/2setup-php.sh
 sed -i "s/_servernginx/$ip_nginx/g" /home/2delete-php.sh
-sed -i "s/_iservernamed/$ip_named/g" /home/2delete-php.sh
+
+ssh root@$ip_nginx "service nginx restart && exit"
