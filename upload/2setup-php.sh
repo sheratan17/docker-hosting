@@ -206,8 +206,8 @@ sudo sh -c 'echo "WP_DOMAIN_pma='${pathtanpatitik}_pma'" >> /home/'$path'/dbdata
 today=$(date +"%Y%m%d")01
 echo "Buat reverse proxy"
 user="root"
-servernginx="103.102.153.56"
-servernamed="103.102.153.56"
+servernginx="_servernginx"
+servernamed="_servernamed"
 sudo ssh "$user@$servernamed" "cp /etc/named/_domain.db /etc/named/$path.db && exit"
 sudo ssh "$user@$servernamed" "sed -i "s/_domain/$path/g" /etc/named/$path.db && exit"
 sudo ssh "$user@$servernamed" "sed -i "s/_soa/$today/g" /etc/named/$path.db && exit"
