@@ -150,3 +150,5 @@ ssh root@$ip_named "service named restart && exit"
 echo "Named selesai"
 echo
 echo "SCRIPT DEPLOY SELESAI"
+echo
+exit 1
