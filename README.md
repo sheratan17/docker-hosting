@@ -39,6 +39,18 @@ Jalankan `deploy_node.sh` untuk menjalankan semua (sepertinya sih) perintah diat
 5. download `template.conf.inc` dan `template-mandiri.conf.inc` letakkan di `/etc/nginx/conf.d`
 6. Restart nginx
 
+ATAU
+
+Jalankan `deploy_node.sh` untuk menjalankan semua (sepertinya sih) perintah diatas
+
+# Setup server named
+1. Install named
+2. Setup DNS nya
+
+ATAU
+
+Jalankan `deploy_node.sh` untuk menjalankan semua (sepertinya sih) perintah diatas
+
 # Pengembangan
 1. Script untuk update ssl dari le ke mandiri atau sebaliknya
 
