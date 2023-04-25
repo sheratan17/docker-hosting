@@ -44,17 +44,18 @@ echo "Docker dan user dihapus"
 
 echo "Hapus reverse proxy..."
 user="root"
-server="103.102.153.56"
+servernginx="_servernginx"
+servernamed="_servernamed"
 
-sudo ssh "$user@$server" "rm /etc/nginx/conf.d/$domain.conf && exit"
-sudo ssh "$user@$server" "rm -rf /home/$domain/ && exit"
-sudo ssh "$user@$server" "systemctl restart nginx && exit"
+sudo ssh "$user@$servernginx" "rm /etc/nginx/conf.d/$domain.conf && exit"
+sudo ssh "$user@$servernginx" "rm -rf /home/$domain/ && exit"
+sudo ssh "$user@$servernginx" "systemctl restart nginx && exit"
 echo "Reverse proxy dihapus"
 echo "Hapus named"
-sudo ssh "$user@$server" "rm /etc/named/$domain.db && exit"
-
-sudo ssh "$user@$server" "sed -i '/# begin zone $domain/,/# end zone $domain/d' /etc/named.conf"
-sudo ssh "$user@$server" "systemctl restart named && exit"
+sudo ssh "$user@$servernamed" "rm /etc/named/$domain.db && exit"
+sudo ssh "$user@$servernamed" "sed -i '/# begin zone $domain/,/# end zone $domain/d' /etc/named.conf"
+sudo ssh "$user@$servernamed" "systemctl restart named && exit"
+echo "Named dihapus"
 systemctl restart php-fpm
 systemctl restart httpd
 exit 1
