@@ -149,6 +149,11 @@ ssh root@$ip_named "systemctl enable named && exit"
 ssh root@$ip_named "service named restart && exit"
 echo "Named selesai"
 echo
+echo "Download image docker..."
+docker image pull mysql:8.0.32
+docker image pull wordpress:6.2-php8.2
+docker image pull filebrowser/filebrowser
+docker image pull phpmyadmin/phpmyadmin
 echo "SCRIPT DEPLOY SELESAI"
 echo
 exit 1
