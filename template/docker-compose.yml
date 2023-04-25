@@ -32,7 +32,7 @@ services:
       - WORDPRESS_DB_PASSWORD=$MYSQL_PASSWORD
       - WORDPRESS_DB_NAME=wordpress
     ports:
-      - "10.89.1.2:_random80:80"
+      - "_ipprivate_node:_random80:80"
     volumes:
       - /home/_userdomain/sitedata:/var/www/html
       - ./wordpress.ini:/usr/local/etc/php/conf.d/wordpress.ini
@@ -52,7 +52,7 @@ services:
     networks:
       backend:
     ports:
-      - "10.89.1.2:_random81:80"
+      - "_ipprivate_node:_random81:80"
     volumes:
       - /home/_userdomain/sitedata:/srv
       - ./config:/config
@@ -73,7 +73,7 @@ services:
        - PMA_HOST=db
        - UPLOAD_LIMIT=100M
     ports:
-      - "10.89.1.2:_random82:80"
+      - "_ipprivate_node:_random82:80"
     networks:
       backend:
     mem_limit: _memlimit
