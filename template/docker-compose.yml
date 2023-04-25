@@ -34,7 +34,7 @@ services:
     ports:
       - "10.89.1.2:_random80:80"
     volumes:
-      - /home/_userdomain/wpdata:/var/www/html
+      - /home/_userdomain/sitedata:/var/www/html
       - ./wordpress.ini:/usr/local/etc/php/conf.d/wordpress.ini
     networks:
       backend:
@@ -54,7 +54,7 @@ services:
     ports:
       - "10.89.1.2:_random81:80"
     volumes:
-      - /home/_userdomain/wpdata:/srv
+      - /home/_userdomain/sitedata:/srv
       - ./config:/config
     mem_limit: _memlimit
     cpus: _cpulimit
