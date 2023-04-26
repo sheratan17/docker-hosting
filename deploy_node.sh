@@ -105,7 +105,7 @@ scp /home/docker-wp/template.conf.inc root@$ip_nginx:/etc/nginx/conf.d || exit 1
 
 # ubah bash script agar menggunakan IP nginx
 sed -i "s/_servernginx/$ip_nginx/g" /home/setup-php.sh
-sed -i "s/_servernginx/$ip_nginx/g" /home/setup-php.sh
+sed -i "s/_servernginx/$ip_nginx/g" /home/delete-php.sh
 
 ssh root@$ip_nginx "systemctl enable nginx && exit"
 ssh root@$ip_nginx "service nginx restart && exit"
@@ -143,7 +143,7 @@ ssh "root@$ip_named" "sed -i "s/_dns/$domaintanpans/g" /etc/named.conf"
 ssh "root@$ip_named" "sed -i "s/_dns/$domaintanpans/g" /etc/named/_domain.db"
 
 sed -i "s/_servernamed/$ip_named/g" /home/setup-php.sh
-sed -i "s/_servernamed/$ip_named/g" /home/setup-php.sh
+sed -i "s/_servernamed/$ip_named/g" /home/delete-php.sh
 
 ssh root@$ip_named "systemctl enable named && exit"
 ssh root@$ip_named "service named restart && exit"
