@@ -53,6 +53,15 @@ Jalankan `deploy_node.sh` untuk menjalankan semua (sepertinya sih) perintah diat
 
 # Pengembangan
 1. Script untuk update ssl dari le ke mandiri atau sebaliknya
+2. PHP GUI yang lebih baik
+3. SELINUX
+4. Integrasi dengan DNS (DONE)
+5. Integrasi dengan nginx reverse proxy (DONE)
+6. Script untuk deploy server node, dns dan nginx (DONE)
+7. Integrasi dengan Redis / Memcached
+8. Database untuk arsip dan pencatatan
+9. Sistem backup - restore
+10. Memastikan port random tidak duplikat
 
 # API
 1. curl JSON request create dengan SSL mandiri<br>
