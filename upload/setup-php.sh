@@ -111,6 +111,8 @@ sudo /usr/sbin/adduser -m $path
 # Buat folder
 sudo mkdir /home/$path/dbdata
 sudo mkdir /home/$path/sitedata
+sudo mkdir /home/$path/pma
+sudo mkdir /home/$path/pma/tmp
 user_id=$(id -u ${path})
 group_id=$(id -g ${path})
 sudo chown -R $user_id:$group_id /home/$path/dbdata
@@ -120,11 +122,16 @@ echo "Membuat user selesai."
 # Copy file compose dari folder template
 sudo cp /home/template/docker-compose.yml /home/$path/
 sudo cp /home/template/wordpress.ini /home/$path/
+sudo cp /home/template/config.inc.php /home/$path/pma/
+sudo cp /home/template/config.secret.inc.php /home/$path/pma/
+sudo cp /home/template/config.user.inc.php /home/$path/pma/
+sudo chown -R $user_id:$group_id /home/$path/pma
 
 # RNG FTW
 db_root_password=$(openssl rand -base64 9 | tr -dc 'a-zA-Z0-9!^()_' | head -c12)
 db_user=$(openssl rand -base64 9 | tr -dc 'a-zA-Z0-9!^()_' | head -c12)
 db_password=$(openssl rand -base64 9 | tr -dc 'a-zA-Z0-9!^()_' | head -c12)
+pma_secret=$(openssl rand -base64 32)
 
 # Masukkan RNG ke .env
 sudo sh -c 'echo "MYSQL_ROOT_PASSWORD='$db_root_password'" >> /home/'$path'/.env'
@@ -134,6 +141,7 @@ sudo sh -c 'echo "WP_DOMAIN_db='${pathtanpatitik}_db'" >> /home/'$path'/.env'
 sudo sh -c 'echo "WP_DOMAIN_wp='${pathtanpatitik}_wp'" >> /home/'$path'/.env'
 sudo sh -c 'echo "WP_DOMAIN_filebrowser='${pathtanpatitik}_filebrowser'" >> /home/'$path'/.env'
 sudo sh -c 'echo "WP_DOMAIN_pma='${pathtanpatitik}_pma'" >> /home/'$path'/.env'
+sudo sh -c 'echo "<?php \$cfg['blowfish_secret'] = '$pma_secret'; ?>" > /home/$path/pma/config.secret.inc.php'
 echo "Membuat random password selesai."
 
 # Fix docker-compose.yml
