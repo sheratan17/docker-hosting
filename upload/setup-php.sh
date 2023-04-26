@@ -262,6 +262,9 @@ elif [ "$ssl" == "nossl" ]; then
 	sudo rm -f $keypath.key
 	echo "$path tidak menggunakan SSL"
 fi
+sudo sh -c 'echo "docker exec _containerdb /usr/bin/mysqldump -u root --password=_containerpassword wordpress > /backup/'$path'.sql && wait" >> /home/docker-wp/backupsql.sh'
+sudo sed -i "s/_containerdb/${pathtanpatitik}_db/g" /home/docker-wp/backupsql.sh
+sudo sed -i "s/_containerpassword/$db_root_password/g" /home/docker-wp/backupsql.sh
 sudo ssh "$user@$servernamed" "systemctl restart named"
 sudo rm -f $path.crt
 sudo rm -f $path.key
