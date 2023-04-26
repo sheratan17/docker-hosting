@@ -115,7 +115,7 @@ user_id=$(id -u ${path})
 group_id=$(id -g ${path})
 sudo chown -R $user_id:$group_id /home/$path/dbdata
 sudo chown -R $user_id:$group_id /home/$path/sitedata
-echo "Membuat user selesai"
+echo "Membuat user selesai."
 
 # Copy file compose dari folder template
 sudo cp /home/template/docker-compose.yml /home/$path/
@@ -134,7 +134,7 @@ sudo sh -c 'echo "WP_DOMAIN_db='${pathtanpatitik}_db'" >> /home/'$path'/.env'
 sudo sh -c 'echo "WP_DOMAIN_wp='${pathtanpatitik}_wp'" >> /home/'$path'/.env'
 sudo sh -c 'echo "WP_DOMAIN_filebrowser='${pathtanpatitik}_filebrowser'" >> /home/'$path'/.env'
 sudo sh -c 'echo "WP_DOMAIN_pma='${pathtanpatitik}_pma'" >> /home/'$path'/.env'
-echo "Membuat random password selesai"
+echo "Membuat random password selesai."
 
 # Fix docker-compose.yml
 sudo sed -i "s/_userdomain/$path/g" /home/$path/docker-compose.yml
@@ -145,12 +145,12 @@ if [ "$paket" == "p1" ]; then
 	sudo sed -i "s/_memlimit/1G/g" /home/$path/docker-compose.yml
 	sudo sed -i "s/_cpulimit/1.0/g" /home/$path/docker-compose.yml
 	sudo setquota -u $path 0 1024000 0 0 -a /home
-	sudo echo "User $path sudah menggunakan $paket"
+	sudo echo "User $path sudah diaktifkan dan menggunakan $paket"
 elif [ "$paket" == "p2" ]; then
 	sudo sed -i "s/_memlimit/2G/g" /home/$path/docker-compose.yml
 	sudo sed -i "s/_cpulimit/2.0/g" /home/$path/docker-compose.yml
 	sudo setquota -u $path 0 2048000 0 0 -a /home
-	sudo echo "User $path sudah menggunakan $paket"
+	sudo echo "User $path sudah diaktifkan dan menggunakan $paket"
 else
 	sudo echo "Paket salah. Masukkan p1 atau p2."
 	sudo exit 1
@@ -171,18 +171,18 @@ number82=$(shuf -i 3001-4000 -n 1)
 sudo sed -i "s/_random80/$number80/g" /home/$path/docker-compose.yml
 sudo sed -i "s/_random81/$number81/g" /home/$path/docker-compose.yml
 sudo sed -i "s/_random82/$number82/g" /home/$path/docker-compose.yml
-echo "Setting docker compose selesai"
+echo "Setting docker compose selesai."
 
 # Start docker, final version
 sudo docker compose -f /home/$path/docker-compose.yml up -d
-echo "Memulai kontainer"
+echo "Memulai kontainer..."
 
 # update quota, tunggu 10 detik biar size nya ke update
 echo "Update Quota..."
 sleep 10s
 sudo quotacheck -ugmf /home
 
-echo "Quota selesai"
+echo "Quota selesai."
 
 # print
 echo
@@ -212,7 +212,7 @@ sudo ssh "$user@$servernamed" "cp /etc/named/_domain.db /etc/named/$path.db && e
 sudo ssh "$user@$servernamed" "sed -i "s/_domain/$path/g" /etc/named/$path.db && exit"
 sudo ssh "$user@$servernamed" "sed -i "s/_soa/$today/g" /etc/named/$path.db && exit"
 
-echo "Edit named"
+echo "Membuat input di DNS server..."
 ssh "$user@$servernamed" "cat << EOF >> /etc/named.conf
 # begin zone $path
 zone "$path" {
@@ -257,5 +257,5 @@ fi
 sudo ssh "$user@$servernamed" "systemctl restart named"
 sudo rm -f $path.crt
 sudo rm -f $path.key
-echo "Selesai. Docker aktif"
+echo "Selesai. Docker aktif."
 
