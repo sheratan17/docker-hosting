@@ -63,6 +63,7 @@ Jalankan `deploy_node.sh` untuk menjalankan semua (sepertinya sih) perintah diat
 9. Sistem backup - restore
 10. Memastikan port random tidak duplikat
 11. Hardening nginx reverse proxy
+12. Antivirus
 
 # API
 1. curl JSON request create dengan SSL mandiri<br>
