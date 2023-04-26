@@ -131,7 +131,7 @@ sudo chown -R $user_id:$group_id /home/$path/pma
 db_root_password=$(openssl rand -base64 9 | tr -dc 'a-zA-Z0-9!^()_' | head -c12)
 db_user=$(openssl rand -base64 9 | tr -dc 'a-zA-Z0-9!^()_' | head -c12)
 db_password=$(openssl rand -base64 9 | tr -dc 'a-zA-Z0-9!^()_' | head -c12)
-pma_secret=$(openssl rand -base64 32)
+pma_secret=$(openssl rand -base64 22)
 
 # Masukkan RNG ke .env
 sudo sh -c 'echo "MYSQL_ROOT_PASSWORD='$db_root_password'" >> /home/'$path'/.env'
@@ -141,7 +141,7 @@ sudo sh -c 'echo "WP_DOMAIN_db='${pathtanpatitik}_db'" >> /home/'$path'/.env'
 sudo sh -c 'echo "WP_DOMAIN_wp='${pathtanpatitik}_wp'" >> /home/'$path'/.env'
 sudo sh -c 'echo "WP_DOMAIN_filebrowser='${pathtanpatitik}_filebrowser'" >> /home/'$path'/.env'
 sudo sh -c 'echo "WP_DOMAIN_pma='${pathtanpatitik}_pma'" >> /home/'$path'/.env'
-sudo sh -c 'echo "<?php \$cfg['blowfish_secret'] = '$pma_secret'; ?>" > /home/'$path'/pma/config.secret.inc.php'
+sudo sed -i "s/_pma_secret/$pma_secret/g" /home/$path/pma/config.secret.inc.php
 echo "Membuat random password selesai."
 
 # Fix docker-compose.yml
