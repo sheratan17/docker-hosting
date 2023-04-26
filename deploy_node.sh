@@ -156,8 +156,10 @@ docker image pull mysql:8.0.32
 docker image pull wordpress:6.2-php8.2
 docker image pull filebrowser/filebrowser
 docker image pull phpmyadmin/phpmyadmin
+echo
 echo "SCRIPT DEPLOY SELESAI."
+echo
 echo "Mohon lakukan 'yum update' pada server Node Docker, nginx, serta DNS, lalu restart."
-echo "Mohon menunggu 5-10 menit sebelum membuat container untuk melewati masa propagasi DNS Server"
+echo "Mohon menunggu 5-10 menit sebelum membuat container untuk melewati masa propagasi DNS Server."
 echo
 exit 1
