@@ -48,7 +48,7 @@ services:
       - wordpress
     restart: always
     container_name: $WP_DOMAIN_filebrowser
-    image: filebrowser/filebrowser
+    image: filebrowser/filebrowser:v2-s6
     networks:
       backend:
     ports:
@@ -58,9 +58,9 @@ services:
       - ./config:/config
     mem_limit: _memlimit
     cpus: _cpulimit
-#    environment:
-#      - PUID=_userid
-#      - PGID=_groupid
+    environment:
+      - PUID=_userid
+      - PGID=_groupid
 #    labels:
 #      io.portainer.accesscontrol.teams: admin
   phpmyadmin:
@@ -72,13 +72,18 @@ services:
     environment:
        - PMA_HOST=db
        - UPLOAD_LIMIT=100M
+       - PMA_PMADB=pmadb
     ports:
       - "_ipprivate_node:_random82:80"
     networks:
       backend:
     mem_limit: _memlimit
     cpus: _cpulimit
-#    user: "_userid:_groupid"
+    user: "_userid:_groupid"
+    volumes:
+      - /home/_userdomain/pma/config.secret.inc.php:/etc/phpmyadmin/config.secret.inc.php
+      - /home/_userdomain/pma/config.user.inc.php:/etc/phpmyadmin/config.user.inc.php:ro
+      - /home/_userdomain/pma/config.inc.php:/etc/phpmyadmin/config.inc.php:ro
 #    labels:
 #      io.portainer.accesscontrol.teams: admin
 
