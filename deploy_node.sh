@@ -88,7 +88,7 @@ sed -i "s/_ipprivate_node/$ipprivate_node/g" /home/template/docker-compose.yml
 
 # Membuat nginx reverse proxy dan named
 echo
-echo "Membuat nginx reverse proxy"
+echo "Membuat nginx reverse proxy..."
 
 ssh-keyscan -t rsa $ip_nginx >> /root/.ssh/known_hosts
 
@@ -110,18 +110,15 @@ sed -i "s/_servernginx/$ip_nginx/g" /home/delete-php.sh
 ssh root@$ip_nginx "systemctl enable nginx && exit"
 ssh root@$ip_nginx "service nginx restart && exit"
 
-echo "Nginx selesai"
+echo "Nginx selesai."
 echo
-echo "Memulai deploy named..."
+echo "Memulai deploy server DNS..."
 sleep 3
 
 today=$(date +"%Y%m%d")01
 
 # Membuat named
 echo
-echo "Membuat named"
-echo
-
 domaintanpans=$(echo $ns_named | sed 's/ns1\.//')
 
 sshpass -p "$pass_named" ssh-copy-id root@$ip_named
@@ -147,13 +144,15 @@ sed -i "s/_servernamed/$ip_named/g" /home/delete-php.sh
 
 ssh root@$ip_named "systemctl enable named && exit"
 ssh root@$ip_named "service named restart && exit"
-echo "Named selesai"
+echo "Server DNS selesai."
 echo
 echo "Download image docker..."
 docker image pull mysql:8.0.32
 docker image pull wordpress:6.2-php8.2
 docker image pull filebrowser/filebrowser
 docker image pull phpmyadmin/phpmyadmin
-echo "SCRIPT DEPLOY SELESAI"
+echo "SCRIPT DEPLOY SELESAI."
+echo "Mohon lakukan 'yum update' pada server Node Docker, nginx, serta DNS, lalu restart."
+echo "Mohon menunggu 5-10 menit sebelum membuat container untuk melewati masa propagasi DNS Server"
 echo
 exit 1
