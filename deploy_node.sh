@@ -146,6 +146,11 @@ ssh root@$ip_named "systemctl enable named && exit"
 ssh root@$ip_named "service named restart && exit"
 echo "Server DNS selesai."
 echo
+echo "Menambahkan cronjob checkquota..."
+echo "0 1 * * * /home/docker-wp/quotacheck.sh > /dev/null 2>&1" > /tmp/cronjob
+crontab /tmp/cronjob
+rm /tmp/cronjob
+
 echo "Download image docker..."
 docker image pull mysql:8.0.32
 docker image pull wordpress:6.2-php8.2
