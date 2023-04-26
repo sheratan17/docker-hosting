@@ -141,7 +141,7 @@ sudo sh -c 'echo "WP_DOMAIN_db='${pathtanpatitik}_db'" >> /home/'$path'/.env'
 sudo sh -c 'echo "WP_DOMAIN_wp='${pathtanpatitik}_wp'" >> /home/'$path'/.env'
 sudo sh -c 'echo "WP_DOMAIN_filebrowser='${pathtanpatitik}_filebrowser'" >> /home/'$path'/.env'
 sudo sh -c 'echo "WP_DOMAIN_pma='${pathtanpatitik}_pma'" >> /home/'$path'/.env'
-sudo sh -c 'echo "<?php \$cfg['blowfish_secret'] = '$pma_secret'; ?>" > /home/$path/pma/config.secret.inc.php'
+sudo sh -c 'echo "<?php \$cfg['blowfish_secret'] = '$pma_secret'; ?>" > /home/'$path'/pma/config.secret.inc.php'
 echo "Membuat random password selesai."
 
 # Fix docker-compose.yml
