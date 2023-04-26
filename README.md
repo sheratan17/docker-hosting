@@ -64,6 +64,7 @@ Jalankan `deploy_node.sh` untuk menjalankan semua (sepertinya sih) perintah diat
 10. Memastikan port random tidak duplikat
 11. Hardening nginx reverse proxy
 12. Antivirus
+13. Custom image (Joomla, moodle, etc)
 
 # API
 1. curl JSON request create dengan SSL mandiri<br>
