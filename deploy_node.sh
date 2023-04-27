@@ -9,7 +9,7 @@ echo "CTRL + C jika:"
 echo "- Ini bukan server kosong" 
 echo "- Server nginx dan DNS belum ada"
 echo "- IP private belum bisa terhubung"
-echp "- Folder untuk backup belum dibuat"
+echo "- Folder untuk backup belum dibuat"
 echo
 sleep 5
 read -p "Masukkan IP private server Node Docker: " ipprivate_node
