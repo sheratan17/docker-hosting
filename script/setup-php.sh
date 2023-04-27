@@ -120,11 +120,11 @@ sudo chown -R $user_id:$group_id /home/$path/sitedata
 echo "Membuat user selesai."
 
 # Copy file compose dari folder template
-sudo cp /home/wp-template/docker-compose.yml /home/$path/
-sudo cp /home/wp-template/wordpress.ini /home/$path/
-sudo cp /home/wp-template/config.inc.php /home/$path/pma/
-sudo cp /home/wp-template/config.secret.inc.php /home/$path/pma/
-sudo cp /home/wp-template/config.user.inc.php /home/$path/pma/
+sudo cp /home/docker-hosting/wp-template/docker-compose.yml /home/$path/
+sudo cp /home/docker-hosting/wp-template/wordpress.ini /home/$path/
+sudo cp /home/docker-hosting/wp-template/config.inc.php /home/$path/pma/
+sudo cp /home/docker-hosting/wp-template/config.secret.inc.php /home/$path/pma/
+sudo cp /home/docker-hosting/wp-template/config.user.inc.php /home/$path/pma/
 sudo chown -R $user_id:$group_id /home/$path/pma
 
 # RNG FTW
