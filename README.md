@@ -23,8 +23,7 @@ Docker + Script + Let's Encrypt + Disk, CPU dan RAM Quota
 20. Update apache directory index tambahkan index.php
 21. Tambah ProxyTimeout 600 di httpd.conf
 22. Copy git punya andi: https://github.com/sheratan17/docker-wp
-23. Pindahkan folder `template` ke `/home`
-24. Pindahkan semua file di `docker-wp/upload` ke `/var/www/html`, file .sh nya di chmod +x
+24. Pindahkan semua file php di `script` ke `/var/www/html`, file .sh nya di chmod +x
 25. `ssh-copy-id` ke server nginx reverse dan named
 
 ATAU
