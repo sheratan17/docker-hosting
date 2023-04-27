@@ -38,11 +38,7 @@
 
 <body>
 <h1>Buat WP Docker baru</h1>
-Pastikan DNS: <br><pre>
-- domain, www.domain<br>
-- pma.domain, www.pma.domain<br>
-- file.domain, www.file.domain</pre>
-Mengarah ke IP: <pre>103.102.153.56</pre>
+Pastikan NS dari domain menggunakan ns1.hanakama.my.id dan ns2.hanakama.my.id <br><br>
 Untuk login ke file.domain, gunakan admin:admin lalu ubah password nya melalui menu "Settings"<br><br>
 Apabila punya SSL sendiri, pastikan SSL nya wildcard atau memiliki hostname pma.domain dan file.domain di SSL nya.<br><br>
     <form action="create.php" method="POST">
