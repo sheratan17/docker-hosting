@@ -78,9 +78,9 @@ echo "Menunggu input key ke github"
 sleep 30
 ssh-keyscan -t rsa github.com >> /root/.ssh/known_hosts
 cd /home
-git clone git@github.com:sheratan17/docker-wp.git
-mv /home/docker-wp/template /home/template
-cp /home/docker-wp/upload/*.sh /home/
+git clone git@github.com:sheratan17/docker-hosting.git
+mv /home/docker-hosting/template /home/template
+cp /home/docker-hosting/upload/*.sh /home/
 
 # Masukkan IP private server
 
