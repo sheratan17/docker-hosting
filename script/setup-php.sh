@@ -120,17 +120,17 @@ sudo chown -R $user_id:$group_id /home/$path/sitedata
 echo "Membuat user selesai."
 
 # Copy file compose dari folder template
-sudo cp /home/template/docker-compose.yml /home/$path/
-sudo cp /home/template/wordpress.ini /home/$path/
-sudo cp /home/template/config.inc.php /home/$path/pma/
-sudo cp /home/template/config.secret.inc.php /home/$path/pma/
-sudo cp /home/template/config.user.inc.php /home/$path/pma/
+sudo cp /home/wp-template/docker-compose.yml /home/$path/
+sudo cp /home/wp-template/wordpress.ini /home/$path/
+sudo cp /home/wp-template/config.inc.php /home/$path/pma/
+sudo cp /home/wp-template/config.secret.inc.php /home/$path/pma/
+sudo cp /home/wp-template/config.user.inc.php /home/$path/pma/
 sudo chown -R $user_id:$group_id /home/$path/pma
 
 # RNG FTW
-db_root_password=$(openssl rand -base64 9 | tr -dc 'a-zA-Z0-9!^()_' | head -c12)
-db_user=$(openssl rand -base64 9 | tr -dc 'a-zA-Z0-9!^()_' | head -c12)
-db_password=$(openssl rand -base64 9 | tr -dc 'a-zA-Z0-9!^()_' | head -c12)
+db_root_password=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 9 | head -n 1)
+db_user=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 9 | head -n 1)
+db_password=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 9 | head -n 1)
 pmasecret=$(openssl rand -base64 22)
 
 # Masukkan RNG ke .env
@@ -262,11 +262,16 @@ elif [ "$ssl" == "nossl" ]; then
 	sudo rm -f $keypath.key
 	echo "$path tidak menggunakan SSL"
 fi
-sudo sh -c 'echo "docker exec _containerdb /usr/bin/mysqldump -u root --password=_containerpassword wordpress > /backup/'$path'.sql && wait" >> /home/docker-wp/backupsql.sh'
+
+echo
+echo "Membuat script backup..."
+sudo sh -c 'echo "docker exec _containerdb /usr/bin/mysqldump -u root --password=_containerpassword wordpress > /backup/'$path'.sql && zip -r /home/'$path'.zip /home/'$path' && mv /home/'$path'.zip /backup &&  wait" >> /home/docker-wp/backupsql.sh'
 sudo sed -i "s/_containerdb/${pathtanpatitik}_db/g" /home/docker-wp/backupsql.sh
 sudo sed -i "s/_containerpassword/$db_root_password/g" /home/docker-wp/backupsql.sh
+
 sudo ssh "$user@$servernamed" "systemctl restart named"
 sudo rm -f $path.crt
 sudo rm -f $path.key
+echo
 echo "Selesai. Docker aktif."
 
