@@ -2,13 +2,14 @@
 
 echo
 echo "Deploy Node Docker, server harus kosong"
-echo "Pastikan server nginx reverse proxy dan named sudah tersedia dan dalam kondisi baru"
+echo "Pastikan server nginx reverse proxy dan DNS sudah tersedia dan dalam kondisi baru"
 echo "Pastikan IP private Node Docker dan nginx reverse proxy sudah aktif dan dapat berkomunikasi"
 echo
 echo "CTRL + C jika:"
 echo "- Ini bukan server kosong" 
-echo "- Server nginx dan named belum ada"
+echo "- Server nginx dan DNS belum ada"
 echo "- IP private belum bisa terhubung"
+echp "- Folder untuk backup belum dibuat"
 echo
 sleep 5
 read -p "Masukkan IP private server Node Docker: " ipprivate_node
@@ -16,9 +17,11 @@ echo
 read -p "Masukkan IP server nginx reverse proxy: " ip_nginx
 read -p "Masukkan password root server nginx reverse proxy: " pass_nginx
 echo
-read -p "Masukkan IP server named: " ip_named
-read -p "Masukkan password root server named: " pass_named
-read -p "Masukkan ns1 yang akan named gunakan (format: ns1.domain.tld): " ns_named
+read -p "Masukkan IP server DNS: " ip_named
+read -p "Masukkan password root server DNS: " pass_named
+read -p "Masukkan ns1 yang akan DNS gunakan (format: ns1.domain.tld): " ns_named
+echo
+read -p "Masukkan lokasi file backup (contoh: /backup): " backup_path
 echo
 echo "Memulai proses..."
 sleep 5
@@ -118,7 +121,7 @@ sleep 3
 
 today=$(date +"%Y%m%d")01
 
-# Membuat named
+# Membuat DNS
 echo
 domaintanpans=$(echo $ns_named | sed 's/ns1\.//')
 
@@ -156,6 +159,8 @@ echo "Menambahkan cronjob backup..."
 echo "0 2 * * * /home/docker-hosting/script/backupsql.sh > /dev/null 2>&1" > /tmp/cronjob2
 crontab /tmp/cronjob2
 rm /tmp/cronjob2
+
+mkdir /$backup_path
 
 echo "Download image docker..."
 docker image pull mysql:8.0.32
