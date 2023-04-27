@@ -259,9 +259,9 @@ fi
 
 echo
 echo "Membuat script backup..."
-sudo sh -c 'echo "docker exec _containerdb /usr/bin/mysqldump -u root --password=_containerpassword wordpress > /backup/'$path'.sql && zip -r /home/'$path'.zip /home/'$path'/sitedata && mv /home/'$path'.zip /backup &&  wait" >> /home/docker-hosting/script/backupsql.sh'
-sudo sed -i "s/_containerdb/${pathtanpatitik}_db/g" /home/docker-hosting/script/backupsql.sh
-sudo sed -i "s/_containerpassword/$db_root_password/g" /home/docker-hosting/script/backupsql.sh
+sudo sh -c 'echo "docker exec _containerdb /usr/bin/mysqldump -u root --password=_containerpassword wordpress > /backup/'$path'.sql && zip -r /home/'$path'.zip /home/'$path'/sitedata && mv /home/'$path'.zip /backup &&  wait" >> /home/docker-hosting/script/backup.sh'
+sudo sed -i "s/_containerdb/${pathtanpatitik}_db/g" /home/docker-hosting/script/backup.sh
+sudo sed -i "s/_containerpassword/$db_root_password/g" /home/docker-hosting/script/backup.sh
 
 sudo ssh "$user@$servernamed" "systemctl restart named"
 sudo rm -f $path.crt

@@ -150,7 +150,7 @@ echo "Server DNS selesai."
 echo
 echo "Menambahkan cronjob backup dan checkquota..."
 (crontab -l ; echo "0 1 * * * /home/docker-hosting/script/quotacheck.sh > /dev/null 2>&1") | crontab -
-(crontab -l ; echo "0 2 * * * /home/docker-hosting/script/backupsql.sh > /dev/null 2>&1") | crontab -
+(crontab -l ; echo "0 2 * * * /home/docker-hosting/script/backup.sh > /dev/null 2>&1") | crontab -
 
 mkdir /backup
 
