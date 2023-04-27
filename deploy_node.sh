@@ -5,7 +5,7 @@ echo "Script untuk deploy Node Docker, server harus kosong."
 echo
 echo "Pastikan server nginx reverse proxy dan DNS sudah tersedia dan dalam kondisi baru"
 echo "Pastikan IP private Node Docker dan nginx reverse proxy sudah aktif dan dapat berkomunikasi"
-echo "Script ini akan membuat direktori /backup , pastikan direktori /backup belum ada di server"
+echo "Script ini membutuhkan direktori /backup , pastikan direktori /backup sudah ada di server"
 echo
 echo "CTRL + C jika:"
 echo "- Ini bukan server kosong" 
@@ -152,7 +152,7 @@ echo "Menambahkan cronjob backup dan checkquota..."
 (crontab -l ; echo "0 1 * * * /home/docker-hosting/script/quotacheck.sh > /dev/null 2>&1") | crontab -
 (crontab -l ; echo "0 2 * * * /home/docker-hosting/script/backup.sh > /dev/null 2>&1") | crontab -
 
-mkdir /backup
+#mkdir /backup
 
 echo "Download image docker..."
 docker image pull mariadb:10.11.2-jammy
