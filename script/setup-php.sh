@@ -212,7 +212,7 @@ sudo sh -c 'echo "WP_DOMAIN_pma='${pathtanpatitik}_pma'" >> /home/'$path'/dbdata
 
 # buat reverse proxy
 today=$(date +"%Y%m%d")01
-echo "Buat reverse proxy"
+echo "Membuat reverse proxy..."
 user="root"
 servernginx="_servernginx"
 servernamed="_servernamed"
