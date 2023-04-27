@@ -79,12 +79,13 @@ sleep 30
 ssh-keyscan -t rsa github.com >> /root/.ssh/known_hosts
 cd /home
 git clone git@github.com:sheratan17/docker-hosting.git
-mv /home/docker-hosting/template /home/template
-cp /home/docker-hosting/upload/*.sh /home/
+mv /home/docker-hosting/script/setup-php.sh /home/
+mv /home/docker-hosting/script/delete-php.sh /home/
+mv /home/docker-hosting/script/changepkg-php-php.sh /home/
 
 # Masukkan IP private server
 
-sed -i "s/_ipprivate_node/$ipprivate_node/g" /home/template/docker-compose.yml
+sed -i "s/_ipprivate_node/$ipprivate_node/g" /home/wp-template/docker-compose.yml
 
 # Membuat nginx reverse proxy dan named
 echo
@@ -94,14 +95,14 @@ ssh-keyscan -t rsa $ip_nginx >> /root/.ssh/known_hosts
 
 sshpass -p "$pass_nginx" ssh-copy-id root@$ip_nginx
 ssh root@$ip_nginx "yum install epel-release -y && exit"
-ssh root@$ip_nginx "yum install nginx nano certbot python3-certbot-nginx -y && exit"
+ssh root@$ip_nginx "yum install nginx nano lsof certbot python3-certbot-nginx -y && exit"
 
 # download script dan update config di nginx reverse dan named
-sed -i "s/_ipprivate_node/$ipprivate_node/g" /home/docker-wp/template-mandiri.conf.inc
-sed -i "s/_ipprivate_node/$ipprivate_node/g" /home/docker-wp/template.conf.inc
+sed -i "s/_ipprivate_node/$ipprivate_node/g" /home/docker-hosting/server-template/template-mandiri.conf.inc
+sed -i "s/_ipprivate_node/$ipprivate_node/g" /home/docker-hosting/server-template/template.conf.inc
 
-scp /home/docker-wp/template-mandiri.conf.inc root@$ip_nginx:/etc/nginx/conf.d || exit 1
-scp /home/docker-wp/template.conf.inc root@$ip_nginx:/etc/nginx/conf.d || exit 1
+scp /home/docker-hosting/server-template/template-mandiri.conf.inc root@$ip_nginx:/etc/nginx/conf.d || exit 1
+scp /home/docker-hosting/server-template/template.conf.inc root@$ip_nginx:/etc/nginx/conf.d || exit 1
 
 # ubah bash script agar menggunakan IP nginx
 sed -i "s/_servernginx/$ip_nginx/g" /home/setup-php.sh
@@ -123,14 +124,13 @@ domaintanpans=$(echo $ns_named | sed 's/ns1\.//')
 
 sshpass -p "$pass_named" ssh-copy-id root@$ip_named
 
-ssh root@$ip_named "yum install bind nano bind-utils -y && exit"
+ssh root@$ip_named "yum install bind nano lsof bind-utils -y && exit"
 
-scp /home/docker-wp/_domain.db root@$ip_named:/etc/named || exit 1
-scp /home/docker-wp/_dns.db root@$ip_named:/etc/named || exit 1
+scp /home/docker-hosting/server-template/_domain.db root@$ip_named:/etc/named || exit 1
+scp /home/docker-hosting/server-template/_dns.db root@$ip_named:/etc/named || exit 1
 ssh root@$ip_named "mv /etc/named.conf /etc/named.conf.backup && exit"
-
 ssh root@$ip_named "mv /etc/named/_dns.db /etc/named/$domaintanpans.db && exit"
-scp /home/docker-wp/named.conf root@$ip_named:/etc/ || exit 1
+scp /home/docker-hosting/server-template/named.conf root@$ip_named:/etc/ || exit 1
 
 # ubah bash script agar menggunakan IP nginx dan named
 ssh "root@$ip_named" "sed -i "s/_dns/$domaintanpans/g" /etc/named/$domaintanpans.db"
@@ -147,9 +147,15 @@ ssh root@$ip_named "service named restart && exit"
 echo "Server DNS selesai."
 echo
 echo "Menambahkan cronjob checkquota..."
-echo "0 1 * * * /home/docker-wp/quotacheck.sh > /dev/null 2>&1" > /tmp/cronjob
+echo "0 1 * * * /home/docker-hosting/script/quotacheck.sh > /dev/null 2>&1" > /tmp/cronjob
 crontab /tmp/cronjob
 rm /tmp/cronjob
+
+echo
+echo "Menambahkan cronjob backup..."
+echo "0 2 * * * /home/docker-hosting/script/backupsql.sh > /dev/null 2>&1" > /tmp/cronjob2
+crontab /tmp/cronjob2
+rm /tmp/cronjob2
 
 echo "Download image docker..."
 docker image pull mysql:8.0.32
