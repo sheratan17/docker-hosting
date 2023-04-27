@@ -11,7 +11,7 @@ Docker + Script + Let's Encrypt + Disk, CPU dan RAM Quota
 8. Aktifkan quota: `quotaon -v /home`
 9. Cek apa sudah aktif: `quotaon -ap`
 10. Install docker: `dnf config-manager --add-repo=https://download.docker.com/linux/centos/docker-ce.repo && dnf install docker-ce docker-ce-cli containerd.io docker-compose-plugin`
-11. Aktifkan docker: `systemctl enable docker systemctl start docker`
+11. Aktifkan docker: `systemctl enable docker && systemctl start docker`
 12. Pastikan ip private sudah aktif, catat ip private nya
 13. Sesuaikan ip docker-compose.yml dengan ip private yang aktif
 14. Buat `ssh-keygen`
