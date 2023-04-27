@@ -22,7 +22,7 @@ Docker + Script + Let's Encrypt + Disk, CPU dan RAM Quota
 19. Update php exec time ke 600
 20. Update apache directory index tambahkan index.php
 21. Tambah ProxyTimeout 600 di httpd.conf
-22. Copy git punya andi: https://github.com/sheratan17/docker-wp
+22. Copy git punya andi: https://github.com/sheratan17/docker-hosting
 24. Pindahkan semua file php di `script` ke `/var/www/html`, file .sh nya di chmod +x
 25. `ssh-copy-id` ke server nginx reverse dan named
 
