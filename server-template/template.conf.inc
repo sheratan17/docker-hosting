@@ -21,6 +21,8 @@ server {
 	proxy_connect_timeout              60s;
 	proxy_send_timeout                 60s;
 	proxy_read_timeout                 60s;
+	
+	client_max_body_size 100M;
 	}
 }
 
@@ -47,6 +49,8 @@ server {
         proxy_connect_timeout              60s;
         proxy_send_timeout                 60s;
         proxy_read_timeout                 60s;
+		
+		client_max_body_size 100M;
         }
 }
 
@@ -73,6 +77,8 @@ server {
         proxy_connect_timeout              60s;
         proxy_send_timeout                 60s;
         proxy_read_timeout                 60s;
+		
+		client_max_body_size 100M;
         }
 }
 

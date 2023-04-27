@@ -27,7 +27,7 @@ sleep 5
 
 # install library
 yum update -y
-yum install quota wget nano curl vim lsof git sshpass -y
+yum install quota wget nano curl vim lsof git sshpass epel-release -y
 
 # Aktifkan quota di /home
 line=$(grep "^UUID=.* /home " /etc/fstab)

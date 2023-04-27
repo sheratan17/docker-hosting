@@ -20,6 +20,8 @@ server {
 	proxy_connect_timeout              60s;
 	proxy_send_timeout                 60s;
 	proxy_read_timeout                 60s;
+	
+	client_max_body_size 100M;
 	}
 
     listen 443 ssl http2; # managed by Certbot
@@ -28,17 +30,11 @@ server {
     include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
     ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
 
-
-
     add_header Strict-Transport-Security "max-age=31536000" always; # managed by Certbot
-
 
     #ssl_trusted_certificate /etc/letsencrypt/live/_domain -0001/chain.pem; # managed by Certbot
     #ssl_stapling on; # managed by Certbot
     #ssl_stapling_verify on; # managed by Certbot
-
-
-
 }
 
 server {
@@ -63,6 +59,8 @@ server {
         proxy_connect_timeout              60s;
         proxy_send_timeout                 60s;
         proxy_read_timeout                 60s;
+		
+		client_max_body_size 100M;
         }
 
     listen 443 ssl http2; # managed by Certbot
@@ -71,17 +69,11 @@ server {
     include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
     ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
 
-
-
     add_header Strict-Transport-Security "max-age=31536000" always; # managed by Certbot
-
 
     #ssl_trusted_certificate /etc/letsencrypt/live/_domain -0001/chain.pem; # managed by Certbot
     #ssl_stapling on; # managed by Certbot
     #ssl_stapling_verify on; # managed by Certbot
-
-
-
 }
 
 server {
@@ -106,6 +98,8 @@ server {
         proxy_connect_timeout              60s;
         proxy_send_timeout                 60s;
         proxy_read_timeout                 60s;
+		
+		client_max_body_size 100M;
         }
 
     listen 443 ssl http2; # managed by Certbot
@@ -114,14 +108,11 @@ server {
     include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
     ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
 
-
     add_header Strict-Transport-Security "max-age=31536000" always; # managed by Certbot
-
 
     #ssl_trusted_certificate /etc/letsencrypt/live/_domain -0001/chain.pem; # managed by Certbot
     #ssl_stapling on; # managed by Certbot
     #ssl_stapling_verify on; # managed by Certbot
-
 }
 
 server {
@@ -133,7 +124,6 @@ server {
     if ($host = _domain ) {
         return 301 https://$host$request_uri;
     } # managed by Certbot
-
 
 	listen      80;
 	server_name _domain  www._domain ;
@@ -157,14 +147,9 @@ server {
 	proxy_connect_timeout              60s;
 	proxy_send_timeout                 60s;
 	proxy_read_timeout                 60s;
+	
+	client_max_body_size 100M;
 	}
-
-
-
-
-
-
-
 }
 
 server {
@@ -176,7 +161,6 @@ server {
     if ($host = file._domain ) {
         return 301 https://$host$request_uri;
     } # managed by Certbot
-
 
         listen      80;
         server_name file._domain  www.file._domain ;
@@ -200,21 +184,15 @@ server {
         proxy_connect_timeout              60s;
         proxy_send_timeout                 60s;
         proxy_read_timeout                 60s;
+		
+		client_max_body_size 100M;
         }
-
-
-
-
-
-
-
 }
 
 server {
     if ($host = pma._domain ) {
         return 301 https://$host$request_uri;
     } # managed by Certbot
-
 
         listen      80;
         server_name pma._domain  www.pma._domain ;
@@ -238,9 +216,7 @@ server {
         proxy_connect_timeout              60s;
         proxy_send_timeout                 60s;
         proxy_read_timeout                 60s;
+		
+		client_max_body_size 100M;
         }
-
-
-
-
 }
