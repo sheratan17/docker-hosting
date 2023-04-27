@@ -2,7 +2,7 @@ version: '2.4'
 
 services:
   db:
-    image: mysql:8.0.32
+    image: mariadb:10.11.2-jammy
     container_name: $WP_DOMAIN_db
     restart: always
     env_file: .env
@@ -56,7 +56,7 @@ services:
     volumes:
       - /home/_userdomain/sitedata:/srv
       - ./config:/config
-    mem_limit: 0.2G
+    mem_limit: 0.1G
     cpus: 1.0
     environment:
       - PUID=_userid

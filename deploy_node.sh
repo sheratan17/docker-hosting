@@ -68,7 +68,7 @@ firewall-cmd --zone=public --add-service=https --permanent
 firewall-cmd --reload
 
 # buat ssh-keygen
-ssh-keygen -t rsa -N '' -f ~/.ssh/id_rsa <<< y
+#ssh-keygen -t rsa -N '' -f ~/.ssh/id_rsa <<< y
 
 echo "Selesai. Berikutnya download script lalu koneksikan server ini dengan nginx reverse proxy dan named..."
 sleep 3
@@ -155,7 +155,7 @@ echo "Menambahkan cronjob backup dan checkquota..."
 mkdir /backup
 
 echo "Download image docker..."
-docker image pull mysql:8.0.32
+docker image pull mariadb:10.11.2-jammy
 docker image pull wordpress:6.2-php8.2
 docker image pull filebrowser/filebrowser:v2-s6
 docker image pull phpmyadmin:5.2.1-apache
