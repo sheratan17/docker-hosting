@@ -57,7 +57,7 @@ sudo ssh "$user@$servernamed" "sed -i '/# begin zone $domain/,/# end zone $domai
 sudo ssh "$user@$servernamed" "systemctl restart named && exit"
 echo "DNS dihapus"
 echo "Hapus Backup..."
-sudo sed -i "/${PREFIX}_db/d" /home/docker-wp/backupsql.sh
+sudo sed -i "/${PREFIX}_db/d" /home/docker-hosting/script/backupsql.sh
 sudo rm -f /backup/$PREFIX.sql
 sudo rm -f /backup/$PREFIX.zip
 echo "Backup dihapus"
