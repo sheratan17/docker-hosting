@@ -67,7 +67,7 @@ services:
     depends_on:
       - db
     restart: always
-    image: phpmyadmin/phpmyadmin
+    image: phpmyadmin:5.2.1-fpm-alpine
     container_name: $WP_DOMAIN_pma
     environment:
        - PMA_HOST=db
@@ -77,8 +77,8 @@ services:
       - "_ipprivate_node:_random82:80"
     networks:
       backend:
-    mem_limit: _memlimit
-    cpus: _cpulimit
+    mem_limit: 0.2G
+    cpus: 1.0
     user: "_userid:_groupid"
     volumes:
       - /home/_userdomain/pma/config.secret.inc.php:/etc/phpmyadmin/config.secret.inc.php

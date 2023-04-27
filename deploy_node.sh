@@ -84,7 +84,7 @@ cd /home
 git clone git@github.com:sheratan17/docker-hosting.git
 mv /home/docker-hosting/script/setup-php.sh /home/
 mv /home/docker-hosting/script/delete-php.sh /home/
-mv /home/docker-hosting/script/changepkg-php-php.sh /home/
+mv /home/docker-hosting/script/changepkg-php.sh /home/
 
 # Masukkan IP private server
 
