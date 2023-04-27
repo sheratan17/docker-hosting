@@ -56,9 +56,11 @@ sudo ssh "$user@$servernamed" "rm /etc/named/$domain.db && exit"
 sudo ssh "$user@$servernamed" "sed -i '/# begin zone $domain/,/# end zone $domain/d' /etc/named.conf"
 sudo ssh "$user@$servernamed" "systemctl restart named && exit"
 echo "DNS dihapus"
+echo "Hapus Backup..."
 sudo sed -i "/${PREFIX}_db/d" /home/docker-wp/backupsql.sh
 sudo rm -f /backup/$PREFIX.sql
 sudo rm -f /backup/$PREFIX.zip
+echo "Backup dihapus"
 systemctl restart php-fpm
 systemctl restart httpd
 exit 1
