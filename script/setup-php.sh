@@ -30,13 +30,7 @@ function show_help {
     exit 1
 }
 
-#path=$1
-#paket=$2
-#ssl=$3
-
-
 # Deklarasi variabel
-
 path=""
 paket=""
 ssl=""
@@ -100,9 +94,9 @@ if [[ -z $path || -z $paket || -z $ssl ]]; then
     exit 1
 fi
 
-echo "Input domain: $path, | paket: $paket, | ssl: $ssl"
+echo "Domain: $path, | Paket: $paket, | SSL: $ssl"
 echo
-echo "Input crt: $crtpath | input key: $keypath"
+echo "Input crt: $crtpath | Input key: $keypath"
 
 # Setting path & add user
 pathtanpatitik=$(echo "${path}" | sed 's/\.//g')
@@ -274,4 +268,6 @@ sudo rm -f $path.crt
 sudo rm -f $path.key
 echo
 echo "Selesai. Docker aktif."
+echo
+exit 1
 

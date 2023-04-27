@@ -1,15 +1,16 @@
 #!/bin/bash
 
 echo
-echo "Deploy Node Docker, server harus kosong"
+echo "Script untuk deploy Node Docker, server harus kosong."
+echo
 echo "Pastikan server nginx reverse proxy dan DNS sudah tersedia dan dalam kondisi baru"
 echo "Pastikan IP private Node Docker dan nginx reverse proxy sudah aktif dan dapat berkomunikasi"
+echo "Script ini akan membuat direktori /backup , pastikan direktori /backup belum ada di server"
 echo
 echo "CTRL + C jika:"
 echo "- Ini bukan server kosong" 
 echo "- Server nginx dan DNS belum ada"
 echo "- IP private belum bisa terhubung"
-echo "- Folder untuk backup belum dibuat"
 echo
 sleep 5
 read -p "Masukkan IP private server Node Docker: " ipprivate_node
@@ -20,8 +21,6 @@ echo
 read -p "Masukkan IP server DNS: " ip_named
 read -p "Masukkan password root server DNS: " pass_named
 read -p "Masukkan ns1 yang akan DNS gunakan (format: ns1.domain.tld): " ns_named
-echo
-read -p "Masukkan lokasi file backup (contoh: /backup): " backup_path
 echo
 echo "Memulai proses..."
 sleep 5
@@ -149,18 +148,11 @@ ssh root@$ip_named "systemctl enable named && exit"
 ssh root@$ip_named "service named restart && exit"
 echo "Server DNS selesai."
 echo
-echo "Menambahkan cronjob checkquota..."
-echo "0 1 * * * /home/docker-hosting/script/quotacheck.sh > /dev/null 2>&1" > /tmp/cronjob
-crontab /tmp/cronjob
-rm /tmp/cronjob
+echo "Menambahkan cronjob backup dan checkquota..."
+(crontab -l ; echo "0 1 * * * /home/docker-hosting/script/quotacheck.sh > /dev/null 2>&1") | crontab -
+(crontab -l ; echo "0 2 * * * /home/docker-hosting/script/backupsql.sh > /dev/null 2>&1") | crontab -
 
-echo
-echo "Menambahkan cronjob backup..."
-echo "0 2 * * * /home/docker-hosting/script/backupsql.sh > /dev/null 2>&1" > /tmp/cronjob2
-crontab /tmp/cronjob2
-rm /tmp/cronjob2
-
-mkdir /$backup_path
+mkdir /backup
 
 echo "Download image docker..."
 docker image pull mysql:8.0.32
