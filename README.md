@@ -23,7 +23,7 @@ Docker + Script + Let's Encrypt + Disk, CPU dan RAM Quota
 20. Update apache directory index tambahkan index.php
 21. Tambah ProxyTimeout 600 di httpd.conf
 22. Copy git punya andi: https://github.com/sheratan17/docker-hosting
-24. Pindahkan semua file php di `script` ke `/var/www/html`, file .sh nya di chmod +x
+24. Pindahkan semua file php dan .sh di `script` ke `/var/www/html`, file .sh nya di chmod +x
 25. `ssh-copy-id` ke server nginx reverse dan named
 
 ATAU
@@ -59,7 +59,7 @@ Jalankan `deploy_node.sh` untuk menjalankan semua (sepertinya sih) perintah diat
 6. Script untuk deploy server node, dns dan nginx :heavy_check_mark:
 7. Integrasi dengan Redis / Memcached
 8. Database untuk arsip dan pencatatan
-9. Sistem backup - restore
+9. Sistem backup - restore :heavy_check_mark:
 10. Memastikan port random tidak duplikat
 11. Hardening nginx reverse proxy
 12. Antivirus
