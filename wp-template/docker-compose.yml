@@ -56,8 +56,8 @@ services:
     volumes:
       - /home/_userdomain/sitedata:/srv
       - ./config:/config
-    mem_limit: _memlimit
-    cpus: _cpulimit
+    mem_limit: 0.2G
+    cpus: 1.0
     environment:
       - PUID=_userid
       - PGID=_groupid
