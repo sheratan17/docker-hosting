@@ -111,15 +111,14 @@ sed -i "s/_servernginx/$ip_nginx/g" /home/setup-php.sh
 sed -i "s/_servernginx/$ip_nginx/g" /home/delete-php.sh
 
 # pasang modsec
-scp -r /home/docker-hosting/server-template/modsec root@$ip_nginx:/etc/nginx/ || exit 1
-scp -r /home/docker-hosting/server-template/modules root@$ip_nginx:/etc/nginx/ || exit 1
-scp -r /home/docker-hosting/server-template/rules root@$ip_nginx:/etc/nginx/ || exit 1
-
-ssh root@$ip_nginx "echo -e 'Include /etc/nginx/modsec/crs-setup.conf\nInclude /etc/nginx/rules/*.conf' >> /etc/nginx/modsec/modsecurity.conf"
-ssh root@$ip_nginx "sed -i 's#/var/log/modsec_audit.log#/var/log/nginx/modsec_audit.log#' && exit"
-ssh root@$ip_nginx "touch /var/log/modsec_audit.log && exit"
-ssh root@$ip_nginx "systemctl enable nginx && exit"
-ssh root@$ip_nginx "service nginx restart && exit"
+#scp -r /home/docker-hosting/server-template/modsec root@$ip_nginx:/etc/nginx/ || exit 1
+#scp -r /home/docker-hosting/server-template/modules root@$ip_nginx:/etc/nginx/ || exit 1
+#scp -r /home/docker-hosting/server-template/rules root@$ip_nginx:/etc/nginx/ || exit 1
+#ssh root@$ip_nginx "echo -e 'Include /etc/nginx/modsec/crs-setup.conf\nInclude /etc/nginx/rules/*.conf' >> /etc/nginx/modsec/modsecurity.conf"
+#ssh root@$ip_nginx "sed -i 's#/var/log/modsec_audit.log#/var/log/nginx/modsec_audit.log#' && exit"
+#ssh root@$ip_nginx "touch /var/log/modsec_audit.log && exit"
+#ssh root@$ip_nginx "systemctl enable nginx && exit"
+#ssh root@$ip_nginx "service nginx restart && exit"
 
 echo "Nginx selesai."
 echo
