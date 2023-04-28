@@ -23,8 +23,8 @@ function show_help {
     echo "  --ssl=<ssl>             Status SSL, Gunakan "le" untuk Let's Encrypt, "mandiri" jika ada SSL sendiri, atau "nossl" jika tanpa SSL"
     echo "                          --crtpath dan --keypath harus ada jika pakai --ssl=mandiri"
     echo "  --crtpath=<alamat crt>  --crtpath dan --keypath haruslah alamat absolute, contoh /var/www/html/domain.crt"
-    echo "  --keypath=<alamat key>  dan namanya harus domain.crt, contoh qwords.co.id.crt | qwords.co.id.key"
-    echo "                          Untuk saat ini alamat yang diterima baru /var/www/html/domain.crt dan /var/www/html/key.crt"
+    echo "  --keypath=<alamat key>  dan namanya harus domain.crt/.key, contoh qwords.co.id.crt | qwords.co.id.key"
+    echo
     echo "  --h                     Tampilkan menu ini"
     echo
     exit 1
