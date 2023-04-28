@@ -89,7 +89,7 @@ mv /home/docker-hosting/script/changepkg-php.sh /home/
 
 sed -i "s/_ipprivate_node/$ipprivate_node/g" /home/docker-hosting/wp-template/docker-compose.yml
 
-# Membuat nginx reverse proxy dan named
+# Membuat nginx reverse proxy
 echo
 echo "Membuat nginx reverse proxy..."
 
@@ -99,7 +99,7 @@ sshpass -p "$pass_nginx" ssh-copy-id root@$ip_nginx
 ssh root@$ip_nginx "yum install epel-release -y && exit"
 ssh root@$ip_nginx "yum install nginx nano lsof certbot python3-certbot-nginx -y && exit"
 
-# download script dan update config di nginx reverse dan named
+# download script dan update config di nginx reverse
 sed -i "s/_ipprivate_node/$ipprivate_node/g" /home/docker-hosting/server-template/template-mandiri.conf.inc
 sed -i "s/_ipprivate_node/$ipprivate_node/g" /home/docker-hosting/server-template/template.conf.inc
 
@@ -110,17 +110,24 @@ scp /home/docker-hosting/server-template/template.conf.inc root@$ip_nginx:/etc/n
 sed -i "s/_servernginx/$ip_nginx/g" /home/setup-php.sh
 sed -i "s/_servernginx/$ip_nginx/g" /home/delete-php.sh
 
+# pasang modsec
+scp -r /home/docker-hosting/server-template/modsec root@$ip_nginx:/etc/nginx/ || exit 1
+scp -r /home/docker-hosting/server-template/modules root@$ip_nginx:/etc/nginx/ || exit 1
+scp -r /home/docker-hosting/server-template/rules root@$ip_nginx:/etc/nginx/ || exit 1
+
 ssh root@$ip_nginx "systemctl enable nginx && exit"
 ssh root@$ip_nginx "service nginx restart && exit"
 
 echo "Nginx selesai."
 echo
+
+# Membuat DNS Server
+
 echo "Memulai deploy server DNS..."
 sleep 3
 
 today=$(date +"%Y%m%d")01
 
-# Membuat DNS
 echo
 domaintanpans=$(echo $ns_named | sed 's/ns1\.//')
 
@@ -134,7 +141,7 @@ ssh root@$ip_named "mv /etc/named.conf /etc/named.conf.backup && exit"
 ssh root@$ip_named "mv /etc/named/_dns.db /etc/named/$domaintanpans.db && exit"
 scp /home/docker-hosting/server-template/named.conf root@$ip_named:/etc/ || exit 1
 
-# ubah bash script agar menggunakan IP nginx dan named
+# ubah bash script agar menggunakan IP DNS Server
 ssh "root@$ip_named" "sed -i "s/_dns/$domaintanpans/g" /etc/named/$domaintanpans.db"
 ssh "root@$ip_named" "sed -i "s/_ipnamed/$ip_named/g" /etc/named/$domaintanpans.db"
 ssh "root@$ip_named" "sed -i "s/_soa/$today/g" /etc/named/$domaintanpans.db"
