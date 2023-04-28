@@ -167,9 +167,9 @@ fi
 #done >> last80.txt
 # to do: port nya tidak bentrok
 
-number80=$(shuf -i 1000-2000 -n 1)
-number81=$(shuf -i 2001-3000 -n 1)
-number82=$(shuf -i 3001-4000 -n 1)
+number80=$(shuf -i 1000-5000 -n 1)
+number81=$(shuf -i 5001-9000 -n 1)
+number82=$(shuf -i 9001-12000 -n 1)
 sudo sed -i "s/_random80/$number80/g" /home/$path/docker-compose.yml
 sudo sed -i "s/_random81/$number81/g" /home/$path/docker-compose.yml
 sudo sed -i "s/_random82/$number82/g" /home/$path/docker-compose.yml
@@ -181,7 +181,7 @@ echo "Memulai kontainer..."
 
 # update quota, tunggu 10 detik biar size nya ke update
 echo "Update Quota..."
-sleep 10s
+sleep 7s
 sudo quotacheck -ugmf /home
 
 echo "Quota selesai."
