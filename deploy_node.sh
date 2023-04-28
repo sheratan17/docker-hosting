@@ -158,6 +158,8 @@ ssh root@$ip_named "service named restart && exit"
 echo "Server DNS selesai."
 echo
 echo "Menambahkan cronjob backup dan checkquota..."
+chmod +x /home/docker-hosting/script/quotacheck.sh
+chmod +x /home/docker-hosting/script/backup.sh
 (crontab -l ; echo "0 1 * * * /home/docker-hosting/script/quotacheck.sh > /var/log/quotacheck.txt 2>&1") | crontab -
 (crontab -l ; echo "0 2 * * * /home/docker-hosting/script/backup.sh > /var/log/backup.txt 2>&1") | crontab -
 
