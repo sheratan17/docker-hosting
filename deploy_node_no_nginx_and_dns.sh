@@ -95,8 +95,8 @@ echo "Membuat nginx reverse proxy..."
 ssh-keyscan -t rsa $ip_nginx >> /root/.ssh/known_hosts
 
 sshpass -p "$pass_nginx" ssh-copy-id root@$ip_nginx
-ssh root@$ip_nginx "yum install epel-release -y && exit"
-ssh root@$ip_nginx "yum install nginx nano lsof certbot python3-certbot-nginx -y && exit"
+#ssh root@$ip_nginx "yum install epel-release -y && exit"
+#ssh root@$ip_nginx "yum install nginx nano lsof certbot python3-certbot-nginx -y && exit"
 
 # download script dan update config di nginx reverse
 # pindahkan ke setup-php.sh, tambahkan cp
@@ -123,38 +123,38 @@ echo
 
 # Membuat DNS Server
 # bagian ini dibuang
-echo "Memulai deploy server DNS..."
-sleep 3
+#echo "Memulai deploy server DNS..."
+#sleep 3
 
-today=$(date +"%Y%m%d")01
+#today=$(date +"%Y%m%d")01
 
-echo
-domaintanpans=$(echo $ns_named | sed 's/ns1\.//')
+#echo
+#domaintanpans=$(echo $ns_named | sed 's/ns1\.//')
 
-sshpass -p "$pass_named" ssh-copy-id root@$ip_named
+#sshpass -p "$pass_named" ssh-copy-id root@$ip_named
 
-ssh root@$ip_named "yum install bind nano lsof bind-utils -y && exit"
+#ssh root@$ip_named "yum install bind nano lsof bind-utils -y && exit"
 
-scp /home/docker-hosting/server-template/_domain.db root@$ip_named:/etc/named || exit 1
-scp /home/docker-hosting/server-template/_dns.db root@$ip_named:/etc/named || exit 1
-ssh root@$ip_named "mv /etc/named.conf /etc/named.conf.backup && exit"
-ssh root@$ip_named "mv /etc/named/_dns.db /etc/named/$domaintanpans.db && exit"
-scp /home/docker-hosting/server-template/named.conf root@$ip_named:/etc/ || exit 1
+#scp /home/docker-hosting/server-template/_domain.db root@$ip_named:/etc/named || exit 1
+#scp /home/docker-hosting/server-template/_dns.db root@$ip_named:/etc/named || exit 1
+#ssh root@$ip_named "mv /etc/named.conf /etc/named.conf.backup && exit"
+#ssh root@$ip_named "mv /etc/named/_dns.db /etc/named/$domaintanpans.db && exit"
+#scp /home/docker-hosting/server-template/named.conf root@$ip_named:/etc/ || exit 1
 
 # ubah bash script agar menggunakan IP DNS Server
-ssh "root@$ip_named" "sed -i "s/_dns/$domaintanpans/g" /etc/named/$domaintanpans.db"
-ssh "root@$ip_named" "sed -i "s/_ipnamed/$ip_named/g" /etc/named/$domaintanpans.db"
-ssh "root@$ip_named" "sed -i "s/_soa/$today/g" /etc/named/$domaintanpans.db"
-ssh "root@$ip_named" "sed -i "s/_dns/$domaintanpans/g" /etc/named.conf"
-ssh "root@$ip_named" "sed -i "s/_dns/$domaintanpans/g" /etc/named/_domain.db"
+#ssh "root@$ip_named" "sed -i "s/_dns/$domaintanpans/g" /etc/named/$domaintanpans.db"
+#ssh "root@$ip_named" "sed -i "s/_ipnamed/$ip_named/g" /etc/named/$domaintanpans.db"
+#ssh "root@$ip_named" "sed -i "s/_soa/$today/g" /etc/named/$domaintanpans.db"
+#ssh "root@$ip_named" "sed -i "s/_dns/$domaintanpans/g" /etc/named.conf"
+#ssh "root@$ip_named" "sed -i "s/_dns/$domaintanpans/g" /etc/named/_domain.db"
 
 sed -i "s/_servernamed/$ip_named/g" /home/setup-php.sh
 sed -i "s/_servernamed/$ip_named/g" /home/delete-php.sh
 
-ssh root@$ip_named "systemctl enable named && exit"
-ssh root@$ip_named "service named restart && exit"
-echo "Server DNS selesai."
-echo
+#ssh root@$ip_named "systemctl enable named && exit"
+#ssh root@$ip_named "service named restart && exit"
+#echo "Server DNS selesai."
+#cho
 
 # Membuat backup
 echo "Menambahkan cronjob backup dan checkquota..."
