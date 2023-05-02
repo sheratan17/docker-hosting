@@ -100,15 +100,13 @@ ssh root@$ip_nginx "yum install nginx nano lsof certbot python3-certbot-nginx -y
 
 # download script dan update config di nginx reverse
 # pindahkan ke setup-php.sh, tambahkan cp
-sed -i "s/_ipprivate_node/$ipprivate_node/g" /home/docker-hosting/server-template/template-mandiri.conf.inc
-sed -i "s/_ipprivate_node/$ipprivate_node/g" /home/docker-hosting/server-template/template.conf.inc
-
-scp /home/docker-hosting/server-template/template-mandiri.conf.inc root@$ip_nginx:/etc/nginx/conf.d || exit 1
-scp /home/docker-hosting/server-template/template.conf.inc root@$ip_nginx:/etc/nginx/conf.d || exit 1
+#scp /home/docker-hosting/server-template/template-mandiri.conf.inc root@$ip_nginx:/etc/nginx/conf.d || exit 1
+#scp /home/docker-hosting/server-template/template.conf.inc root@$ip_nginx:/etc/nginx/conf.d || exit 1
 
 # ubah bash script agar menggunakan IP nginx
 sed -i "s/_servernginx/$ip_nginx/g" /home/setup-php.sh
 sed -i "s/_servernginx/$ip_nginx/g" /home/delete-php.sh
+sed -i "s/_ipprivate_node/$ipprivate_node/g" /home/delete-php.sh
 
 # pasang modsec
 #scp -r /home/docker-hosting/server-template/modsec root@$ip_nginx:/etc/nginx/ || exit 1
