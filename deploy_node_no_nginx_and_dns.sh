@@ -20,7 +20,7 @@ read -p "Masukkan password root server nginx reverse proxy: " pass_nginx
 echo
 read -p "Masukkan IP server DNS: " ip_named
 read -p "Masukkan password root server DNS: " pass_named
-read -p "Masukkan ns1 yang akan DNS gunakan (format: ns1.domain.tld): " ns_named
+#read -p "Masukkan ns1 yang akan DNS gunakan (format: ns1.domain.tld): " ns_named
 echo
 echo "Memulai proses..."
 sleep 5
@@ -131,7 +131,7 @@ echo
 #echo
 #domaintanpans=$(echo $ns_named | sed 's/ns1\.//')
 
-#sshpass -p "$pass_named" ssh-copy-id root@$ip_named
+sshpass -p "$pass_named" ssh-copy-id root@$ip_named
 
 #ssh root@$ip_named "yum install bind nano lsof bind-utils -y && exit"
 
@@ -153,7 +153,7 @@ sed -i "s/_servernamed/$ip_named/g" /home/delete-php.sh
 
 #ssh root@$ip_named "systemctl enable named && exit"
 #ssh root@$ip_named "service named restart && exit"
-#echo "Server DNS selesai."
+echo "Server DNS selesai."
 #cho
 
 # Membuat backup
