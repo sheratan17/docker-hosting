@@ -16,7 +16,7 @@ Docker + Script + Let's Encrypt + Disk, CPU dan RAM Quota
 
 ATAU
 
-Jalankan `deploy_node.sh` untuk menjalankan semua (sepertinya sih) perintah diatas
+Jalankan `deploy_node.sh` pada server Node Docker untuk menjalankan semua (sepertinya sih) perintah diatas
 
 # Setup server named
 1. Install named
@@ -24,7 +24,7 @@ Jalankan `deploy_node.sh` untuk menjalankan semua (sepertinya sih) perintah diat
 
 ATAU
 
-Jalankan `deploy_node.sh` untuk menjalankan semua (sepertinya sih) perintah diatas
+Jalankan `deploy_node.sh` pada server Node Docker untuk menjalankan semua (sepertinya sih) perintah diatas
 
 # Pengembangan
 1. Script untuk update ssl dari le ke mandiri atau sebaliknya
