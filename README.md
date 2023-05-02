@@ -4,31 +4,7 @@ Docker + Script + Let's Encrypt + Disk, CPU dan RAM Quota
 1. Instal Almalinux 8
 2. Pastikan semua partisi pakai ext4 dan /home memiliki partisi yang berbeda (tidak disatukan sama / )
 3. Update OS
-4. Install: `yum install quota wget nano curl vim lsof git`
-5. Aktifkan quota, edit `/etc/fstab` tambahkan `usrjquota=aquota.user,grpjquota=aquota.group,jqfmt=vfsv1` pada `defaults` bagian /home sehingga hasil akhirnya seperti `... /home ... defaults,usrjquota=aquota.user,grpjquota=aquota.group,jqfmt=vfsv1`
-6. Reboot
-7. Buat index: `quotacheck -cugm /home`
-8. Aktifkan quota: `quotaon -v /home`
-9. Cek apa sudah aktif: `quotaon -ap`
-10. Install docker: `dnf config-manager --add-repo=https://download.docker.com/linux/centos/docker-ce.repo && dnf install docker-ce docker-ce-cli containerd.io docker-compose-plugin`
-11. Aktifkan docker: `systemctl enable docker && systemctl start docker`
-12. Pastikan ip private sudah aktif, catat ip private nya
-13. Sesuaikan ip docker-compose.yml dengan ip private yang aktif
-14. Buat `ssh-keygen`
-15. Matikan selinux
-16. Add apache ke grup wheel `usermod -a -G wheel apache`
-17. Add apache ke grup docker `usermod -a -G docker apache`
-18. Edit visudo, allow apache
-19. Update php exec time ke 600
-20. Update apache directory index tambahkan index.php
-21. Tambah ProxyTimeout 600 di httpd.conf
-22. Copy git punya andi: https://github.com/sheratan17/docker-hosting
-24. Pindahkan semua file php dan .sh di `script` ke `/var/www/html`, file .sh nya di chmod +x
-25. `ssh-copy-id` ke server nginx reverse dan named
-
-ATAU
-
-Jalankan `deploy_node.sh` untuk menjalankan semua (sepertinya sih) perintah diatas
+4. Jalankan `deploy_node.sh` untuk menjalankan semua (sepertinya sih) perintah diatas atau `deploy_node_no_nginx_and_dns.sh` kalau sudah setup node nginx dan DNS (Jadi hanya setup + menghubungkan Node Docker saja)
 
 # Setup server nginx reverse
 1. Install Almalinux
@@ -74,3 +50,29 @@ Jalankan `deploy_node.sh` untuk menjalankan semua (sepertinya sih) perintah diat
 `curl -X POST -H 'Content-Type: application/json' -d '{"--d": "fikara.my.id"}' http://docker.fastcloud.id/api-delete.php`
 4. curl JSON request ganti paket<br>
 `curl -X POST -H 'Content-Type: application/json' -d '{"--d": "fikara.my.id", "--p": "p1"}' http://docker.fastcloud.id/api-changepkg.php`
+
+# OLD README
+1. Instal Almalinux 8
+2. Pastikan semua partisi pakai ext4 dan /home memiliki partisi yang berbeda (tidak disatukan sama / )
+3. Update OS
+4. Install: `yum install quota wget nano curl vim lsof git`
+5. Aktifkan quota, edit `/etc/fstab` tambahkan `usrjquota=aquota.user,grpjquota=aquota.group,jqfmt=vfsv1` pada `defaults` bagian /home sehingga hasil akhirnya seperti `... /home ... defaults,usrjquota=aquota.user,grpjquota=aquota.group,jqfmt=vfsv1`
+6. Reboot
+7. Buat index: `quotacheck -cugm /home`
+8. Aktifkan quota: `quotaon -v /home`
+9. Cek apa sudah aktif: `quotaon -ap`
+10. Install docker: `dnf config-manager --add-repo=https://download.docker.com/linux/centos/docker-ce.repo && dnf install docker-ce docker-ce-cli containerd.io docker-compose-plugin`
+11. Aktifkan docker: `systemctl enable docker && systemctl start docker`
+12. Pastikan ip private sudah aktif, catat ip private nya
+13. Sesuaikan ip docker-compose.yml dengan ip private yang aktif
+14. Buat `ssh-keygen`
+15. Matikan selinux
+16. Add apache ke grup wheel `usermod -a -G wheel apache`
+17. Add apache ke grup docker `usermod -a -G docker apache`
+18. Edit visudo, allow apache
+19. Update php exec time ke 600
+20. Update apache directory index tambahkan index.php
+21. Tambah ProxyTimeout 600 di httpd.conf
+22. Copy git punya andi: https://github.com/sheratan17/docker-hosting
+24. Pindahkan semua file php dan .sh di `script` ke `/var/www/html`, file .sh nya di chmod +x
+25. `ssh-copy-id` ke server nginx reverse dan named
