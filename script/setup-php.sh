@@ -18,9 +18,9 @@ function show_help {
     echo "Perintah: ./setup-php.sh --cms=<cms> --d=<domain> --p=<package> --ssl=<ssl> --crtpath=<absolute path for crt> --keypath=<absolute path for key> [--h]"
     echo
     echo "Penjelasan:"
-	echo "  --cms=<cms>				CMS yang akan dipasang, gunakan:"
-	echo "							"wp" untuk wordpress, "joomla" untuk joomla, dan "moodle" untuk moodle"
-	echo "							contoh: --cms=wp"
+    echo "  --cms=<cms>             CMS yang akan dipasang, gunakan:"
+    echo "                          'wp' untuk wordpress, 'joomla' untuk joomla, dan 'moodle' untuk moodle"
+    echo "                          contoh: --cms=wp"
     echo "  --d=<domain>            Nama domain"
     echo "  --p=<package>           Paket WP"
     echo "  --ssl=<ssl>             Status SSL, Gunakan "le" untuk Let's Encrypt, "mandiri" jika ada SSL sendiri, atau "nossl" jika tanpa SSL"
