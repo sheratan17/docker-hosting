@@ -149,7 +149,7 @@ sudo sh -c 'echo "MYSQL_ROOT_PASSWORD='$db_root_password'" >> /home/'$path'/.env
 sudo sh -c 'echo "MYSQL_USER='$db_user'" >>/home/'$path'/.env'
 sudo sh -c 'echo "MYSQL_PASSWORD='$db_password'" >> /home/'$path'/.env'
 sudo sh -c 'echo "SITE_DOMAIN_db='${pathtanpatitik}_db'" >> /home/'$path'/.env'
-sudo sh -c 'echo "SITE_DOMAIN_wp='${pathtanpatitik}_web'" >> /home/'$path'/.env'
+sudo sh -c 'echo "SITE_DOMAIN_web='${pathtanpatitik}_web'" >> /home/'$path'/.env'
 sudo sh -c 'echo "SITE_DOMAIN_filebrowser='${pathtanpatitik}_filebrowser'" >> /home/'$path'/.env'
 sudo sh -c 'echo "SITE_DOMAIN_pma='${pathtanpatitik}_pma'" >> /home/'$path'/.env'
 sudo sed -i "s/_pma_secret/$pmasecret/g" /home/$path/pma/config.secret.inc.php
