@@ -97,7 +97,7 @@ done
 
 # Cek input harus lengkap
 if [[ -z $path || -z $paket || -z $ssl ]]; then
-    echo "Error: --d, --p, dan --ssl harus ada dan lengkap."
+    echo "Error: --cms, --d, --p, dan --ssl harus ada dan lengkap."
     show_help
     exit 1
 fi
