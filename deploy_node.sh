@@ -87,7 +87,7 @@ mv /home/docker-hosting/script/changepkg-php.sh /home/
 
 # Masukkan IP private server
 
-sed -i "s/_ipprivate_node/$ipprivate_node/g" /home/docker-hosting/wp-template/docker-compose.yml
+sed -i "s/_ipprivate_node/$ipprivate_node/g" /home/docker-hosting/*-template/docker-compose.yml
 
 # Membuat nginx reverse proxy
 echo
