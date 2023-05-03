@@ -210,7 +210,7 @@ echo "Membuat reverse proxy..."
 user="root"
 servernginx="_servernginx"
 servernamed="_servernamed"
-ipprivate_node="_ipprivate_node"
+ipprivate_node="_ipprivate_node_"
 
 sudo ssh "$user@$servernamed" "cp /etc/named/_domain.db /etc/named/$path.db && exit"
 sudo ssh "$user@$servernamed" "sed -i "s/_domain/$path/g" /etc/named/$path.db && exit"

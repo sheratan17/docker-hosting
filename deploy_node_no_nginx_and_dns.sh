@@ -81,7 +81,7 @@ echo "Menunggu input key ke github"
 ssh-keyscan -t rsa github.com >> /root/.ssh/known_hosts
 cd /home
 git clone git@github.com:sheratan17/docker-hosting.git
-mv /home/docker-hosting/script/setup-php.sh /home/
+mv /home/docker-hosting/script/setup-php-*.sh /home/
 mv /home/docker-hosting/script/delete-php.sh /home/
 mv /home/docker-hosting/script/changepkg-php.sh /home/
 
@@ -104,9 +104,9 @@ sshpass -p "$pass_nginx" ssh-copy-id root@$ip_nginx
 #scp /home/docker-hosting/server-template/template.conf.inc root@$ip_nginx:/etc/nginx/conf.d || exit 1
 
 # ubah bash script agar menggunakan IP nginx
-sed -i "s/_servernginx/$ip_nginx/g" /home/setup-php.sh
+sed -i "s/_servernginx/$ip_nginx/g" /home/setup-php-*.sh
+sed -i "s/_ipprivate_node_/$ipprivate_node/g" /home/setup-php-*.sh
 sed -i "s/_servernginx/$ip_nginx/g" /home/delete-php.sh
-sed -i "s/_ipprivate_node/$ipprivate_node/g" /home/delete-php.sh
 
 # pasang modsec
 #scp -r /home/docker-hosting/server-template/modsec root@$ip_nginx:/etc/nginx/ || exit 1
@@ -148,7 +148,7 @@ sshpass -p "$pass_named" ssh-copy-id root@$ip_named
 #ssh "root@$ip_named" "sed -i "s/_dns/$domaintanpans/g" /etc/named.conf"
 #ssh "root@$ip_named" "sed -i "s/_dns/$domaintanpans/g" /etc/named/_domain.db"
 
-sed -i "s/_servernamed/$ip_named/g" /home/setup-php.sh
+sed -i "s/_servernamed/$ip_named/g" /home/setup-php-*.sh
 sed -i "s/_servernamed/$ip_named/g" /home/delete-php.sh
 
 #ssh root@$ip_named "systemctl enable named && exit"
