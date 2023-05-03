@@ -82,7 +82,7 @@ ssh-keyscan -t rsa github.com >> /root/.ssh/known_hosts
 cd /home
 git clone git@github.com:sheratan17/docker-hosting.git
 mv /home/docker-hosting/script/setup-php-*.sh /home/
-mv /home/docker-hosting/script/delete-php.sh /home/
+mv /home/docker-hosting/script/delete-php-*.sh /home/
 mv /home/docker-hosting/script/changepkg-php.sh /home/
 
 # Masukkan IP private server
