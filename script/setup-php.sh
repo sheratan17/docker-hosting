@@ -46,8 +46,8 @@ while [[ $# -gt 0 ]]
 do
     key="$1"
     case $key in
-	     --cms=*)
-        path="${key#*=}"
+	    --cms=*)
+        cms="${key#*=}"
         shift
         ;;
         --d=*)
@@ -96,7 +96,7 @@ do
 done
 
 # Cek input harus lengkap
-if [[ -z $path || -z $paket || -z $ssl ]]; then
+if [[ -z $cms || -z $path || -z $paket || -z $ssl ]]; then
     echo "Error: --cms, --d, --p, dan --ssl harus ada dan lengkap."
     show_help
     exit 1
@@ -126,6 +126,7 @@ sudo cp /home/docker-hosting/pma-template/config.inc.php /home/$path/pma/
 sudo cp /home/docker-hosting/pma-template/config.secret.inc.php /home/$path/pma/
 sudo cp /home/docker-hosting/pma-template/config.user.inc.php /home/$path/pma/
 sudo chown -R $user_id:$group_id /home/$path/pma
+echo "Copy file pma selesai."
 
 # Copy file template sesuai kondisi CMS
 if [ "$cms" == "wp" ]; then
@@ -133,8 +134,6 @@ if [ "$cms" == "wp" ]; then
 	sudo cp /home/docker-hosting/wp-template/wordpress.ini /home/$path/
 elif [ "$cms" == "moodle" ]; then
 	sudo cp /home/docker-hosting/moodle-template/docker-compose.yml /home/$path/
-else
-	sudo exit 1
 fi
 
 echo "Copy file template selesai."
