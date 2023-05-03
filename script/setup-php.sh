@@ -4,9 +4,9 @@ export PATH="$PATH:/usr/sbin/"
 BLUE='\033[0;36m'
 NC='\033[0m' # No Color
 echo
-echo "-----------------------------------------------"
-echo "| Buat Docker untuk Wordpress berbasis domain |"
-echo "------------------------------created by Andi--"
+echo "--------------------------------"
+echo "| Buat Hosting berbasis Docker |"
+echo "---------------created by Andi--"
 echo
 echo "Paket yang tersedia:"
 echo "1. P1 (1 Core, 1GB RAM, 10GB SSD)"
@@ -15,9 +15,12 @@ echo
 
 function show_help {
     echo
-    echo "Perintah: ./setup-php.sh --d=<domain> --p=<package> --ssl=<ssl> --crtpath=<absolute path for crt> --keypath=<absolute path for key> [--h]"
+    echo "Perintah: ./setup-php.sh --cms=<cms> --d=<domain> --p=<package> --ssl=<ssl> --crtpath=<absolute path for crt> --keypath=<absolute path for key> [--h]"
     echo
     echo "Penjelasan:"
+	echo "  --cms=<cms>				CMS yang akan dipasang, gunakan:"
+	echo "							"wp" untuk wordpress, "joomla" untuk joomla, dan "moodle" untuk moodle"
+	echo "							contoh: --cms=wp"
     echo "  --d=<domain>            Nama domain"
     echo "  --p=<package>           Paket WP"
     echo "  --ssl=<ssl>             Status SSL, Gunakan "le" untuk Let's Encrypt, "mandiri" jika ada SSL sendiri, atau "nossl" jika tanpa SSL"
@@ -25,7 +28,7 @@ function show_help {
     echo "  --crtpath=<alamat crt>  --crtpath dan --keypath haruslah alamat absolute, contoh /var/www/html/domain.crt"
     echo "  --keypath=<alamat key>  dan namanya harus domain.crt/.key, contoh qwords.co.id.crt | qwords.co.id.key"
     echo
-    echo "  --h                     Tampilkan menu ini"
+    echo "  --h                     Tampilkan menu ini."
     echo
     exit 1
 }
@@ -36,12 +39,17 @@ paket=""
 ssl=""
 keypath=""
 crtpath=""
+cms=""
 
 # Buat menu dan deteksi input
 while [[ $# -gt 0 ]]
 do
     key="$1"
     case $key in
+	     --cms=*)
+        path="${key#*=}"
+        shift
+        ;;
         --d=*)
         path="${key#*=}"
         shift
@@ -94,7 +102,7 @@ if [[ -z $path || -z $paket || -z $ssl ]]; then
     exit 1
 fi
 
-echo "Domain: $path, | Paket: $paket, | SSL: $ssl"
+echo "CMS: $cms | Domain: $path, | Paket: $paket, | SSL: $ssl"
 echo
 echo "Input crt: $crtpath | Input key: $keypath"
 
@@ -113,13 +121,23 @@ sudo chown -R $user_id:$group_id /home/$path/dbdata
 sudo chown -R $user_id:$group_id /home/$path/sitedata
 echo "Membuat user selesai."
 
-# Copy file compose dari folder template
-sudo cp /home/docker-hosting/wp-template/docker-compose.yml /home/$path/
-sudo cp /home/docker-hosting/wp-template/wordpress.ini /home/$path/
-sudo cp /home/docker-hosting/wp-template/config.inc.php /home/$path/pma/
-sudo cp /home/docker-hosting/wp-template/config.secret.inc.php /home/$path/pma/
-sudo cp /home/docker-hosting/wp-template/config.user.inc.php /home/$path/pma/
+# Copy file template untuk phpMyAdmin
+sudo cp /home/docker-hosting/pma-template/config.inc.php /home/$path/pma/
+sudo cp /home/docker-hosting/pma-template/config.secret.inc.php /home/$path/pma/
+sudo cp /home/docker-hosting/pma-template/config.user.inc.php /home/$path/pma/
 sudo chown -R $user_id:$group_id /home/$path/pma
+
+# Copy file template sesuai kondisi CMS
+if [ "$cms" == "wp" ]; then
+	sudo cp /home/docker-hosting/wp-template/docker-compose.yml /home/$path/
+	sudo cp /home/docker-hosting/wp-template/wordpress.ini /home/$path/
+elif [ "$cms" == "moodle" ]; then
+	sudo cp /home/docker-hosting/moodle-template/docker-compose.yml /home/$path/
+else
+	sudo exit 1
+fi
+
+echo "Copy file template selesai."
 
 # RNG FTW
 db_root_password=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 9 | head -n 1)
@@ -131,10 +149,10 @@ pmasecret=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)
 sudo sh -c 'echo "MYSQL_ROOT_PASSWORD='$db_root_password'" >> /home/'$path'/.env'
 sudo sh -c 'echo "MYSQL_USER='$db_user'" >>/home/'$path'/.env'
 sudo sh -c 'echo "MYSQL_PASSWORD='$db_password'" >> /home/'$path'/.env'
-sudo sh -c 'echo "WP_DOMAIN_db='${pathtanpatitik}_db'" >> /home/'$path'/.env'
-sudo sh -c 'echo "WP_DOMAIN_wp='${pathtanpatitik}_wp'" >> /home/'$path'/.env'
-sudo sh -c 'echo "WP_DOMAIN_filebrowser='${pathtanpatitik}_filebrowser'" >> /home/'$path'/.env'
-sudo sh -c 'echo "WP_DOMAIN_pma='${pathtanpatitik}_pma'" >> /home/'$path'/.env'
+sudo sh -c 'echo "SITE_DOMAIN_db='${pathtanpatitik}_db'" >> /home/'$path'/.env'
+sudo sh -c 'echo "SITE_DOMAIN_wp='${pathtanpatitik}_wp'" >> /home/'$path'/.env'
+sudo sh -c 'echo "SITE_DOMAIN_filebrowser='${pathtanpatitik}_filebrowser'" >> /home/'$path'/.env'
+sudo sh -c 'echo "SITE_DOMAIN_pma='${pathtanpatitik}_pma'" >> /home/'$path'/.env'
 sudo sed -i "s/_pma_secret/$pmasecret/g" /home/$path/pma/config.secret.inc.php
 echo "Membuat random password selesai."
 
@@ -179,7 +197,7 @@ echo "Setting docker compose selesai."
 sudo docker compose -f /home/$path/docker-compose.yml up -d
 echo "Memulai kontainer..."
 
-# update quota, tunggu 10 detik biar size nya ke update
+# update quota, tunggu 7 detik biar size nya ke update
 echo "Update Quota..."
 sleep 7s
 sudo quotacheck -ugmf /home
@@ -199,10 +217,10 @@ echo "Username dan password root MySQL bisa di cek di /home/$path/dbdata/info.tx
 sudo sh -c 'echo "MYSQL_ROOT_PASSWORD='$db_root_password'" >> /home/'$path'/dbdata/info.txt'
 sudo sh -c 'echo "MYSQL_USER='$db_user'" >>/home/'$path'/dbdata/info.txt'
 sudo sh -c 'echo "MYSQL_PASSWORD='$db_password'" >> /home/'$path'/dbdata/info.txt'
-sudo sh -c 'echo "WP_DOMAIN_db='${pathtanpatitik}_db'" >> /home/'$path'/dbdata/info.txt'
-sudo sh -c 'echo "WP_DOMAIN_wp='${pathtanpatitik}_wp'" >> /home/'$path'/dbdata/info.txt'
-sudo sh -c 'echo "WP_DOMAIN_filebrowser='${pathtanpatitik}_filebrowser'" >> /home/'$path'/dbdata/info.txt'
-sudo sh -c 'echo "WP_DOMAIN_pma='${pathtanpatitik}_pma'" >> /home/'$path'/dbdata/info.txt'
+sudo sh -c 'echo "SITE_DOMAIN_db='${pathtanpatitik}_db'" >> /home/'$path'/dbdata/info.txt'
+sudo sh -c 'echo "SITE_DOMAIN_wp='${pathtanpatitik}_wp'" >> /home/'$path'/dbdata/info.txt'
+sudo sh -c 'echo "SITE_DOMAIN_filebrowser='${pathtanpatitik}_filebrowser'" >> /home/'$path'/dbdata/info.txt'
+sudo sh -c 'echo "SITE_DOMAIN_pma='${pathtanpatitik}_pma'" >> /home/'$path'/dbdata/info.txt'
 
 # buat reverse proxy
 today=$(date +"%Y%m%d")01

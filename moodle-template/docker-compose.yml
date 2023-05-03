@@ -3,7 +3,7 @@ version: '2.4'
 services:
   db:
     image: mariadb:10.11.2-jammy
-    container_name: $WP_DOMAIN_db
+    container_name: $SITE_DOMAIN_db
     restart: always
     env_file: .env
     environment:
@@ -23,7 +23,7 @@ services:
     depends_on: 
       - db
     image: moodlehq/moodle-php-apache:8.2-bullseye
-    container_name: $WP_DOMAIN_moodle
+    container_name: $SITE_DOMAIN_moodle
     restart: always
     #env_file: .env
     #environment:
@@ -45,9 +45,9 @@ services:
 #      io.portainer.accesscontrol.teams: admin
   filebrowser:
     depends_on:
-      - wordpress
+      - moodle-php-apache
     restart: always
-    container_name: $WP_DOMAIN_filebrowser
+    container_name: $SITE_DOMAIN_filebrowser
     image: filebrowser/filebrowser:v2-s6
     networks:
       backend:
@@ -68,7 +68,7 @@ services:
       - db
     restart: always
     image: phpmyadmin:5.2.1-apache
-    container_name: $WP_DOMAIN_pma
+    container_name: $SITE_DOMAIN_pma
     environment:
        - PMA_HOST=db
        - UPLOAD_LIMIT=100M
