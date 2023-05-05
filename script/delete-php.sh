@@ -37,13 +37,13 @@ PREFIX=$(echo "${domain}" | sed 's/\.//g')
 #docker container rm $(docker ps -a -q --filter name=${PREFIX}_*)
 #docker network rm $(docker network ls -q --filter name=${PREFIX}_*)
 
-echo "Menghentikan container..."
+echo "Menghentikan Docker yang diminta..."
 docker container stop ${PREFIX}_web
 docker container stop ${PREFIX}_db
 docker container stop ${PREFIX}_pma
 docker container stop ${PREFIX}_filebrowser
 
-echo "Menghapus container..."
+echo "Menghapus Docker yang diminta..."
 docker container rm ${PREFIX}_web
 docker container rm ${PREFIX}_db
 docker container rm ${PREFIX}_pma
