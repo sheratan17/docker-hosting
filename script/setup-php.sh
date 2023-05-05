@@ -218,7 +218,7 @@ sudo sh -c 'echo "MYSQL_ROOT_PASSWORD='$db_root_password'" >> /home/'$path'/dbda
 sudo sh -c 'echo "MYSQL_USER='$db_user'" >>/home/'$path'/dbdata/info.txt'
 sudo sh -c 'echo "MYSQL_PASSWORD='$db_password'" >> /home/'$path'/dbdata/info.txt'
 sudo sh -c 'echo "SITE_DOMAIN_db='${pathtanpatitik}_db'" >> /home/'$path'/dbdata/info.txt'
-sudo sh -c 'echo "SITE_DOMAIN_wp='${pathtanpatitik}_wp'" >> /home/'$path'/dbdata/info.txt'
+sudo sh -c 'echo "SITE_DOMAIN_web='${pathtanpatitik}_web'" >> /home/'$path'/dbdata/info.txt'
 sudo sh -c 'echo "SITE_DOMAIN_filebrowser='${pathtanpatitik}_filebrowser'" >> /home/'$path'/dbdata/info.txt'
 sudo sh -c 'echo "SITE_DOMAIN_pma='${pathtanpatitik}_pma'" >> /home/'$path'/dbdata/info.txt'
 
