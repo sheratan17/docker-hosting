@@ -170,7 +170,7 @@ docker image pull mariadb:10.11.2-jammy
 docker image pull wordpress:6.2-php8.2
 docker image pull filebrowser/filebrowser:v2-s6
 docker image pull phpmyadmin:5.2.1-apache
-docker image pull moodlehq/moodle-php-apache:8.2-bullseye
+#docker image pull moodlehq/moodle-php-apache:8.2-bullseye
 echo
 echo "SCRIPT DEPLOY SELESAI."
 echo
