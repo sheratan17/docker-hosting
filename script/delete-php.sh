@@ -50,6 +50,7 @@ docker container rm ${PREFIX}_pma
 docker container rm ${PREFIX}_filebrowser
 docker network rm ${PREFIX}_backend
 
+echo "Menghapus Network Docker yang diminta..."
 docker volume prune -f
 sudo userdel -r $domain
 #sudo rm -rf /var/spool/mail/$domain
