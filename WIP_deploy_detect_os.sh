@@ -12,6 +12,10 @@ echo "- Ini bukan server kosong"
 echo "- Server nginx dan DNS belum ada"
 echo "- IP private belum bisa terhubung"
 echo
+echo "Script ini akan mendeteksi otomatis OS yang dipakai."
+echo "OS yang didukung: Almalinux 8 dan Debian 11"
+echo "Semua server harus menggunakan OS yang sama. Apabila node menggunakan Debian 11, maka nginx reverse proxy dan DNS Server harus menggunakan Debian 11 juga."
+echo
 sleep 5
 read -p "Masukkan IP private server Node Docker: " ipprivate_node
 echo
@@ -25,7 +29,7 @@ echo
 echo "Memulai proses..."
 sleep 5
 
-# install library
+# Deteksi OS, debian
 if grep -qi "debian" /etc/os-release; then
     echo "Operating System: Debian"
     apt update && apt upgrade
@@ -39,10 +43,8 @@ if grep -qi "debian" /etc/os-release; then
 	sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 	apt update
 	apt install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin apache2 php php-json -y
-fi
-
-# Detect if the OS is AlmaLinux
-if grep -qi "almalinux" /etc/os-release; then
+# Deteksi OS, almalinux
+elif grep -qi "almalinux" /etc/os-release; then
     echo "Operating System: AlmaLinux"
     yum update -y
 	yum install quota wget nano curl vim lsof git sshpass epel-release zip -y
@@ -69,8 +71,9 @@ if grep -qi "almalinux" /etc/os-release; then
 	firewall-cmd --reload
 	# buat ssh-keygen
 	#ssh-keygen -t rsa -N '' -f ~/.ssh/id_rsa <<< y
+else
+	echo "OS TIDAK DIDUKUNG"
 fi
-
 
 # Aktifkan quota di /home
 line=$(grep "^UUID=.* /home " /etc/fstab)
@@ -80,11 +83,6 @@ mount -o remount /home
 quotacheck -cugm /home
 quotaon -v /home
 quotaon -ap
-
-# install docker
-# install apache
-
-# fix apache dan php
 
 echo "Selesai. Berikutnya download script lalu koneksikan server ini dengan nginx reverse proxy dan named..."
 sleep 3
@@ -110,70 +108,61 @@ echo
 echo "Membuat nginx reverse proxy..."
 
 ssh-keyscan -t rsa $ip_nginx >> /root/.ssh/known_hosts
-
 sshpass -p "$pass_nginx" ssh-copy-id root@$ip_nginx
-ssh root@$ip_nginx "yum install epel-release -y && exit"
-ssh root@$ip_nginx "yum install nginx nano lsof certbot python3-certbot-nginx -y && exit"
-
-# download script dan update config di nginx reverse
-sed -i "s/_ipprivate_node/$ipprivate_node/g" /home/docker-hosting/server-template/template-mandiri.conf.inc
-sed -i "s/_ipprivate_node/$ipprivate_node/g" /home/docker-hosting/server-template/template.conf.inc
-
-scp /home/docker-hosting/server-template/template-mandiri.conf.inc root@$ip_nginx:/etc/nginx/conf.d || exit 1
-scp /home/docker-hosting/server-template/template.conf.inc root@$ip_nginx:/etc/nginx/conf.d || exit 1
-
-# ubah bash script agar menggunakan IP nginx
-sed -i "s/_servernginx/$ip_nginx/g" /home/setup-php.sh
-sed -i "s/_ipprivate_node_/$ipprivate_node/g" /home/setup-php.sh
-sed -i "s/_servernginx/$ip_nginx/g" /home/delete-php.sh
-
-# pasang modsec
-#scp -r /home/docker-hosting/server-template/modsec root@$ip_nginx:/etc/nginx/ || exit 1
-#scp -r /home/docker-hosting/server-template/modules root@$ip_nginx:/etc/nginx/ || exit 1
-#scp -r /home/docker-hosting/server-template/rules root@$ip_nginx:/etc/nginx/ || exit 1
-#ssh root@$ip_nginx "echo -e 'Include /etc/nginx/modsec/crs-setup.conf\nInclude /etc/nginx/rules/*.conf' >> /etc/nginx/modsec/modsecurity.conf"
-#ssh root@$ip_nginx "sed -i 's#/var/log/modsec_audit.log#/var/log/nginx/modsec_audit.log#' && exit"
-#ssh root@$ip_nginx "touch /var/log/modsec_audit.log && exit"
-#ssh root@$ip_nginx "systemctl enable nginx && exit"
-#ssh root@$ip_nginx "service nginx restart && exit"
-
-echo "Nginx selesai."
-echo
-
-# Membuat DNS Server
-
-echo "Memulai deploy server DNS..."
-sleep 3
-
-today=$(date +"%Y%m%d")01
-
-echo
-domaintanpans=$(echo $ns_named | sed 's/ns1\.//')
-
 sshpass -p "$pass_named" ssh-copy-id root@$ip_named
 
-ssh root@$ip_named "yum install bind nano lsof bind-utils -y && exit"
-
-scp /home/docker-hosting/server-template/_domain.db root@$ip_named:/etc/named || exit 1
-scp /home/docker-hosting/server-template/_dns.db root@$ip_named:/etc/named || exit 1
-ssh root@$ip_named "mv /etc/named.conf /etc/named.conf.backup && exit"
-ssh root@$ip_named "mv /etc/named/_dns.db /etc/named/$domaintanpans.db && exit"
-scp /home/docker-hosting/server-template/named.conf root@$ip_named:/etc/ || exit 1
-
-# ubah bash script agar menggunakan IP DNS Server
-ssh "root@$ip_named" "sed -i "s/_dns/$domaintanpans/g" /etc/named/$domaintanpans.db"
-ssh "root@$ip_named" "sed -i "s/_ipnamed/$ip_named/g" /etc/named/$domaintanpans.db"
-ssh "root@$ip_named" "sed -i "s/_soa/$today/g" /etc/named/$domaintanpans.db"
-ssh "root@$ip_named" "sed -i "s/_dns/$domaintanpans/g" /etc/named.conf"
-ssh "root@$ip_named" "sed -i "s/_dns/$domaintanpans/g" /etc/named/_domain.db"
+if grep -qi "debian" /etc/os-release; then
+		echo "asd"
+elif grep -qi "almalinux" /etc/os-release; then
+	ssh root@$ip_nginx "yum install epel-release -y && exit"
+	ssh root@$ip_nginx "yum install nginx nano lsof certbot python3-certbot-nginx -y && exit"
+	# download script dan update config di nginx reverse
+	sed -i "s/_ipprivate_node/$ipprivate_node/g" /home/docker-hosting/server-template/template-mandiri.conf.inc
+	sed -i "s/_ipprivate_node/$ipprivate_node/g" /home/docker-hosting/server-template/template.conf.inc
+	scp /home/docker-hosting/server-template/template-mandiri.conf.inc root@$ip_nginx:/etc/nginx/conf.d || exit 1
+	scp /home/docker-hosting/server-template/template.conf.inc root@$ip_nginx:/etc/nginx/conf.d || exit 1
+	# ubah bash script agar menggunakan IP nginx
+	sed -i "s/_servernginx/$ip_nginx/g" /home/setup-php.sh
+	sed -i "s/_ipprivate_node_/$ipprivate_node/g" /home/setup-php.sh
+	sed -i "s/_servernginx/$ip_nginx/g" /home/delete-php.sh
+	# pasang modsec
+	#scp -r /home/docker-hosting/server-template/modsec root@$ip_nginx:/etc/nginx/ || exit 1
+	#scp -r /home/docker-hosting/server-template/modules root@$ip_nginx:/etc/nginx/ || exit 1
+	#scp -r /home/docker-hosting/server-template/rules root@$ip_nginx:/etc/nginx/ || exit 1
+	#ssh root@$ip_nginx "echo -e 'Include /etc/nginx/modsec/crs-setup.conf\nInclude /etc/nginx/rules/*.conf' >> /etc/nginx/modsec/modsecurity.conf"
+	#ssh root@$ip_nginx "sed -i 's#/var/log/modsec_audit.log#/var/log/nginx/modsec_audit.log#' && exit"
+	#ssh root@$ip_nginx "touch /var/log/modsec_audit.log && exit"
+	#ssh root@$ip_nginx "systemctl enable nginx && exit"
+	#ssh root@$ip_nginx "service nginx restart && exit"
+	echo "Nginx selesai."
+	echo
+	# Membuat DNS Server
+	echo "Memulai deploy server DNS..."
+	sleep 3
+	today=$(date +"%Y%m%d")01
+	echo
+	domaintanpans=$(echo $ns_named | sed 's/ns1\.//')
+	ssh root@$ip_named "yum install bind nano lsof bind-utils -y && exit"
+	scp /home/docker-hosting/server-template/_domain.db root@$ip_named:/etc/named || exit 1
+	scp /home/docker-hosting/server-template/_dns.db root@$ip_named:/etc/named || exit 1
+	ssh root@$ip_named "mv /etc/named.conf /etc/named.conf.backup && exit"
+	ssh root@$ip_named "mv /etc/named/_dns.db /etc/named/$domaintanpans.db && exit"
+	scp /home/docker-hosting/server-template/named.conf root@$ip_named:/etc/ || exit 1
+	# ubah bash script agar menggunakan IP DNS Server
+	ssh "root@$ip_named" "sed -i "s/_dns/$domaintanpans/g" /etc/named/$domaintanpans.db"
+	ssh "root@$ip_named" "sed -i "s/_ipnamed/$ip_named/g" /etc/named/$domaintanpans.db"
+	ssh "root@$ip_named" "sed -i "s/_soa/$today/g" /etc/named/$domaintanpans.db"
+	ssh "root@$ip_named" "sed -i "s/_dns/$domaintanpans/g" /etc/named.conf"
+	ssh "root@$ip_named" "sed -i "s/_dns/$domaintanpans/g" /etc/named/_domain.db"
+	ssh root@$ip_named "systemctl enable named && exit"
+	ssh root@$ip_named "service named restart && exit"
+	echo "Server DNS selesai."
+	echo
+fi
 
 sed -i "s/_servernamed/$ip_named/g" /home/setup-php.sh
 sed -i "s/_servernamed/$ip_named/g" /home/delete-php.sh
 
-ssh root@$ip_named "systemctl enable named && exit"
-ssh root@$ip_named "service named restart && exit"
-echo "Server DNS selesai."
-echo
 echo "Menambahkan cronjob backup dan checkquota..."
 chmod +x /home/docker-hosting/script/quotacheck.sh
 chmod +x /home/docker-hosting/script/backup.sh
@@ -187,7 +176,7 @@ docker image pull mariadb:10.11.2-jammy
 docker image pull wordpress:6.2-php8.2
 docker image pull filebrowser/filebrowser:v2-s6
 docker image pull phpmyadmin:5.2.1-apache
-docker image pull moodlehq/moodle-php-apache:8.2-bullseye
+#docker image pull moodlehq/moodle-php-apache:8.2-bullseye
 echo
 echo "SCRIPT DEPLOY SELESAI."
 echo
