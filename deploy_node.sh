@@ -96,17 +96,15 @@ echo "Membuat nginx reverse proxy..."
 ssh-keyscan -t rsa $ip_nginx >> /root/.ssh/known_hosts
 
 sshpass -p "$pass_nginx" ssh-copy-id root@$ip_nginx
-ssh root@$ip_nginx "yum install epel-release -y && exit"
+ssh root@$ip_nginx "yum update -y && install epel-release -y && exit"
 ssh root@$ip_nginx "yum install nginx nano lsof certbot python3-certbot-nginx -y && exit"
 
 # download script dan update config di nginx reverse
-sed -i "s/_ipprivate_node/$ipprivate_node/g" /home/docker-hosting/server-template/wp-template-mandiri.conf.inc
-sed -i "s/_ipprivate_node/$ipprivate_node/g" /home/docker-hosting/server-template/wp-template.conf.inc
-sed -i "s/_ipprivate_node/$ipprivate_node/g" /home/docker-hosting/server-template/minio-template.conf.inc
+sed -i "s/_ipprivate_node/$ipprivate_node/g" /home/docker-hosting/server-template/*.conf.inc
+#sed -i "s/_ipprivate_node/$ipprivate_node/g" /home/docker-hosting/server-template/wp-template.conf.inc
+#sed -i "s/_ipprivate_node/$ipprivate_node/g" /home/docker-hosting/server-template/minio-template.conf.inc
 
-scp /home/docker-hosting/server-template/wp-template-mandiri.conf.inc root@$ip_nginx:/etc/nginx/conf.d || exit 1
-scp /home/docker-hosting/server-template/wp-template.conf.inc root@$ip_nginx:/etc/nginx/conf.d || exit 1
-scp /home/docker-hosting/server-template/minio-template.conf.inc root@$ip_nginx:/etc/nginx/conf.d || exit 1
+scp /home/docker-hosting/server-template/*.conf.inc root@$ip_nginx:/etc/nginx/conf.d || exit 1
 
 # ubah bash script agar menggunakan IP nginx
 sed -i "s/_servernginx/$ip_nginx/g" /home/setup-php.sh
@@ -138,7 +136,7 @@ domaintanpans=$(echo $ns_named | sed 's/ns1\.//')
 
 sshpass -p "$pass_named" ssh-copy-id root@$ip_named
 
-ssh root@$ip_named "yum install bind nano lsof bind-utils -y && exit"
+ssh root@$ip_named "yum update -y && yum install bind nano lsof bind-utils -y && exit"
 
 scp /home/docker-hosting/server-template/_domain.db root@$ip_named:/etc/named || exit 1
 scp /home/docker-hosting/server-template/_dns.db root@$ip_named:/etc/named || exit 1
