@@ -1,6 +1,10 @@
 # docker-hosting
 Docker + Script + Let's Encrypt + Disk, CPU dan RAM Quota
 
+Script yang tersedia:
+1. Wordpress
+2. Minio
+
 1. Instal Almalinux 8
 2. Pastikan semua partisi pakai ext4 dan /home memiliki partisi yang berbeda (tidak disatukan sama / )
 3. Update OS
@@ -40,6 +44,7 @@ Jalankan `deploy_node.sh` pada server Node Docker untuk menjalankan semua (seper
 11. Hardening nginx reverse proxy
 12. Antivirus
 13. Custom image (Joomla, moodle, etc)
+14. Stats menggunakan: https://github.com/virtualzone/docker-container-stats
 
 # API
 1. curl JSON request create dengan SSL mandiri<br>
