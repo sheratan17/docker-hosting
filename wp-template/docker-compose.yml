@@ -23,7 +23,7 @@ services:
     depends_on: 
       - db
     image: wordpress:6.2-php8.2
-    container_name: $SITE_DOMAIN_wp
+    container_name: $SITE_DOMAIN_web
     restart: always
     env_file: .env
     environment:
