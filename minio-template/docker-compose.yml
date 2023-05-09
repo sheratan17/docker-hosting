@@ -11,7 +11,7 @@ services:
         - MINIO_ROOT_PASSWORD=$MINIO_ROOT_PASSWORD
     ports:
         - "_ipprivate_node:_randomminio:9001"
-        - "_ipprivate_node:_randommin:9000"
+        - "_ipprivate_node:_randommini:9000"
     volumes: 
       - /home/_userdomain/minio/data:/data
     networks:
