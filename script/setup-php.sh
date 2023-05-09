@@ -166,6 +166,11 @@ if [ "$cms" == "wp" ]; then
 	sudo sed -i "s/_random81/$number81/g" /home/$path/docker-compose.yml
 	sudo sed -i "s/_random82/$number82/g" /home/$path/docker-compose.yml
 	echo "Setting docker compose selesai."
+	echo
+	echo "Membuat script backup..."
+	sudo sh -c 'echo "docker exec _containerdb /usr/bin/mysqldump -u root --password=_containerpassword wordpress > /backup/'$path'.sql && zip -r /home/'$path'.zip /home/'$path'/sitedata && mv /home/'$path'.zip /backup &&  wait" >> /home/docker-hosting/script/backup.sh'
+	sudo sed -i "s/_containerdb/${pathtanpatitik}_db/g" /home/docker-hosting/script/backup.sh
+	sudo sed -i "s/_containerpassword/$db_root_password/g" /home/docker-hosting/script/backup.sh
 elif [ "$cms" == "minio" ]; then
 	sudo mkdir /home/$path/minio/data
 	user_id=$(id -u ${path})
@@ -296,12 +301,6 @@ elif [[[ "$cms" == "wp" && "$ssl" == "nossl" ]]; then
 	sudo rm -f $keypath.key
 	echo "$path tidak menggunakan SSL"
 fi
-
-echo
-echo "Membuat script backup..."
-sudo sh -c 'echo "docker exec _containerdb /usr/bin/mysqldump -u root --password=_containerpassword wordpress > /backup/'$path'.sql && zip -r /home/'$path'.zip /home/'$path'/sitedata && mv /home/'$path'.zip /backup &&  wait" >> /home/docker-hosting/script/backup.sh'
-sudo sed -i "s/_containerdb/${pathtanpatitik}_db/g" /home/docker-hosting/script/backup.sh
-sudo sed -i "s/_containerpassword/$db_root_password/g" /home/docker-hosting/script/backup.sh
 
 sudo ssh "$user@$servernamed" "systemctl restart named"
 sudo rm -f $path.crt
