@@ -96,7 +96,7 @@ echo "Membuat nginx reverse proxy..."
 ssh-keyscan -t rsa $ip_nginx >> /root/.ssh/known_hosts
 
 sshpass -p "$pass_nginx" ssh-copy-id root@$ip_nginx
-ssh root@$ip_nginx "yum update -y && install epel-release -y && exit"
+ssh root@$ip_nginx "yum update -y && yum install epel-release -y && exit"
 ssh root@$ip_nginx "yum install nginx nano lsof certbot python3-certbot-nginx -y && exit"
 
 # download script dan update config di nginx reverse
