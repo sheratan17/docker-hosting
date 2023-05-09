@@ -100,11 +100,13 @@ ssh root@$ip_nginx "yum install epel-release -y && exit"
 ssh root@$ip_nginx "yum install nginx nano lsof certbot python3-certbot-nginx -y && exit"
 
 # download script dan update config di nginx reverse
-sed -i "s/_ipprivate_node/$ipprivate_node/g" /home/docker-hosting/server-template/template-mandiri.conf.inc
-sed -i "s/_ipprivate_node/$ipprivate_node/g" /home/docker-hosting/server-template/template.conf.inc
+sed -i "s/_ipprivate_node/$ipprivate_node/g" /home/docker-hosting/server-template/wp-template-mandiri.conf.inc
+sed -i "s/_ipprivate_node/$ipprivate_node/g" /home/docker-hosting/server-template/wp-template.conf.inc
+sed -i "s/_ipprivate_node/$ipprivate_node/g" /home/docker-hosting/server-template/minio-template.conf.inc
 
-scp /home/docker-hosting/server-template/template-mandiri.conf.inc root@$ip_nginx:/etc/nginx/conf.d || exit 1
-scp /home/docker-hosting/server-template/template.conf.inc root@$ip_nginx:/etc/nginx/conf.d || exit 1
+scp /home/docker-hosting/server-template/wp-template-mandiri.conf.inc root@$ip_nginx:/etc/nginx/conf.d || exit 1
+scp /home/docker-hosting/server-template/wp-template.conf.inc root@$ip_nginx:/etc/nginx/conf.d || exit 1
+scp /home/docker-hosting/server-template/minio-template.conf.inc root@$ip_nginx:/etc/nginx/conf.d || exit 1
 
 # ubah bash script agar menggunakan IP nginx
 sed -i "s/_servernginx/$ip_nginx/g" /home/setup-php.sh

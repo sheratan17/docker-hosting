@@ -10,7 +10,8 @@ services:
         - MINIO_ROOT_USER=admin
         - MINIO_ROOT_PASSWORD=$MINIO_ROOT_PASSWORD
     ports:
-        - "_ipprivate_node:_randomminio:9090"
+        - "_ipprivate_node:_randomminio:9001"
+        - "_ipprivate_node:_randommin:9000"
     volumes: 
       - /home/_userdomain/minio/data:/data
     networks:
@@ -18,6 +19,7 @@ services:
     user: "_userid:_groupid"
     mem_limit: _memlimit
     cpus: _cpulimit
+    command: server --console-address ":9001" /data
  #   labels:
  #     io.portainer.accesscontrol.teams: admin
 

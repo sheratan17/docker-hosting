@@ -98,19 +98,12 @@ do
 done
 
 # Cek input harus lengkap
-if [[ $cms == "wp" ]]; then
-    if [[ -z $d || -z $p || -z $ssl ]]; then
-        echo "Error: Missing required options for WordPress (wp)."
-        show_help
-        exit 1
-    fi
-elif [[ $cms == "minio" ]]; then
-    if [[ -z $d || -z $p ]]; then
-        echo "Error: Missing required options for MinIO (minio)."
-        show_help
-        exit 1
-    fi
+if [[ -z $cms || -z $path || -z $paket || -z $ssl ]]; then
+    echo "Error"
+    show_help
+    exit 1
 fi
+
 
 echo "CMS: $cms | Domain: $path, | Paket: $paket, | SSL: $ssl"
 echo
@@ -120,20 +113,17 @@ echo "Input crt: $crtpath | Input key: $keypath"
 pathtanpatitik=$(echo "${path}" | sed 's/\.//g')
 sudo /usr/sbin/adduser -m $path
 
-# RNG FTW
-db_root_password=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 9 | head -n 1)
-db_user=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 9 | head -n 1)
-db_password=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 9 | head -n 1)
-pmasecret=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)
-minio_pass=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 9 | head -n 1)
-number80=$(shuf -i 1000-5000 -n 1)
-number81=$(shuf -i 5001-9000 -n 1)
-number82=$(shuf -i 9001-12000 -n 1)
-numberminio=$(shuf -i 12001-14000 -n 1)
-echo "Membuat random password selesai."
-
 # Copy file template sesuai kondisi CMS
 if [ "$cms" == "wp" ]; then
+	# RNG FTW
+	db_root_password=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 9 | head -n 1)
+	db_user=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 9 | head -n 1)
+	db_password=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 9 | head -n 1)
+	pmasecret=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)
+	number80=$(shuf -i 1000-5000 -n 1)
+	number81=$(shuf -i 5001-9000 -n 1)
+	number82=$(shuf -i 9001-12000 -n 1)
+	echo "Membuat random password selesai."
 	# Buat folder
 	sudo mkdir /home/$path/dbdata
 	sudo mkdir /home/$path/sitedata
@@ -172,6 +162,7 @@ if [ "$cms" == "wp" ]; then
 	sudo sed -i "s/_containerdb/${pathtanpatitik}_db/g" /home/docker-hosting/script/backup.sh
 	sudo sed -i "s/_containerpassword/$db_root_password/g" /home/docker-hosting/script/backup.sh
 elif [ "$cms" == "minio" ]; then
+	minio_pass=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 9 | head -n 1)
 	sudo mkdir /home/$path/minio
 	sudo mkdir /home/$path/minio/data
 	user_id=$(id -u ${path})
@@ -179,8 +170,12 @@ elif [ "$cms" == "minio" ]; then
 	sudo chown -R $user_id:$group_id /home/$path/minio
 	sudo cp /home/docker-hosting/minio-template/docker-compose.yml /home/$path/
 	echo "Copy file template selesai."
+	sudo sh -c 'echo "SITE_DOMAIN_minio='${pathtanpatitik}_minio'" >> /home/'$path'/.env'
 	sudo sh -c 'echo "MINIO_ROOT_PASSWORD='$minio_pass'" >> /home/'$path'/.env'
+	numberminio=$(shuf -i 12001-14000 -n 1)
+	numbermini=$(shuf -i 14001-16000 -n 1)
 	sudo sed -i "s/_randomminio/$numberminio/g" /home/$path/docker-compose.yml
+	sudo sed -i "s/_randommini/$numbermini/g" /home/$path/docker-compose.yml
 fi
 
 
