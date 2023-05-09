@@ -42,12 +42,14 @@ docker container stop ${PREFIX}_web
 docker container stop ${PREFIX}_db
 docker container stop ${PREFIX}_pma
 docker container stop ${PREFIX}_filebrowser
+docker container stop ${PREFIX}_minio
 
 echo "Menghapus Docker yang diminta..."
 docker container rm ${PREFIX}_web
 docker container rm ${PREFIX}_db
 docker container rm ${PREFIX}_pma
 docker container rm ${PREFIX}_filebrowser
+docker container rm ${PREFIX}_minio
 docker network rm ${PREFIX}_backend
 
 echo "Menghapus Network Docker yang diminta..."

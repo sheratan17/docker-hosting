@@ -172,14 +172,14 @@ if [ "$cms" == "wp" ]; then
 	sudo sed -i "s/_containerdb/${pathtanpatitik}_db/g" /home/docker-hosting/script/backup.sh
 	sudo sed -i "s/_containerpassword/$db_root_password/g" /home/docker-hosting/script/backup.sh
 elif [ "$cms" == "minio" ]; then
-	sudo mkdir /home/$path/minio/
+	sudo mkdir /home/$path/minio
 	sudo mkdir /home/$path/minio/data
 	user_id=$(id -u ${path})
 	group_id=$(id -g ${path})
 	sudo chown -R $user_id:$group_id /home/$path/minio
-	sudo cp /home/docker-hosting/mi-template/docker-compose.yml /home/$path/
+	sudo cp /home/docker-hosting/minio-template/docker-compose.yml /home/$path/
 	echo "Copy file template selesai."
-	sudo sh -c 'echo "MINIO_ROOT_PASSWORD'$minio_pass'" >> /home/'$path'/.env'
+	sudo sh -c 'echo "MINIO_ROOT_PASSWORD='$minio_pass'" >> /home/'$path'/.env'
 	sudo sed -i "s/_randomminio/$numberminio/g" /home/$path/docker-compose.yml
 fi
 
