@@ -12,15 +12,17 @@ echo "Paket yang tersedia:"
 echo "1. P1 (1 Core, 1GB RAM, 10GB SSD)"
 echo "2. P2 (2 Core, 2GB RAM, 20GB SSD)"
 echo
+echo "CMS yang tersedia:"
+echo "1. Wordpress (wp)"
+echo "2. Minio (minio)"
+
 
 function show_help {
     echo
     echo "Perintah: ./setup-php.sh --cms=<cms> --d=<domain> --p=<package> --ssl=<ssl> --crtpath=<absolute path for crt> --keypath=<absolute path for key> [--h]"
     echo
     echo "Penjelasan:"
-    echo "  --cms=<cms>             CMS yang akan dipasang, gunakan:"
-    echo "                          'wp' untuk wordpress, 'joomla' untuk joomla, dan 'moodle' untuk moodle"
-    echo "                          contoh: --cms=wp"
+    echo "  --cms=<cms>             CMS yang akan dipasang, contoh: --cms=wp"
     echo "  --d=<domain>            Nama domain"
     echo "  --p=<package>           Paket WP"
     echo "  --ssl=<ssl>             Status SSL, Gunakan "le" untuk Let's Encrypt, "mandiri" jika ada SSL sendiri, atau "nossl" jika tanpa SSL"
@@ -96,10 +98,18 @@ do
 done
 
 # Cek input harus lengkap
-if [[ -z $cms || -z $path || -z $paket || -z $ssl ]]; then
-    echo "Error: --cms, --d, --p, dan --ssl harus ada dan lengkap."
-    show_help
-    exit 1
+if [[ $cms == "wp" ]]; then
+    if [[ -z $d || -z $p || -z $ssl ]]; then
+        echo "Error: Missing required options for WordPress (wp)."
+        show_help
+        exit 1
+    fi
+elif [[ $cms == "minio" ]]; then
+    if [[ -z $d || -z $p ]]; then
+        echo "Error: Missing required options for MinIO (minio)."
+        show_help
+        exit 1
+    fi
 fi
 
 echo "CMS: $cms | Domain: $path, | Paket: $paket, | SSL: $ssl"
@@ -110,50 +120,63 @@ echo "Input crt: $crtpath | Input key: $keypath"
 pathtanpatitik=$(echo "${path}" | sed 's/\.//g')
 sudo /usr/sbin/adduser -m $path
 
-# Buat folder
-sudo mkdir /home/$path/dbdata
-sudo mkdir /home/$path/sitedata
-sudo mkdir /home/$path/pma
-sudo mkdir /home/$path/pma/tmp
-user_id=$(id -u ${path})
-group_id=$(id -g ${path})
-sudo chown -R $user_id:$group_id /home/$path/dbdata
-sudo chown -R $user_id:$group_id /home/$path/sitedata
-echo "Membuat user selesai."
-
-# Copy file template untuk phpMyAdmin
-sudo cp /home/docker-hosting/pma-template/config.inc.php /home/$path/pma/
-sudo cp /home/docker-hosting/pma-template/config.secret.inc.php /home/$path/pma/
-sudo cp /home/docker-hosting/pma-template/config.user.inc.php /home/$path/pma/
-sudo chown -R $user_id:$group_id /home/$path/pma
-echo "Copy file pma selesai."
-
-# Copy file template sesuai kondisi CMS
-if [ "$cms" == "wp" ]; then
-	sudo cp /home/docker-hosting/wp-template/docker-compose.yml /home/$path/
-	sudo cp /home/docker-hosting/wp-template/wordpress.ini /home/$path/
-elif [ "$cms" == "moodle" ]; then
-	sudo cp /home/docker-hosting/moodle-template/docker-compose.yml /home/$path/
-fi
-
-echo "Copy file template selesai."
-
 # RNG FTW
 db_root_password=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 9 | head -n 1)
 db_user=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 9 | head -n 1)
 db_password=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 9 | head -n 1)
 pmasecret=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)
-
-# Masukkan RNG ke .env
-sudo sh -c 'echo "MYSQL_ROOT_PASSWORD='$db_root_password'" >> /home/'$path'/.env'
-sudo sh -c 'echo "MYSQL_USER='$db_user'" >>/home/'$path'/.env'
-sudo sh -c 'echo "MYSQL_PASSWORD='$db_password'" >> /home/'$path'/.env'
-sudo sh -c 'echo "SITE_DOMAIN_db='${pathtanpatitik}_db'" >> /home/'$path'/.env'
-sudo sh -c 'echo "SITE_DOMAIN_web='${pathtanpatitik}_web'" >> /home/'$path'/.env'
-sudo sh -c 'echo "SITE_DOMAIN_filebrowser='${pathtanpatitik}_filebrowser'" >> /home/'$path'/.env'
-sudo sh -c 'echo "SITE_DOMAIN_pma='${pathtanpatitik}_pma'" >> /home/'$path'/.env'
-sudo sed -i "s/_pma_secret/$pmasecret/g" /home/$path/pma/config.secret.inc.php
+minio_pass=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 9 | head -n 1)
+number80=$(shuf -i 1000-5000 -n 1)
+number81=$(shuf -i 5001-9000 -n 1)
+number82=$(shuf -i 9001-12000 -n 1)
+numberminio=$(shuf -i 12001-14000 -n 1)
 echo "Membuat random password selesai."
+
+# Copy file template sesuai kondisi CMS
+if [ "$cms" == "wp" ]; then
+	# Buat folder
+	sudo mkdir /home/$path/dbdata
+	sudo mkdir /home/$path/sitedata
+	sudo mkdir /home/$path/pma
+	sudo mkdir /home/$path/pma/tmp
+	user_id=$(id -u ${path})
+	group_id=$(id -g ${path})
+	sudo chown -R $user_id:$group_id /home/$path/dbdata
+	sudo chown -R $user_id:$group_id /home/$path/sitedata
+	echo "Membuat user selesai."
+	# Copy file template untuk phpMyAdmin
+	sudo cp /home/docker-hosting/pma-template/config.inc.php /home/$path/pma/
+	sudo cp /home/docker-hosting/pma-template/config.secret.inc.php /home/$path/pma/
+	sudo cp /home/docker-hosting/pma-template/config.user.inc.php /home/$path/pma/
+	sudo chown -R $user_id:$group_id /home/$path/pma
+	echo "Copy file pma selesai."
+	sudo cp /home/docker-hosting/wp-template/docker-compose.yml /home/$path/
+	sudo cp /home/docker-hosting/wp-template/wordpress.ini /home/$path/
+	echo "Copy file template selesai."
+	# Masukkan RNG ke .env
+	sudo sh -c 'echo "MYSQL_ROOT_PASSWORD='$db_root_password'" >> /home/'$path'/.env'
+	sudo sh -c 'echo "MYSQL_USER='$db_user'" >>/home/'$path'/.env'
+	sudo sh -c 'echo "MYSQL_PASSWORD='$db_password'" >> /home/'$path'/.env'
+	sudo sh -c 'echo "SITE_DOMAIN_db='${pathtanpatitik}_db'" >> /home/'$path'/.env'
+	sudo sh -c 'echo "SITE_DOMAIN_web='${pathtanpatitik}_web'" >> /home/'$path'/.env'
+	sudo sh -c 'echo "SITE_DOMAIN_filebrowser='${pathtanpatitik}_filebrowser'" >> /home/'$path'/.env'
+	sudo sh -c 'echo "SITE_DOMAIN_pma='${pathtanpatitik}_pma'" >> /home/'$path'/.env'
+	sudo sed -i "s/_pma_secret/$pmasecret/g" /home/$path/pma/config.secret.inc.php
+	sudo sed -i "s/_random80/$number80/g" /home/$path/docker-compose.yml
+	sudo sed -i "s/_random81/$number81/g" /home/$path/docker-compose.yml
+	sudo sed -i "s/_random82/$number82/g" /home/$path/docker-compose.yml
+	echo "Setting docker compose selesai."
+elif [ "$cms" == "minio" ]; then
+	sudo mkdir /home/$path/minio/data
+	user_id=$(id -u ${path})
+	group_id=$(id -g ${path})
+	sudo chown -R $user_id:$group_id /home/$path/minio
+	sudo cp /home/docker-hosting/mi-template/docker-compose.yml /home/$path/
+	echo "Copy file template selesai."
+	sudo sh -c 'echo "MINIO_ROOT_PASSWORD'$minio_pass'" >> /home/'$path'/.env'
+	sudo sed -i "s/_randomminio/$numberminio/g" /home/$path/docker-compose.yml
+fi
+
 
 # Fix docker-compose.yml
 sudo sed -i "s/_userdomain/$path/g" /home/$path/docker-compose.yml
@@ -184,14 +207,6 @@ fi
 #done >> last80.txt
 # to do: port nya tidak bentrok
 
-number80=$(shuf -i 1000-5000 -n 1)
-number81=$(shuf -i 5001-9000 -n 1)
-number82=$(shuf -i 9001-12000 -n 1)
-sudo sed -i "s/_random80/$number80/g" /home/$path/docker-compose.yml
-sudo sed -i "s/_random81/$number81/g" /home/$path/docker-compose.yml
-sudo sed -i "s/_random82/$number82/g" /home/$path/docker-compose.yml
-echo "Setting docker compose selesai."
-
 # Start docker, final version
 sudo docker compose -f /home/$path/docker-compose.yml up -d
 echo "Memulai kontainer..."
@@ -207,20 +222,24 @@ echo "Quota selesai."
 echo
 echo "Domain: ${path}"
 echo "Script: ${cms}"
-echo "Username: ${path}"
-echo "Database name: wordpress"
-echo "Password root MySQL: ${db_root_password}"
-echo
-echo "Catatan:"
-echo "Gunakan username: root dan password root MySQL untuk login ke phpMyAdmin"
-echo "Username dan password root MySQL bisa di cek di /home/$path/dbdata/info.txt"
-sudo sh -c 'echo "MYSQL_ROOT_PASSWORD='$db_root_password'" >> /home/'$path'/dbdata/info.txt'
-sudo sh -c 'echo "MYSQL_USER='$db_user'" >>/home/'$path'/dbdata/info.txt'
-sudo sh -c 'echo "MYSQL_PASSWORD='$db_password'" >> /home/'$path'/dbdata/info.txt'
-sudo sh -c 'echo "SITE_DOMAIN_db='${pathtanpatitik}_db'" >> /home/'$path'/dbdata/info.txt'
-sudo sh -c 'echo "SITE_DOMAIN_web='${pathtanpatitik}_web'" >> /home/'$path'/dbdata/info.txt'
-sudo sh -c 'echo "SITE_DOMAIN_filebrowser='${pathtanpatitik}_filebrowser'" >> /home/'$path'/dbdata/info.txt'
-sudo sh -c 'echo "SITE_DOMAIN_pma='${pathtanpatitik}_pma'" >> /home/'$path'/dbdata/info.txt'
+if [ "$cms" == "wp" ]; then
+	echo "Database name: wordpress"
+	echo "Password root MySQL: ${db_root_password}"
+	echo
+	echo "Catatan:"
+	echo "Gunakan username: root dan password root MySQL untuk login ke phpMyAdmin"
+	echo "Username dan password root MySQL bisa di cek di /home/$path/dbdata/info.txt"
+	sudo sh -c 'echo "MYSQL_ROOT_PASSWORD='$db_root_password'" >> /home/'$path'/dbdata/info.txt'
+	sudo sh -c 'echo "MYSQL_USER='$db_user'" >>/home/'$path'/dbdata/info.txt'
+	sudo sh -c 'echo "MYSQL_PASSWORD='$db_password'" >> /home/'$path'/dbdata/info.txt'
+	sudo sh -c 'echo "SITE_DOMAIN_db='${pathtanpatitik}_db'" >> /home/'$path'/dbdata/info.txt'
+	sudo sh -c 'echo "SITE_DOMAIN_web='${pathtanpatitik}_web'" >> /home/'$path'/dbdata/info.txt'
+	sudo sh -c 'echo "SITE_DOMAIN_filebrowser='${pathtanpatitik}_filebrowser'" >> /home/'$path'/dbdata/info.txt'
+	sudo sh -c 'echo "SITE_DOMAIN_pma='${pathtanpatitik}_pma'" >> /home/'$path'/dbdata/info.txt'
+elif [ "$cms" == "minio" ]; then
+	echo "Username: admin"
+	echo "Password: ${minio_pass}"
+fi
 
 # buat reverse proxy
 today=$(date +"%Y%m%d")01
@@ -248,7 +267,7 @@ sudo ssh "$user@$servernamed" "systemctl restart named"
 
 
 # SSL GAES
-if [ "$ssl" == "le" ]; then
+if [[ "$cms" == "wp" && "$ssl" == "le" ]]; then
 	sudo ssh "$user@$servernginx" "cp /etc/nginx/conf.d/template.conf.inc /etc/nginx/conf.d/$path.conf && sed -i "s/_domain/$path/g" /etc/nginx/conf.d/$path.conf && sed -i "s/_random80/$number80/g" /etc/nginx/conf.d/$path.conf && sed -i "s/_random81/$number81/g" /etc/nginx/conf.d/$path.conf && sed -i "s/_random82/$number82/g" /etc/nginx/conf.d/$path.conf && sed -i "s/_ipprivate_node/$ipprivate_node/g" /etc/nginx/conf.d/$path.conf && exit"
 	# dibawah ini adalah menu untuk aktifkan SSL yang staging vs beneran
 	#sudo ssh "$user@$servernginx" "certbot --nginx --agree-tos --redirect --hsts --staple-ocsp --must-staple --no-eff-email --force-renewal --email andi.triyadi@qwords.co.id -d $path -d www.$path -d file.$path -d www.file.$path -d pma.$path -d www.$path && systemctl restart nginx"
@@ -256,7 +275,7 @@ if [ "$ssl" == "le" ]; then
 	sudo ssh "$user@$servernginx" "sed -i 's/listen 443 ssl;/listen 443 ssl http2;/g' /etc/nginx/conf.d/$path.conf && exit"
 	sudo ssh "$user@$servernginx" "systemctl restart nginx && exit"
 	echo "$path sudah terpasang Let's Encrypt"
-elif [ "$ssl" == "mandiri" ]; then
+elif [[ "$cms" == "wp" && "$ssl" == "mandiri" ]]; then
 	echo "Membuat file config dan transfer key serta crt ke nginx reverse"
 	sudo ssh "$user@$servernginx" "mkdir /home/$path && exit"
 	sudo scp $crtpath ${user}@${servernginx}:/home/$path || exit 1
@@ -268,7 +287,7 @@ elif [ "$ssl" == "mandiri" ]; then
 	sudo ssh "$user@$servernginx" sed -i "s/_ipprivate_node/$ipprivate_node/g" /etc/nginx/conf.d/$path.conf && exit
 	sudo ssh "$user@$servernginx" "systemctl restart nginx && exit"
 	echo "$path sudah terpasang SSL Mandiri (SSL Sendiri)"
-elif [ "$ssl" == "nossl" ]; then
+elif [[[ "$cms" == "wp" && "$ssl" == "nossl" ]]; then
 	sudo sh -c echo '"no ssl" >> /home/'$path'/info.txt'
 	sudo ssh "$user@$servernginx" "cp /etc/nginx/conf.d/template.conf.inc /etc/nginx/conf.d/$path.conf && exit"
 	sudo ssh "$user@$servernginx" "sed -i "s/_domain/$path/g" /etc/nginx/conf.d/$path.conf && sed -i "s/_random80/$number80/g" /etc/nginx/conf.d/$path.conf && sed -i "s/_random81/$number81/g" /etc/nginx/conf.d/$path.conf && sed -i "s/_random82/$number82/g" /etc/nginx/conf.d/$path.conf && exit"

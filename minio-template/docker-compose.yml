@@ -1,0 +1,28 @@
+version: '2.4'
+
+services:
+  minio:
+    image: minio/minio:latest
+    container_name: $SITE_DOMAIN_minio
+    restart: always
+    env_file: .env
+    environment:
+        - MINIO_ROOT_USER=admin
+        - MINIO_ROOT_PASSWORD=$MINIO_ROOT_PASSWORD
+    ports:
+        - "_ipprivate_node:_randomminio:9090"
+    volumes: 
+      - /home/_userdomain/minio/data:/data
+    networks:
+      backend:
+    user: "_userid:_groupid"
+    mem_limit: _memlimit
+    cpus: _cpulimit
+ #   labels:
+ #     io.portainer.accesscontrol.teams: admin
+
+volumes:
+  minio:
+
+networks:
+  backend:
