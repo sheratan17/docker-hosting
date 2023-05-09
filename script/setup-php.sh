@@ -172,6 +172,7 @@ if [ "$cms" == "wp" ]; then
 	sudo sed -i "s/_containerdb/${pathtanpatitik}_db/g" /home/docker-hosting/script/backup.sh
 	sudo sed -i "s/_containerpassword/$db_root_password/g" /home/docker-hosting/script/backup.sh
 elif [ "$cms" == "minio" ]; then
+	sudo mkdir /home/$path/minio/
 	sudo mkdir /home/$path/minio/data
 	user_id=$(id -u ${path})
 	group_id=$(id -g ${path})
@@ -292,7 +293,7 @@ elif [[ "$cms" == "wp" && "$ssl" == "mandiri" ]]; then
 	sudo ssh "$user@$servernginx" sed -i "s/_ipprivate_node/$ipprivate_node/g" /etc/nginx/conf.d/$path.conf && exit
 	sudo ssh "$user@$servernginx" "systemctl restart nginx && exit"
 	echo "$path sudah terpasang SSL Mandiri (SSL Sendiri)"
-elif [[[ "$cms" == "wp" && "$ssl" == "nossl" ]]; then
+elif [[ "$cms" == "wp" && "$ssl" == "nossl" ]]; then
 	sudo sh -c echo '"no ssl" >> /home/'$path'/info.txt'
 	sudo ssh "$user@$servernginx" "cp /etc/nginx/conf.d/template.conf.inc /etc/nginx/conf.d/$path.conf && exit"
 	sudo ssh "$user@$servernginx" "sed -i "s/_domain/$path/g" /etc/nginx/conf.d/$path.conf && sed -i "s/_random80/$number80/g" /etc/nginx/conf.d/$path.conf && sed -i "s/_random81/$number81/g" /etc/nginx/conf.d/$path.conf && sed -i "s/_random82/$number82/g" /etc/nginx/conf.d/$path.conf && exit"
