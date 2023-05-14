@@ -5,6 +5,7 @@ Script yang tersedia:
 1. Wordpress
 2. Minio
 
+# Petunjuk
 1. Instal Almalinux 8
 2. Pastikan semua partisi pakai ext4 dan /home memiliki partisi yang berbeda (tidak disatukan sama / )
 3. Update OS
