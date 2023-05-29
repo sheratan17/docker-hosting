@@ -5,7 +5,7 @@ echo "Script untuk deploy Node Docker, server harus kosong."
 echo
 echo "Pastikan server nginx reverse proxy dan DNS sudah tersedia dan dalam kondisi baru"
 echo "Pastikan IP private Node Docker dan nginx reverse proxy sudah aktif dan dapat berkomunikasi"
-echo "Script ini membutuhkan direktori /backup , pastikan direktori /backup sudah ada di server"
+echo "Script ini akan membuat direktori /backup , pastikan direktori /backup tidak ada di server"
 echo
 echo "CTRL + C jika:"
 echo "- Ini bukan server kosong" 
@@ -166,6 +166,11 @@ ssh "root@$ip_named" "sed -i "s/_ip_nameed/$ip_nameed/g" /etc/named.conf && exit
 ssh "root@$ip_named" "sed -i "s/_ip_nameed/$ip_nameed/g" /etc/named/_domain.db && exit"
 ssh "root@$ip_named" "sed -i "s/_servernginx/$ip_nginx/g" /etc/named/_domain.db && exit"
 
+ssh root@$ip_named "systemctl enable named && exit"
+ssh root@$ip_named "service named restart && exit"
+ssh root@$ip_named "firewall-cmd --zone=public --add-service=dns --permanent && exit"
+ssh root@$ip_named "firewall-cmd --reload && exit"
+
 echo "Memulai deploy server DNS-2..."
 sleep 3
 
@@ -199,7 +204,7 @@ ssh root@$ip_nameed "firewall-cmd --zone=public --add-service=dns --permanent &&
 ssh root@$ip_nameed "firewall-cmd --reload && exit"
 
 sed -i "s/_servernamed/$ip_named/g" /home/setup-php.sh
-sed -i "s/_servernamedd/$ip_nameed/g" /home/setup-php.sh
+sed -i "s/_servernameed/$ip_nameed/g" /home/setup-php.sh
 sed -i "s/_servernamed/$ip_named/g" /home/delete-php.sh
 
 echo "Server DNS selesai."
@@ -210,7 +215,7 @@ chmod +x /home/docker-hosting/script/backup.sh
 (crontab -l ; echo "0 1 * * * /home/docker-hosting/script/quotacheck.sh > /var/log/quotacheck.txt 2>&1") | crontab -
 (crontab -l ; echo "0 2 * * * /home/docker-hosting/script/backup.sh > /var/log/backup.txt 2>&1") | crontab -
 
-#mkdir /backup
+mkdir /backup
 
 echo "Download image docker..."
 docker image pull mariadb:10.11.2-jammy
