@@ -1,4 +1,4 @@
-; BIND zonefile for hanakama.my.id
+; BIND zonefile for NS
 
 $TTL    7200
 _dns.         IN      SOA     ns1._dns. admin._dns. (
