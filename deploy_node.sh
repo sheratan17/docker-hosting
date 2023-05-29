@@ -176,7 +176,7 @@ ssh root@$ip_namedd "yum update -y && yum install bind nano lsof bind-utils poli
 scp /home/docker-hosting/server-template/_domain.db root@$ip_namedd:/etc/named || exit 1
 scp /home/docker-hosting/server-template/_dns.db root@$ip_namedd:/etc/named || exit 1
 ssh root@$ip_namedd "mv /etc/named.conf /etc/named.conf.backup && exit"
-scp /home/docker-hosting/server-template/_named.conf root@$ip_named:/etc/named || exit 1
+scp /home/docker-hosting/server-template/_named.conf root@$ip_named:/etc/|| exit 1
 ssh root@$ip_namedd "mv /etc/named/_dns.db /etc/named/$domaintanpans.db && exit"
 ssh root@$ip_namedd "mv /etc/_named.conf /etc/named.conf && exit"
 
@@ -193,6 +193,7 @@ ssh "root@$ip_named" "sed -i "s/_servernginx/$ip_nginx/g" /etc/named/_domain.db 
 ssh "root@$ip_named" "sed -i "s/_ip_namedd/$ip_namedd/g" /etc/named/domaintanpans.db && exit"
 
 sed -i "s/_servernamed/$ip_named/g" /home/setup-php.sh
+sed -i "s/_servernamedd/$ip_namedd/g" /home/setup-php.sh
 sed -i "s/_servernamed/$ip_named/g" /home/delete-php.sh
 
 ssh root@$ip_namedd "systemctl enable named && exit"

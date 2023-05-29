@@ -251,6 +251,7 @@ echo "Membuat reverse proxy..."
 user="root"
 servernginx="_servernginx"
 servernamed="_servernamed"
+servernamedd="_servernamedd"
 ipprivate_node="_ipprivate_node_"
 
 sudo ssh "$user@$servernamed" "cp /etc/named/_domain.db /etc/named/$path.db && exit"
@@ -264,6 +265,24 @@ zone "$path" {
       type master;
       file \"/etc/named/$path.db\";
       allow-query { any; };
+	  allow-transfer { _servernamedd; };
+};
+# end zone $path
+EOF"
+sudo ssh "$user@$servernamed" "systemctl restart named"
+
+sudo ssh "$user@$servernamedd" "cp /etc/named/_domain.db /etc/named/$path.db && exit"
+sudo ssh "$user@$servernamedd" "sed -i "s/_domain/$path/g" /etc/named/$path.db && exit"
+sudo ssh "$user@$servernamedd" "sed -i "s/_soa/$today/g" /etc/named/$path.db && exit"
+
+echo "Membuat input di DNS server..."
+ssh "$user@$servernamedd" "cat << EOF >> /etc/named.conf
+# begin zone $path
+zone "$path" {
+      type slave;
+      file \"/etc/named/$path.db\";
+      allow-query { any; };
+	  allow-transfer { _servernamedd; };
 };
 # end zone $path
 EOF"
