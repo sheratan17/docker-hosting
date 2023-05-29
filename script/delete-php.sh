@@ -102,7 +102,7 @@ if [ "$cms" == "wp" ]; then
 	docker container rm "${PREFIX}_pma"
 	docker container rm "${PREFIX}_filebrowser"
 	echo "Menghapus Network Docker yang diminta..."
-	docker network rm "${PREFIX}_wp-backend}"
+	docker network rm "${PREFIX}_wp-backend"
 elif [ "$cms" == "minio" ]; then
 	echo "Menghentikan Docker Minio yang diminta..."
 	docker container stop "${PREFIX}_minio"
