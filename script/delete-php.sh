@@ -58,6 +58,13 @@ fi
 
 
 PREFIX=$(echo "${domain}" | sed 's/\.//g')
+PREFIX_WEB = "${PREFIX}_web"
+PREFIX_DB = "${PREFIX}_db"
+PREFIX_PMA = "${PREFIX}_pma"
+PREFIX_FILEBROWSER = "${PREFIX}_filebrowser"
+PREFIX_MINIO = "${PREFIX}_minio"
+PREFIX_WP_BACKEND = "${PREFIX}_wp-backend"
+PREFIX_MINIO_BACKEND = "${PREFIX}_minio-backend"
 
 #docker container stop $(docker container ls -q --filter name=${PREFIX}_*)
 #docker container rm $(docker ps -a -q --filter name=${PREFIX}_*)
@@ -85,27 +92,27 @@ PREFIX=$(echo "${domain}" | sed 's/\.//g')
 if [[ "$cms" == "wp"]]; 
 	echo "Menghentikan Docker WP yang diminta..."
 	sleep 3
-	docker container stop ${PREFIX}_web
-	docker container stop ${PREFIX}_db
-	docker container stop ${PREFIX}_pma
-	docker container stop ${PREFIX}_filebrowser
+	docker container stop "${PREFIX_WEB}"
+	docker container stop "${PREFIX_DB}"
+	docker container stop "${PREFIX_PMA}"
+	docker container stop "${PREFIX_FILEBROWSER}"
 	echo "Menghapus Docker yang diminta..."
 	sleep 3
-	docker container rm ${PREFIX}_web
-	docker container rm ${PREFIX}_db
-	docker container rm ${PREFIX}_pma
-	docker container rm ${PREFIX}_filebrowser
+	docker container rm "${PREFIX_WEB}"
+	docker container rm "${PREFIX_DB}"
+	docker container rm "${PREFIX_PMA}"
+	docker container rm "${PREFIX_FILEBROWSER}"
 	echo "Menghapus Network Docker yang diminta..."
-	docker network rm ${PREFIX}_wp-backend
+	docker network rm "${PREFIX_WP_BACKEND}"
 elif if [[ "$cms" == "minio" ]]; 
 	echo "Menghentikan Docker Minio yang diminta..."
-	docker container stop ${PREFIX}_minio
+	docker container stop "${PREFIX_MINIO}"
 	sleep 3
 	echo "Menghapus Docker Minio yang diminta..."
 	sleep 3
-	docker container rm ${PREFIX}_minio
+	docker container rm "${PREFIX_MINIO}"
 	echo "Menghapus Network Docker yang diminta..."
-	docker network rm ${PREFIX}_minio-backend
+	docker network rm "${PREFIX_MINIO_BACKEND}"
 fi
 
 sudo userdel -r $domain
@@ -117,6 +124,7 @@ echo "Hapus reverse proxy..."
 user="root"
 servernginx="_servernginx"
 servernamed="_servernamed"
+servernamedd="_servernameed"
 
 sudo ssh "$user@$servernginx" "rm /etc/nginx/conf.d/$domain.conf && exit"
 sudo ssh "$user@$servernginx" "rm -rf /home/$domain/ && exit"
@@ -126,6 +134,9 @@ echo "Hapus DNS..."
 sudo ssh "$user@$servernamed" "rm /etc/named/$domain.db && exit"
 sudo ssh "$user@$servernamed" "sed -i '/# begin zone $domain/,/# end zone $domain/d' /etc/named.conf"
 sudo ssh "$user@$servernamed" "systemctl restart named && exit"
+sudo ssh "$user@$servernamedd" "rm /etc/named/$domain.db && exit"
+sudo ssh "$user@$servernamedd" "sed -i '/# begin zone $domain/,/# end zone $domain/d' /etc/named.conf"
+sudo ssh "$user@$servernamedd" "systemctl restart named && exit"
 echo "DNS dihapus"
 echo "Hapus Backup..."
 sudo sed -i "/${PREFIX}_db/d" /home/docker-hosting/script/backup.sh
