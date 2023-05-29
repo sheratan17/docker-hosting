@@ -68,7 +68,7 @@ firewall-cmd --zone=public --add-service=https --permanent
 firewall-cmd --reload
 
 # buat ssh-keygen
-#ssh-keygen -t rsa -N '' -f ~/.ssh/id_rsa <<< y
+ssh-keygen -t rsa -N '' -f ~/.ssh/id_rsa <<< y
 
 echo "Selesai. Berikutnya download script lalu koneksikan server ini dengan nginx reverse proxy dan named..."
 sleep 3
