@@ -13,12 +13,12 @@ echo "- Server nginx dan DNS belum ada"
 echo "- IP private belum bisa terhubung"
 echo
 sleep 5
-read -p "Masukkan IP private server Node Docker: " ipprivate_node
+read -p "Masukkan IP PRIVATE server Node Docker: " ipprivate_node
 echo
-read -p "Masukkan IP server nginx reverse proxy: " ip_nginx
+read -p "Masukkan IP PUBLIC server nginx reverse proxy: " ip_nginx
 read -p "Masukkan password root server nginx reverse proxy: " pass_nginx
 echo
-read -p "Masukkan IP server DNS: " ip_named
+read -p "Masukkan IP PUBLIC server DNS: " ip_named
 read -p "Masukkan password root server DNS: " pass_named
 read -p "Masukkan ns1 yang akan DNS gunakan (format: ns1.domain.tld): " ns_named
 echo
