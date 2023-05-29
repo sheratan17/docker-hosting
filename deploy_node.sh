@@ -25,9 +25,11 @@ read -p "Masukkan IP PUBLIC server DNS-2: " ip_namedd
 read -p "Masukkan password root server DNS-2: " pass_namedd
 echo
 read -p "Masukkan ns1 yang akan DNS gunakan (format: ns1.domain.tld): " ns_named
-echo
-echo "Memulai proses..."
+echo "Input lengkap. Memulai proses..."
 sleep 5
+echo
+echo "Proses dimulai"
+sleep 3
 
 # install library
 yum update -y
