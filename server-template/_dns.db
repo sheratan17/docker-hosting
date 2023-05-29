@@ -14,4 +14,4 @@ _dns.         IN      SOA     ns1._dns. admin._dns. (
 _dns.         IN      A       _ipnamed
 www                     IN      CNAME   _dns.
 ns1                     IN      A       _ipnamed
-ns2                     IN      A       _ipnamed
+ns2                     IN      A       _ipnamedd
