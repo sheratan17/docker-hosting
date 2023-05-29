@@ -177,8 +177,8 @@ ssh root@$ip_namedd "yum update -y && yum install bind nano lsof bind-utils poli
 
 scp /home/docker-hosting/server-template/_domain.db root@$ip_namedd:/etc/named || exit 1
 scp /home/docker-hosting/server-template/_dns.db root@$ip_namedd:/etc/named || exit 1
-ssh root@$ip_namedd "mv /etc/named.conf /etc/named.conf.backup && exit"
 scp /home/docker-hosting/server-template/_named.conf root@$ip_named:/etc/|| exit 1
+ssh root@$ip_namedd "mv /etc/named.conf /etc/named.conf.backup && exit"
 ssh root@$ip_namedd "mv /etc/named/_dns.db /etc/named/$domaintanpans.db && exit"
 ssh root@$ip_namedd "mv /etc/_named.conf /etc/named.conf && exit"
 
