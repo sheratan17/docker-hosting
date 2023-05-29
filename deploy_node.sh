@@ -141,6 +141,7 @@ today=$(date +"%Y%m%d")01
 echo
 domaintanpans=$(echo $ns_named | sed 's/ns1\.//')
 
+ssh-keyscan -t rsa $ip_named >> /root/.ssh/known_hosts
 sshpass -p "$pass_named" ssh-copy-id root@$ip_named
 
 ssh root@$ip_named "yum update -y && yum install bind nano lsof bind-utils policycoreutils-python-utils -y && exit"
@@ -161,11 +162,12 @@ ssh "root@$ip_named" "sed -i "s/_ip_namedd/$ip_namedd/g" /etc/named.conf && exit
 ssh "root@$ip_named" "sed -i "s/_ip_named/$ip_named/g" /etc/named/_domain.db && exit"
 ssh "root@$ip_named" "sed -i "s/_ip_namedd/$ip_namedd/g" /etc/named/_domain.db && exit"
 ssh "root@$ip_named" "sed -i "s/_servernginx/$ip_nginx/g" /etc/named/_domain.db && exit"
-ssh "root@$ip_named" "sed -i "s/_ip_namedd/$ip_namedd/g" /etc/named/_dns.db && exit"
+ssh "root@$ip_named" "sed -i "s/_ip_namedd/$ip_namedd/g" /etc/named/$domaintanpans.db && exit"
 
 echo "Memulai deploy server DNS-2..."
 sleep 3
 
+ssh-keyscan -t rsa $ip_namedd >> /root/.ssh/known_hosts
 sshpass -p "$pass_namedd" ssh-copy-id root@$ip_namedd
 
 ssh root@$ip_namedd "yum update -y && yum install bind nano lsof bind-utils policycoreutils-python-utils -y && exit"
