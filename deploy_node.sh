@@ -121,6 +121,9 @@ sed -i "s/_servernginx/$ip_nginx/g" /home/delete-php.sh
 #ssh root@$ip_nginx "systemctl enable nginx && exit"
 #ssh root@$ip_nginx "service nginx restart && exit"
 
+ssh root@$ip_nginx "firewall-cmd --zone=public --add-service=http --permanent"
+ssh root@$ip_nginx "firewall-cmd --zone=public --add-service=https --permanent"
+ssh root@$ip_nginx "firewall-cmd --reload && exit"
 echo "Nginx selesai."
 echo
 
@@ -156,6 +159,8 @@ sed -i "s/_servernamed/$ip_named/g" /home/delete-php.sh
 
 ssh root@$ip_named "systemctl enable named && exit"
 ssh root@$ip_named "service named restart && exit"
+ssh root@$ip_named "firewall-cmd --zone=public --add-service=dns --permanent && exit"
+ssh root@$ip_named "firewall-cmd --reload && exit"
 echo "Server DNS selesai."
 echo
 echo "Menambahkan cronjob backup dan checkquota..."
