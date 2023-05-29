@@ -264,8 +264,6 @@ ssh "$user@$servernamed" "cat << EOF >> /etc/named.conf
 zone "$path" {
       type master;
       file \"/etc/named/$path.db\";
-      allow-query { any; };
-	  allow-transfer { _servernamedd; };
 };
 # end zone $path
 EOF"
@@ -281,8 +279,6 @@ ssh "$user@$servernamedd" "cat << EOF >> /etc/named.conf
 zone "$path" {
       type slave;
       file \"/etc/named/$path.db\";
-      allow-query { any; };
-	  allow-transfer { _servernamedd; };
 };
 # end zone $path
 EOF"
