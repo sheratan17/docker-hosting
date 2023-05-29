@@ -1,7 +1,7 @@
 #!/bin/bash
 
 domain=""
-
+cms=""
 # Loop through all arguments
 #while [[ $# -gt 0 ]]
 #do
@@ -36,12 +36,12 @@ do
         --cms=*)
         cms="${key#*=}"
         shift
-        ;;		
+        ;;
         *)
-		echo
+	echo
         echo "Error: Input tidak boleh kosong '$key'"
-		echo "Contoh: ./delete-php.sh --d=domain.com --cms=wp"
-		echo
+	echo "Contoh: ./delete-php.sh --d=domain.com --cms=wp"
+	echo
         exit 1
         ;;
     esac
@@ -56,15 +56,14 @@ if [[ -z $domain ]]; then
     exit 1
 fi
 
-
 PREFIX=$(echo "${domain}" | sed 's/\.//g')
-PREFIX_WEB = "${PREFIX}_web"
-PREFIX_DB = "${PREFIX}_db"
-PREFIX_PMA = "${PREFIX}_pma"
-PREFIX_FILEBROWSER = "${PREFIX}_filebrowser"
-PREFIX_MINIO = "${PREFIX}_minio"
-PREFIX_WP_BACKEND = "${PREFIX}_wp-backend"
-PREFIX_MINIO_BACKEND = "${PREFIX}_minio-backend"
+#PREFIX_WEB = ${PREFIX}_web
+#PREFIX_DB = ${PREFIX}_db
+#PREFIX_PMA = ${PREFIX}_pma
+#PREFIX_FILEBROWSER = ${PREFIX}_filebrowser
+#PREFIX_MINIO = ${PREFIX}_minio
+#PREFIX_WP_BACKEND = ${PREFIX}_wp-backend
+#PREFIX_MINIO_BACKEND = ${PREFIX}_minio-backend
 
 #docker container stop $(docker container ls -q --filter name=${PREFIX}_*)
 #docker container rm $(docker ps -a -q --filter name=${PREFIX}_*)
@@ -89,30 +88,30 @@ PREFIX_MINIO_BACKEND = "${PREFIX}_minio-backend"
 #docker volume prune -f
 
 
-if [[ "$cms" == "wp"]]; 
+if [ "$cms" == "wp" ]; then
 	echo "Menghentikan Docker WP yang diminta..."
 	sleep 3
-	docker container stop "${PREFIX_WEB}"
-	docker container stop "${PREFIX_DB}"
-	docker container stop "${PREFIX_PMA}"
-	docker container stop "${PREFIX_FILEBROWSER}"
+	docker container stop "${PREFIX}_web"
+	docker container stop "${PREFIX}_db"
+	docker container stop "${PREFIX}_pma"
+	docker container stop "${PREFIX}_filebrowser"
 	echo "Menghapus Docker yang diminta..."
 	sleep 3
-	docker container rm "${PREFIX_WEB}"
-	docker container rm "${PREFIX_DB}"
-	docker container rm "${PREFIX_PMA}"
-	docker container rm "${PREFIX_FILEBROWSER}"
+	docker container rm "${PREFIX}_web"
+	docker container rm "${PREFIX}_db"
+	docker container rm "${PREFIX}_pma"
+	docker container rm "${PREFIX}_filebrowser"
 	echo "Menghapus Network Docker yang diminta..."
-	docker network rm "${PREFIX_WP_BACKEND}"
-elif if [[ "$cms" == "minio" ]]; 
+	docker network rm "${PREFIX}_wp-backend}"
+elif [ "$cms" == "minio" ]; then
 	echo "Menghentikan Docker Minio yang diminta..."
-	docker container stop "${PREFIX_MINIO}"
+	docker container stop "${PREFIX}_minio"
 	sleep 3
 	echo "Menghapus Docker Minio yang diminta..."
 	sleep 3
-	docker container rm "${PREFIX_MINIO}"
+	docker container rm "${PREFIX}_minio"
 	echo "Menghapus Network Docker yang diminta..."
-	docker network rm "${PREFIX_MINIO_BACKEND}"
+	docker network rm "${PREFIX}_minio-backend"
 fi
 
 sudo userdel -r $domain
@@ -122,9 +121,9 @@ echo "Docker dan user dihapus"
 
 echo "Hapus reverse proxy..."
 user="root"
-servernginx="_servernginx"
-servernamed="_servernamed"
-servernamedd="_servernameed"
+servernginx="103.102.153.85"
+servernamed="103.102.153.86"
+servernamedd="103.102.153.87"
 
 sudo ssh "$user@$servernginx" "rm /etc/nginx/conf.d/$domain.conf && exit"
 sudo ssh "$user@$servernginx" "rm -rf /home/$domain/ && exit"
