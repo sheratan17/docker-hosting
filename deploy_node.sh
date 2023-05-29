@@ -21,8 +21,8 @@ echo
 read -p "Masukkan IP PUBLIC server DNS-1: " ip_named
 read -p "Masukkan password root server DNS-1: " pass_named
 echo
-read -p "Masukkan IP PUBLIC server DNS-2: " ip_namedd
-read -p "Masukkan password root server DNS-2: " pass_namedd
+read -p "Masukkan IP PUBLIC server DNS-2: " ip_nameed
+read -p "Masukkan password root server DNS-2: " pass_nameed
 echo
 read -p "Masukkan ns1 yang akan DNS gunakan (format: ns1.domain.tld): " ns_named
 echo "Input lengkap. Memulai proses..."
@@ -158,47 +158,48 @@ ssh root@$ip_named "mv /etc/named/_dns.db /etc/named/$domaintanpans.db && exit"
 # ubah bash script agar menggunakan IP DNS Server
 ssh "root@$ip_named" "sed -i "s/_dns/$domaintanpans/g" /etc/named/$domaintanpans.db && exit"
 ssh "root@$ip_named" "sed -i "s/_ipnamed/$ip_named/g" /etc/named/$domaintanpans.db && exit"
-ssh "root@$ip_named" "sed -i "s/_ip_namedd/$ip_namedd/g" /etc/named/$domaintanpans.db && exit"
+ssh "root@$ip_named" "sed -i "s/_ip_nameed/$ip_nameed/g" /etc/named/$domaintanpans.db && exit"
 ssh "root@$ip_named" "sed -i "s/_soa/$today/g" /etc/named/$domaintanpans.db && exit"
 ssh "root@$ip_named" "sed -i "s/_dns/$domaintanpans/g" /etc/named.conf && exit"
 ssh "root@$ip_named" "sed -i "s/_ip_named/$ip_named/g" /etc/named/_domain.db && exit"
-ssh "root@$ip_named" "sed -i "s/_ip_namedd/$ip_namedd/g" /etc/named.conf && exit"
-ssh "root@$ip_named" "sed -i "s/_ip_namedd/$ip_namedd/g" /etc/named/_domain.db && exit"
+ssh "root@$ip_named" "sed -i "s/_ip_nameed/$ip_nameed/g" /etc/named.conf && exit"
+ssh "root@$ip_named" "sed -i "s/_ip_nameed/$ip_nameed/g" /etc/named/_domain.db && exit"
 ssh "root@$ip_named" "sed -i "s/_servernginx/$ip_nginx/g" /etc/named/_domain.db && exit"
 
 echo "Memulai deploy server DNS-2..."
 sleep 3
 
-ssh-keyscan -t rsa $ip_namedd >> /root/.ssh/known_hosts
-sshpass -p "$pass_namedd" ssh-copy-id root@$ip_namedd
+ssh-keyscan -t rsa $ip_nameed >> /root/.ssh/known_hosts
+sshpass -p "$pass_nameed" ssh-copy-id root@$ip_nameed
 
-ssh root@$ip_namedd "yum update -y && yum install bind nano lsof bind-utils policycoreutils-python-utils -y && exit"
+ssh root@$ip_nameed "yum update -y && yum install bind nano lsof bind-utils policycoreutils-python-utils -y && exit"
 
-scp /home/docker-hosting/server-template/_domain.db root@$ip_namedd:/etc/named || exit 1
-scp /home/docker-hosting/server-template/_dns.db root@$ip_namedd:/etc/named || exit 1
-scp /home/docker-hosting/server-template/_named.conf root@$ip_namedd:/etc/ || exit 1
-ssh root@$ip_namedd "mv /etc/named.conf /etc/named.conf.backup && exit"
-ssh root@$ip_namedd "mv /etc/named/_dns.db /etc/named/$domaintanpans.db && exit"
-ssh root@$ip_namedd "mv /etc/_named.conf /etc/named.conf && exit"
+scp /home/docker-hosting/server-template/_domain.db root@$ip_nameed:/etc/named || exit 1
+scp /home/docker-hosting/server-template/_dns.db root@$ip_nameed:/etc/named || exit 1
+scp /home/docker-hosting/server-template/_named.conf root@$ip_nameed:/etc/ || exit 1
+ssh root@$ip_nameed "mv /etc/named.conf /etc/named.conf.backup && exit"
+ssh root@$ip_nameed "mv /etc/named/_dns.db /etc/named/$domaintanpans.db && exit"
+ssh root@$ip_nameed "mv /etc/_named.conf /etc/named.conf && exit"
 
 # ubah bash script agar menggunakan IP DNS Server
-ssh "root@$ip_namedd" "sed -i "s/_dns/$domaintanpans/g" /etc/named/$domaintanpans.db && exit"
-ssh "root@$ip_namedd" "sed -i "s/_ipnamed/$ip_named/g" /etc/named/$domaintanpans.db && exit"
-ssh "root@$ip_namedd" "sed -i "s/_ip_namedd/$ip_namedd/g" /etc/named/$domaintanpans.db && exit"
-ssh "root@$ip_namedd" "sed -i "s/_soa/$today/g" /etc/named/$domaintanpans.db && exit"
-ssh "root@$ip_namedd" "sed -i "s/_dns/$domaintanpans/g" /etc/named.conf && exit"
-ssh "root@$ip_namedd" "sed -i "s/_ip_named/$ip_named/g" /etc/named/_domain.db && exit"
-ssh "root@$ip_namedd" "sed -i "s/_ip_namedd/$ip_namedd/g" /etc/named.conf && exit"
-ssh "root@$ip_namedd" "sed -i "s/_ip_namedd/$ip_namedd/g" /etc/named/_domain.db && exit"
-ssh "root@$ip_namedd" "sed -i "s/_servernginx/$ip_nginx/g" /etc/named/_domain.db && exit"
+ssh "root@$ip_nameed" "sed -i "s/_dns/$domaintanpans/g" /etc/named/$domaintanpans.db && exit"
+ssh "root@$ip_nameed" "sed -i "s/_ipnamed/$ip_named/g" /etc/named/$domaintanpans.db && exit"
+ssh "root@$ip_nameed" "sed -i "s/_ip_nameed/$ip_nameed/g" /etc/named/$domaintanpans.db && exit"
+ssh "root@$ip_nameed" "sed -i "s/_soa/$today/g" /etc/named/$domaintanpans.db && exit"
+ssh "root@$ip_nameed" "sed -i "s/_dns/$domaintanpans/g" /etc/named.conf && exit"
+ssh "root@$ip_nameed" "sed -i "s/_ip_named/$ip_named/g" /etc/named/_domain.db && exit"
+ssh "root@$ip_nameed" "sed -i "s/_ip_nameed/$ip_nameed/g" /etc/named.conf && exit"
+ssh "root@$ip_nameed" "sed -i "s/_ip_nameed/$ip_nameed/g" /etc/named/_domain.db && exit"
+ssh "root@$ip_nameed" "sed -i "s/_servernginx/$ip_nginx/g" /etc/named/_domain.db && exit"
+ssh "root@$ip_nameed" "sed -i "s/_ip_named/$$ip_named/g" /etc/named.conf && exit"
 
-ssh root@$ip_namedd "systemctl enable named && exit"
-ssh root@$ip_namedd "service named restart && exit"
-ssh root@$ip_namedd "firewall-cmd --zone=public --add-service=dns --permanent && exit"
-ssh root@$ip_namedd "firewall-cmd --reload && exit"
+ssh root@$ip_nameed "systemctl enable named && exit"
+ssh root@$ip_nameed "service named restart && exit"
+ssh root@$ip_nameed "firewall-cmd --zone=public --add-service=dns --permanent && exit"
+ssh root@$ip_nameed "firewall-cmd --reload && exit"
 
 sed -i "s/_servernamed/$ip_named/g" /home/setup-php.sh
-sed -i "s/_servernamedd/$ip_namedd/g" /home/setup-php.sh
+sed -i "s/_servernamedd/$ip_nameed/g" /home/setup-php.sh
 sed -i "s/_servernamed/$ip_named/g" /home/delete-php.sh
 
 echo "Server DNS selesai."

@@ -13,8 +13,8 @@ _domain.         IN      SOA     ns1._dns. admin._dns. (
 
 _domain.         IN      A       _servernginx
 www                     IN      CNAME   _domain.
-ns1                     IN      A       _ip_named
-ns2                     IN      A       _ip_namedd
+ns1                     IN      A       _ipnamed
+ns2                     IN      A       _ip_nameed
 pma			IN	A	_servernginx
 file			IN	A	_servernginx
 www.pma			IN	CNAME	pma._domain.
