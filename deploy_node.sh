@@ -189,7 +189,7 @@ ssh "root@$ip_named" "sed -i "s/_ip_namedd/$ip_namedd/g" /etc/named.conf && exit
 ssh "root@$ip_named" "sed -i "s/_ip_named/$ip_named/g" /etc/named/_domain.db && exit"
 ssh "root@$ip_named" "sed -i "s/_ip_namedd/$ip_namedd/g" /etc/named/_domain.db && exit"
 ssh "root@$ip_named" "sed -i "s/_servernginx/$ip_nginx/g" /etc/named/_domain.db && exit"
-ssh "root@$ip_named" "sed -i "s/_ip_namedd/$ip_namedd/g" /etc/named/_dns.db && exit"
+ssh "root@$ip_named" "sed -i "s/_ip_namedd/$ip_namedd/g" /etc/named/domaintanpans.db && exit"
 
 sed -i "s/_servernamed/$ip_named/g" /home/setup-php.sh
 sed -i "s/_servernamed/$ip_named/g" /home/delete-php.sh
