@@ -27,7 +27,7 @@ sleep 5
 
 # install library
 yum update -y
-yum install quota wget nano curl vim lsof git sshpass epel-release zip -y
+yum install quota wget nano curl vim lsof git sshpass epel-release zip policycoreutils-python-utils -y
 
 # Aktifkan quota di /home
 line=$(grep "^UUID=.* /home " /etc/fstab)
@@ -45,24 +45,24 @@ systemctl enable docker
 systemctl start docker
 
 # install apache
-yum install httpd php php-json -y
+#yum install httpd php php-json -y
 
 # fix permission dan sudo
-usermod -a -G docker apache
-usermod -a -G wheel apache
-echo "%wheel        ALL=(ALL)       NOPASSWD: ALL" >> /etc/sudoers
+#usermod -a -G docker apache
+#usermod -a -G wheel apache
+#echo "%wheel        ALL=(ALL)       NOPASSWD: ALL" >> /etc/sudoers
 
 # fix apache dan php
-sed -i "s/^max_execution_time = .*$/max_execution_time = 600/" /etc/php.ini
-echo "ProxyTimeout 600" >> /etc/httpd/conf/httpd.conf
-sed -i 's/DirectoryIndex index\.html/DirectoryIndex index.php index.html/g' /etc/httpd/conf/httpd.conf
-systemctl enable httpd
-systemctl enable php-fpm
-systemctl restart httpd
-systemctl restart php-fpm
+#sed -i "s/^max_execution_time = .*$/max_execution_time = 600/" /etc/php.ini
+#echo "ProxyTimeout 600" >> /etc/httpd/conf/httpd.conf
+#sed -i 's/DirectoryIndex index\.html/DirectoryIndex index.php index.html/g' /etc/httpd/conf/httpd.conf
+#systemctl enable httpd
+#systemctl enable php-fpm
+#systemctl restart httpd
+#systemctl restart php-fpm
 
 # fix firewall dan selinux
-sed -i 's/^SELINUX=.*/SELINUX=disabled/' /etc/selinux/config
+#sed -i 's/^SELINUX=.*/SELINUX=disabled/' /etc/selinux/config
 firewall-cmd --zone=public --add-service=http --permanent
 firewall-cmd --zone=public --add-service=https --permanent
 firewall-cmd --reload
