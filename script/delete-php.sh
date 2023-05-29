@@ -121,9 +121,9 @@ echo "Docker dan user dihapus"
 
 echo "Hapus reverse proxy..."
 user="root"
-servernginx="103.102.153.85"
-servernamed="103.102.153.86"
-servernamedd="103.102.153.87"
+servernginx="_servernginx"
+servernamed="_servernamed"
+servernamedd="_servernameed"
 
 sudo ssh "$user@$servernginx" "rm /etc/nginx/conf.d/$domain.conf && exit"
 sudo ssh "$user@$servernginx" "rm -rf /home/$domain/ && exit"
