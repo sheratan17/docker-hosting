@@ -194,7 +194,7 @@ ssh "root@$ip_nameed" "sed -i "s/_ipnamed/$ip_named/g" /etc/named/$domaintanpans
 ssh "root@$ip_nameed" "sed -i "s/_ip_nameed/$ip_nameed/g" /etc/named/$domaintanpans.db && exit"
 ssh "root@$ip_nameed" "sed -i "s/_soa/$today/g" /etc/named/$domaintanpans.db && exit"
 ssh "root@$ip_nameed" "sed -i "s/_dns/$domaintanpans/g" /etc/named.conf && exit"
-ssh "root@$ip_namedd" "sed -i "s/_dns/$domaintanpans/g" /etc/named/_domain.db && exit"
+ssh "root@$ip_nameed" "sed -i "s/_dns/$domaintanpans/g" /etc/named/_domain.db && exit"
 ssh "root@$ip_nameed" "sed -i "s/_ip_named/$ip_named/g" /etc/named/_domain.db && exit"
 ssh "root@$ip_nameed" "sed -i "s/_ip_nameed/$ip_nameed/g" /etc/named.conf && exit"
 ssh "root@$ip_nameed" "sed -i "s/_ip_nameed/$ip_nameed/g" /etc/named/_domain.db && exit"
