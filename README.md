@@ -34,17 +34,17 @@ Jalankan `deploy_node.sh` pada server Node Docker untuk menjalankan semua (seper
 # Pengembangan
 1. Script untuk update ssl dari le ke mandiri atau sebaliknya
 2. PHP GUI yang lebih baik
-3. SELINUX
-4. Integrasi dengan DNS :heavy_check_mark:
+3. SELINUX :heavy_check_mark:
+4. Integrasi dengan DNS  :heavy_check_mark:
 5. Integrasi dengan nginx reverse proxy :heavy_check_mark:
 6. Script untuk deploy server node, dns dan nginx :heavy_check_mark:
 7. Integrasi dengan Redis / Memcached
 8. Database untuk arsip dan pencatatan
 9. Sistem backup - restore :heavy_check_mark:
 10. Memastikan port random tidak duplikat
-11. Hardening nginx reverse proxy
+11. Hardening nginx reverse proxy :heavy_check_mark:
 12. Antivirus
-13. Custom image (Joomla, moodle, etc)
+13. Custom image (Joomla, moodle, etc) :heavy_check_mark:
 14. Stats menggunakan: https://github.com/virtualzone/docker-container-stats
 
 # API
