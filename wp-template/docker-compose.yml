@@ -13,7 +13,7 @@ services:
       - /home/_userdomain/dbdata:/var/lib/mysql
     command: '--default-authentication-plugin=mysql_native_password'
     networks:
-      backend:
+      wp-backend:
     user: "_userid:_groupid"
     mem_limit: _memlimit
     cpus: _cpulimit
@@ -37,7 +37,7 @@ services:
       - /home/_userdomain/sitedata:/var/www/html
       - ./wordpress.ini:/usr/local/etc/php/conf.d/wordpress.ini
     networks:
-      backend:
+      wp-backend:
     user: "_userid:_groupid"
     mem_limit: _memlimit
     cpus: _cpulimit
@@ -50,7 +50,7 @@ services:
     container_name: $SITE_DOMAIN_filebrowser
     image: filebrowser/filebrowser:v2-s6
     networks:
-      backend:
+      wp-backend:
     ports:
       - "_ipprivate_node:_random81:80"
     volumes:
@@ -76,7 +76,7 @@ services:
     ports:
       - "_ipprivate_node:_random82:80"
     networks:
-      backend:
+      wp-backend:
     mem_limit: 0.2G
     cpus: 1.0
     user: "_userid:_groupid"
@@ -93,4 +93,4 @@ volumes:
   pma:
 
 networks:
-  backend:
+  wp-backend:

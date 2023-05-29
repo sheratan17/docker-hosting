@@ -15,7 +15,7 @@ services:
     volumes: 
       - /home/_userdomain/minio/data:/data
     networks:
-      backend:
+      minio-backend:
     user: "_userid:_groupid"
     mem_limit: _memlimit
     cpus: _cpulimit
@@ -27,4 +27,4 @@ volumes:
   minio:
 
 networks:
-  backend:
+  minio-backend:

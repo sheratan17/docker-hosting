@@ -3,6 +3,28 @@
 domain=""
 
 # Loop through all arguments
+#while [[ $# -gt 0 ]]
+#do
+#    key="$1"
+#    case $key in
+#        --d=*)
+#        domain="${key#*=}"
+#        shift
+#        ;;
+#        *)
+#	echo
+#        echo "Error: Input --d tidak boleh kosong '$key'"
+#	echo "Contoh: ./delete-php.sh --d=domain.com"
+#	echo
+#       exit 1
+#        ;;
+#    esac
+#done
+
+
+domain=""
+cms=""
+# Loop through all arguments
 while [[ $# -gt 0 ]]
 do
     key="$1"
@@ -11,11 +33,15 @@ do
         domain="${key#*=}"
         shift
         ;;
+        --cms=*)
+        cms="${key#*=}"
+        shift
+        ;;		
         *)
-	echo
-        echo "Error: Input --d tidak boleh kosong '$key'"
-	echo "Contoh: ./delete-php.sh --d=domain.com"
-	echo
+		echo
+        echo "Error: Input tidak boleh kosong '$key'"
+		echo "Contoh: ./delete-php.sh --d=domain.com --cms=wp"
+		echo
         exit 1
         ;;
     esac
@@ -25,7 +51,7 @@ done
 if [[ -z $domain ]]; then
     echo
     echo "Error: --d tidak boleh kosong"
-    echo "Contoh: ./delete-php.sh --d=domain.com"
+    echo "Contoh: ./delete-php.sh --d=domain.com  --cms=wp"
     echo 
     exit 1
 fi
@@ -37,23 +63,51 @@ PREFIX=$(echo "${domain}" | sed 's/\.//g')
 #docker container rm $(docker ps -a -q --filter name=${PREFIX}_*)
 #docker network rm $(docker network ls -q --filter name=${PREFIX}_*)
 
-echo "Menghentikan Docker yang diminta..."
-docker container stop ${PREFIX}_web
-docker container stop ${PREFIX}_db
-docker container stop ${PREFIX}_pma
-docker container stop ${PREFIX}_filebrowser
-docker container stop ${PREFIX}_minio
+#echo "Menghentikan Docker yang diminta..."
+#docker container stop ${PREFIX}_web
+#docker container stop ${PREFIX}_db
+#docker container stop ${PREFIX}_pma
+#docker container stop ${PREFIX}_filebrowser
+#docker container stop ${PREFIX}_minio
 
-echo "Menghapus Docker yang diminta..."
-docker container rm ${PREFIX}_web
-docker container rm ${PREFIX}_db
-docker container rm ${PREFIX}_pma
-docker container rm ${PREFIX}_filebrowser
-docker container rm ${PREFIX}_minio
-docker network rm ${PREFIX}_backend
+#echo "Menghapus Docker yang diminta..."
+#docker container rm ${PREFIX}_web
+#docker container rm ${PREFIX}_db
+#docker container rm ${PREFIX}_pma
+#docker container rm ${PREFIX}_filebrowser
+#docker container rm ${PREFIX}_minio
+#docker network rm ${PREFIX}_backend
 
-echo "Menghapus Network Docker yang diminta..."
-docker volume prune -f
+#echo "Menghapus Network Docker yang diminta..."
+#docker volume prune -f
+
+
+if [[ "$cms" == "wp"]]; 
+	echo "Menghentikan Docker WP yang diminta..."
+	sleep 3
+	docker container stop ${PREFIX}_web
+	docker container stop ${PREFIX}_db
+	docker container stop ${PREFIX}_pma
+	docker container stop ${PREFIX}_filebrowser
+	echo "Menghapus Docker yang diminta..."
+	sleep 3
+	docker container rm ${PREFIX}_web
+	docker container rm ${PREFIX}_db
+	docker container rm ${PREFIX}_pma
+	docker container rm ${PREFIX}_filebrowser
+	echo "Menghapus Network Docker yang diminta..."
+	docker network rm ${PREFIX}_wp-backend
+elif if [[ "$cms" == "minio" ]]; 
+	echo "Menghentikan Docker Minio yang diminta..."
+	docker container stop ${PREFIX}_minio
+	sleep 3
+	echo "Menghapus Docker Minio yang diminta..."
+	sleep 3
+	docker container rm ${PREFIX}_minio
+	echo "Menghapus Network Docker yang diminta..."
+	docker network rm ${PREFIX}_minio-backend
+fi
+
 sudo userdel -r $domain
 #sudo rm -rf /var/spool/mail/$domain
 sudo quotacheck -ugmf /home
@@ -78,6 +132,6 @@ sudo sed -i "/${PREFIX}_db/d" /home/docker-hosting/script/backup.sh
 sudo rm -f /backup/$PREFIX.sql
 sudo rm -f /backup/$PREFIX.zip
 echo "Backup dihapus"
-systemctl restart php-fpm
-systemctl restart httpd
+#systemctl restart php-fpm
+#systemctl restart httpd
 exit 1
