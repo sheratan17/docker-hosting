@@ -27,7 +27,7 @@ sleep 5
 
 # install library
 yum update -y
-yum install quota wget nano curl vim lsof git sshpass epel-release zip -y
+yum install quota wget nano curl vim lsof git sshpass epel-release zip policycoreutils-python-utils -y
 
 # Aktifkan quota di /home
 line=$(grep "^UUID=.* /home " /etc/fstab)
@@ -45,24 +45,24 @@ systemctl enable docker
 systemctl start docker
 
 # install apache
-yum install httpd php php-json -y
+#yum install httpd php php-json -y
 
 # fix permission dan sudo
-usermod -a -G docker apache
-usermod -a -G wheel apache
-echo "%wheel        ALL=(ALL)       NOPASSWD: ALL" >> /etc/sudoers
+#usermod -a -G docker apache
+#usermod -a -G wheel apache
+#echo "%wheel        ALL=(ALL)       NOPASSWD: ALL" >> /etc/sudoers
 
 # fix apache dan php
-sed -i "s/^max_execution_time = .*$/max_execution_time = 600/" /etc/php.ini
-echo "ProxyTimeout 600" >> /etc/httpd/conf/httpd.conf
-sed -i 's/DirectoryIndex index\.html/DirectoryIndex index.php index.html/g' /etc/httpd/conf/httpd.conf
-systemctl enable httpd
-systemctl enable php-fpm
-systemctl restart httpd
-systemctl restart php-fpm
+#sed -i "s/^max_execution_time = .*$/max_execution_time = 600/" /etc/php.ini
+#echo "ProxyTimeout 600" >> /etc/httpd/conf/httpd.conf
+#sed -i 's/DirectoryIndex index\.html/DirectoryIndex index.php index.html/g' /etc/httpd/conf/httpd.conf
+#systemctl enable httpd
+#systemctl enable php-fpm
+#systemctl restart httpd
+#systemctl restart php-fpm
 
 # fix firewall dan selinux
-sed -i 's/^SELINUX=.*/SELINUX=disabled/' /etc/selinux/config
+#sed -i 's/^SELINUX=.*/SELINUX=disabled/' /etc/selinux/config
 firewall-cmd --zone=public --add-service=http --permanent
 firewall-cmd --zone=public --add-service=https --permanent
 firewall-cmd --reload
@@ -97,7 +97,7 @@ ssh-keyscan -t rsa $ip_nginx >> /root/.ssh/known_hosts
 
 sshpass -p "$pass_nginx" ssh-copy-id root@$ip_nginx
 ssh root@$ip_nginx "yum update -y && yum install epel-release -y && exit"
-ssh root@$ip_nginx "yum install nginx nano lsof certbot python3-certbot-nginx -y && exit"
+ssh root@$ip_nginx "yum install nginx nano lsof certbot python3-certbot-nginx policycoreutils-python-utils -y && exit"
 
 # download script dan update config di nginx reverse
 sed -i "s/_ipprivate_node/$ipprivate_node/g" /home/docker-hosting/server-template/*.conf.inc
@@ -136,7 +136,7 @@ domaintanpans=$(echo $ns_named | sed 's/ns1\.//')
 
 sshpass -p "$pass_named" ssh-copy-id root@$ip_named
 
-ssh root@$ip_named "yum update -y && yum install bind nano lsof bind-utils -y && exit"
+ssh root@$ip_named "yum update -y && yum install bind nano lsof bind-utils policycoreutils-python-utils -y && exit"
 
 scp /home/docker-hosting/server-template/_domain.db root@$ip_named:/etc/named || exit 1
 scp /home/docker-hosting/server-template/_dns.db root@$ip_named:/etc/named || exit 1
