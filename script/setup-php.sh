@@ -258,7 +258,7 @@ sudo ssh "$user@$servernamed" "cp /etc/named/_domain.db /etc/named/$path.db && e
 sudo ssh "$user@$servernamed" "sed -i "s/_domain/$path/g" /etc/named/$path.db && exit"
 sudo ssh "$user@$servernamed" "sed -i "s/_soa/$today/g" /etc/named/$path.db && exit"
 
-echo "Membuat input di DNS server..."
+echo "Membuat input di DNS-1 server..."
 ssh "$user@$servernamed" "cat << EOF >> /etc/named.conf
 # begin zone $path
 zone "$path" {
@@ -273,7 +273,7 @@ sudo ssh "$user@$servernamedd" "cp /etc/named/_domain.db /etc/named/$path.db && 
 sudo ssh "$user@$servernamedd" "sed -i "s/_domain/$path/g" /etc/named/$path.db && exit"
 sudo ssh "$user@$servernamedd" "sed -i "s/_soa/$today/g" /etc/named/$path.db && exit"
 
-echo "Membuat input di DNS server..."
+echo "Membuat input di DNS-2 server..."
 ssh "$user@$servernamedd" "cat << EOF >> /etc/named.conf
 # begin zone $path
 zone "$path" {
