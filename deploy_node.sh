@@ -130,6 +130,7 @@ sed -i "s/_servernginx/$ip_nginx/g" /home/delete-php.sh
 ssh root@$ip_nginx "firewall-cmd --zone=public --add-service=http --permanent"
 ssh root@$ip_nginx "firewall-cmd --zone=public --add-service=https --permanent"
 ssh root@$ip_nginx "firewall-cmd --reload && exit"
+ssh root@$ip_nginx "systemctl enable nginx && exit"
 echo "Nginx selesai."
 echo
 
@@ -206,6 +207,7 @@ ssh root@$ip_nameed "firewall-cmd --reload && exit"
 sed -i "s/_servernamed/$ip_named/g" /home/setup-php.sh
 sed -i "s/_servernameed/$ip_nameed/g" /home/setup-php.sh
 sed -i "s/_servernamed/$ip_named/g" /home/delete-php.sh
+sed -i "s/_servernameed/$ip_nameed/g" /home/delete-php.sh
 
 echo "Server DNS selesai."
 echo
