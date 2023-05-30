@@ -279,7 +279,7 @@ ssh "$user@$servernamedd" "cat << EOF >> /etc/named.conf
 zone "$path" {
       type slave;
       file \"/etc/named/$path.db\";
-      masters { _servernameed; };
+      masters { _servernamed; };
 };
 # end zone $path
 EOF"
