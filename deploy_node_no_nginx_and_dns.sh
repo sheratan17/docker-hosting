@@ -5,25 +5,34 @@ echo "Script untuk deploy Node Docker, server harus kosong."
 echo
 echo "Pastikan server nginx reverse proxy dan DNS sudah tersedia dan dalam kondisi baru"
 echo "Pastikan IP private Node Docker dan nginx reverse proxy sudah aktif dan dapat berkomunikasi"
-echo "Script ini membutuhkan direktori /backup , pastikan direktori /backup sudah ada di server"
+echo "Script ini akan membuat direktori /backup , pastikan direktori /backup tidak ada di server"
 echo
 echo "CTRL + C jika:"
 echo "- Ini bukan server kosong" 
 echo "- Server nginx dan DNS belum ada"
 echo "- IP private belum bisa terhubung"
 echo
-sleep 5
-read -p "Masukkan IP private server Node Docker: " ipprivate_node
+echo "SCRIPT INI HANYA UNTUK DEPLOY NODE DOCKER SAJA"
 echo
-read -p "Masukkan IP server nginx reverse proxy: " ip_nginx
+sleep 5
+read -p "Masukkan IP PRIVATE server Node Docker: " ipprivate_node
+echo
+read -p "Masukkan IP PUBLIC server nginx reverse proxy: " ip_nginx
 read -p "Masukkan password root server nginx reverse proxy: " pass_nginx
 echo
-read -p "Masukkan IP server DNS: " ip_named
-read -p "Masukkan password root server DNS: " pass_named
-#read -p "Masukkan ns1 yang akan DNS gunakan (format: ns1.domain.tld): " ns_named
+read -p "Masukkan IP PUBLIC server DNS-1: " ip_named
+read -p "Masukkan password root server DNS-1: " pass_named
 echo
-echo "Memulai proses..."
+read -p "Masukkan IP PUBLIC server DNS-2: " ip_nameed
+read -p "Masukkan password root server DNS-2: " pass_nameed
+echo
+#read -p "Masukkan ns1 yang akan DNS gunakan (format: ns1.domain.tld): " ns_named
+echo "Input lengkap. Memulai proses..."
 sleep 5
+echo
+echo "Proses dimulai"
+sleep 3
+
 
 # install library
 yum update -y
@@ -149,7 +158,9 @@ sshpass -p "$pass_named" ssh-copy-id root@$ip_named
 #ssh "root@$ip_named" "sed -i "s/_dns/$domaintanpans/g" /etc/named/_domain.db"
 
 sed -i "s/_servernamed/$ip_named/g" /home/setup-php.sh
+sed -i "s/_servernameed/$ip_nameed/g" /home/setup-php.sh
 sed -i "s/_servernamed/$ip_named/g" /home/delete-php.sh
+sed -i "s/_servernameed/$ip_nameed/g" /home/delete-php.sh
 
 #ssh root@$ip_named "systemctl enable named && exit"
 #ssh root@$ip_named "service named restart && exit"
