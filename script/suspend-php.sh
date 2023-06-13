@@ -1,8 +1,6 @@
 #!/bin/bash
 
-
 domain=""
-cms=""
 # Loop through all arguments
 while [[ $# -gt 0 ]]
 do
