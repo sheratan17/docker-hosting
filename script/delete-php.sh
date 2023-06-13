@@ -29,6 +29,16 @@ if [[ -z $domain ]]; then
     exit 1
 fi
 
+home_path="/home/$domain"
+
+# Check if folder exists
+if [ ! -d "$home_path" ]; then
+        echo "Domain tidak ditemukan. Cek input."
+        exit 1
+else
+        echo "Docker ditemukan. Melanjukan proses..."
+fi
+
 cd /home/$domain
 docker compose down
 
