@@ -222,8 +222,8 @@ chmod +x /home/docker-hosting/script/backup.sh
 mkdir /backup
 
 echo "Download image docker..."
-docker image pull mariadb:10.11.2-jammy
-docker image pull wordpress:6.2-php8.2
+docker image pull mariadb:11.0.2-jammy
+docker image pull wordpress:6.2.2-php8.2
 docker image pull filebrowser/filebrowser:v2-s6
 docker image pull phpmyadmin:5.2.1-apache
 docker image pull minio/minio:latest
