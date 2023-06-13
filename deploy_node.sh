@@ -90,6 +90,8 @@ git clone git@github.com:sheratan17/docker-hosting.git
 mv /home/docker-hosting/script/setup-php.sh /home/
 mv /home/docker-hosting/script/delete-php.sh /home/
 mv /home/docker-hosting/script/changepkg-php.sh /home/
+mv /home/docker-hosting/script/suspend-php.sh /home/
+mv /home/docker-hosting/script/unsuspend-php.sh /home/
 
 # Masukkan IP private server
 
@@ -107,10 +109,8 @@ ssh root@$ip_nginx "yum install nginx nano lsof certbot python3-certbot-nginx po
 
 # download script dan update config di nginx reverse
 sed -i "s/_ipprivate_node/$ipprivate_node/g" /home/docker-hosting/server-template/*.conf.inc
-#sed -i "s/_ipprivate_node/$ipprivate_node/g" /home/docker-hosting/server-template/wp-template.conf.inc
-#sed -i "s/_ipprivate_node/$ipprivate_node/g" /home/docker-hosting/server-template/minio-template.conf.inc
-
 scp /home/docker-hosting/server-template/*.conf.inc root@$ip_nginx:/etc/nginx/conf.d || exit 1
+ssh "root@$ip_nginx" "sed -i "/http {/a \    server_tokens off;" /etc/nginx/nginx.conf && exit"
 
 # ubah bash script agar menggunakan IP nginx
 sed -i "s/_servernginx/$ip_nginx/g" /home/setup-php.sh
