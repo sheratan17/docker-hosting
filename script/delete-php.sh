@@ -36,9 +36,11 @@ if [ ! -d "$home_path" ]; then
         echo "Domain tidak ditemukan. Cek input."
         exit 1
 else
-        echo "Docker ditemukan. Melanjukan proses..."
+		echo ""
+        echo "Docker ditemukan. 5 DETIK SAFETY BUFFER. CTRL-C SEKARANG JIKA SALAH INPUT."
 fi
-
+sleep 5
+echo "Melanjutkan proses..."
 cd /home/$domain
 docker compose down
 
