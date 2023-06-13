@@ -2,7 +2,7 @@ version: '2.4'
 
 services:
   db:
-    image: mariadb:10.11.2-jammy
+    image: mariadb:11.0.2-jammy
     container_name: $SITE_DOMAIN_db
     restart: always
     env_file: .env
@@ -22,7 +22,7 @@ services:
   wordpress:
     depends_on: 
       - db
-    image: wordpress:6.2-php8.2
+    image: wordpress:6.2.2-php8.2
     container_name: $SITE_DOMAIN_web
     restart: always
     env_file: .env
