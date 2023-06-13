@@ -50,7 +50,11 @@ do
     case $key in
 	    --cms=*)
         cms="${key#*=}"
-        shift
+        if [[ $cms != "wp" && $paket != "minio" ]]; then
+            echo "Error: Input salah untuk --cms"
+            exit 1
+        fi
+		shift
         ;;
         --d=*)
         path="${key#*=}"
