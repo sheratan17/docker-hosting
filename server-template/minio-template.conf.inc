@@ -2,7 +2,7 @@ server {
   listen 80;
   server_name _domain www._domain;
   location / {
-    proxy_pass http://10.89.1.2:_randomminio;
+    proxy_pass http://_ipprivate_node:_randomminio;
 
     proxy_set_header X-Real-IP $remote_addr;
     proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
@@ -21,7 +21,7 @@ server {
   listen 9090;
   server_name _domain www._domain;
   location / {
-    proxy_pass http://10.89.1.2:_randommini;
+    proxy_pass http://_ipprivate_node:_randommini;
 
     proxy_set_header X-Real-IP $remote_addr;
     proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
