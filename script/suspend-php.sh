@@ -20,6 +20,8 @@ do
     esac
 done
 
+home_path="/home/$domain"
+
 # Check if domain is empty
 if [[ -z $domain ]]; then
     echo
@@ -27,6 +29,14 @@ if [[ -z $domain ]]; then
     echo "Contoh: ./suspend-php.sh --d=domain.com"
     echo
     exit 1
+fi
+
+# Check if folder exists
+if [ ! -d "$home_path" ]; then
+        echo "Domain tidak ditemukan. Cek input."
+        exit 1
+else
+        echo "Docker ditemukan. Melanjukan proses..."
 fi
 
 echo "Menghentikan docker domain ${domain} yang diminta..."
