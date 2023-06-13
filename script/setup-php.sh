@@ -104,6 +104,16 @@ if [[ -z $cms || -z $path || -z $paket || -z $ssl ]]; then
     exit 1
 fi
 
+home_path="/home/$domain"
+
+# Check if folder exists
+if [ -d "$home_path" ]; then
+        echo "Domain/direktori ditemukan. Akun sudah aktif. Cek input."
+        exit 1
+else
+        echo "Domain/direktori tidak ditemukan. Akun belum aktif. Melanjukan proses..."
+fi
+
 echo
 echo "CMS: $cms | Domain: $path, | Paket: $paket, | SSL: $ssl"
 echo

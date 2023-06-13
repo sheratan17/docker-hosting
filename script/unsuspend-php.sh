@@ -20,8 +20,6 @@ do
     esac
 done
 
-home_path="/home/$domain"
-
 # Check if domain is empty
 if [[ -z $domain ]]; then
     echo
@@ -30,6 +28,8 @@ if [[ -z $domain ]]; then
     echo
     exit 1
 fi
+
+home_path="/home/$domain"
 
 # Check if folder exists
 if [ ! -d "$home_path" ]; then
