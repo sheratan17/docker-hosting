@@ -46,6 +46,7 @@ Jalankan `deploy_node.sh` pada server Node Docker untuk menjalankan semua (seper
 12. Antivirus
 13. Custom image (Joomla, moodle, etc) :heavy_check_mark:
 14. Stats menggunakan: https://github.com/virtualzone/docker-container-stats
+15. Sanity input untuk aktivasi, suspend, unsuspend, dan delete :heavy_check_mark:
 
 # API
 1. curl JSON request create dengan SSL mandiri<br>
