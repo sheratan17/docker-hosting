@@ -110,7 +110,7 @@ ssh root@$ip_nginx "yum install nginx nano lsof certbot python3-certbot-nginx po
 # download script dan update config di nginx reverse
 sed -i "s/_ipprivate_node/$ipprivate_node/g" /home/docker-hosting/server-template/*.conf.inc
 scp /home/docker-hosting/server-template/*.conf.inc root@$ip_nginx:/etc/nginx/conf.d || exit 1
-ssh root@$ip_nginx "sed -i "/http {/a \    server_tokens off;" /etc/nginx/nginx.conf && exit"
+ssh root@$ip_nginx 'sed -i "/http {/a \    server_tokens off;" /etc/nginx/nginx.conf && exit'
 
 # ubah bash script agar menggunakan IP nginx
 sed -i "s/_servernginx/$ip_nginx/g" /home/setup-php.sh

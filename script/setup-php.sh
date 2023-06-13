@@ -108,7 +108,7 @@ if [[ -z $cms || -z $path || -z $paket || -z $ssl ]]; then
     exit 1
 fi
 
-home_path="/home/$domain"
+home_path="/home/$path"
 
 # Check if folder exists
 if [ -d "$home_path" ]; then
