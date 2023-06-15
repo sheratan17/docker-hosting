@@ -3,21 +3,20 @@ export PATH="$PATH:/usr/sbin/"
 
 BLUE='\033[0;36m'
 NC='\033[0m' # No Color
-echo
-echo "--------------------------------"
-echo "| Buat Hosting berbasis Docker |"
-echo "---------------created by Andi--"
-echo
-echo "Paket yang tersedia:"
-echo "1. P1 (1 Core, 1GB RAM, 10GB SSD)"
-echo "2. P2 (2 Core, 2GB RAM, 20GB SSD)"
-echo
-echo "CMS yang tersedia:"
-echo "1. Wordpress (wp)"
-echo "2. Minio (minio)"
-
 
 function show_help {
+    echo
+    echo "--------------------------------"
+    echo "| Buat Hosting berbasis Docker |"
+    echo "---------------created by Andi--"
+    echo
+    echo "Paket yang tersedia:"
+    echo "1. P1 (1 Core, 1GB RAM, 10GB SSD)"
+    echo "2. P2 (2 Core, 2GB RAM, 20GB SSD)"
+    echo
+    echo "CMS yang tersedia:"
+    echo "1. Wordpress (wp)"
+    echo "2. Minio (minio)"
     echo
     echo "Perintah: ./setup-php.sh --cms=<cms> --d=<domain> --p=<package> --ssl=<ssl> --crtpath=<absolute path for crt> --keypath=<absolute path for key> [--h]"
     echo
