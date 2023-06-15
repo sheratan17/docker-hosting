@@ -70,6 +70,10 @@ do
         ;;
         --ssl=*)
         ssl="${key#*=}"
+        if [[ $ssl != "le" && $ssl != "nossl" && $ssl != "mandiri" ]]; then
+            echo "Error: Input salah untuk --ssl. Gunakan le, mandiri atau nossl."
+            exit 1
+        fi
         if [[ $ssl == "mandiri" ]]; then
             if [[ $# -lt 3 || "${2:0:2}" != "--" || "${3:0:2}" != "--" ]]; then
                 echo "Error: --keypath dan --crtpath dibutuhkan saat --ssl=mandiri."
