@@ -49,7 +49,7 @@ do
     case $key in
 	    --cms=*)
         cms="${key#*=}"
-        if [[ $cms != "wp" && $paket != "minio" ]]; then
+        if [[ $cms != "wp" && $cms != "minio" ]]; then
             echo "Error: Input salah untuk --cms"
             exit 1
         fi
