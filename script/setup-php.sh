@@ -47,7 +47,7 @@ while [[ $# -gt 0 ]]
 do
     key="$1"
     case $key in
-	    --cms=*)
+		--cms=*)
         cms="${key#*=}"
         if [[ $cms != "wp" && $cms != "minio" ]]; then
             echo "Error: Input salah untuk --cms"
