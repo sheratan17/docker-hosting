@@ -112,28 +112,32 @@ if [[ -z $cms || -z $path || -z $paket || -z $ssl ]]; then
 fi
 
 home_path="/home/$path"
-dns_conf="/etc/named"
-nginx_conf="/etc/nginx/conf.d"
+dns_folder="/etc/named"
+nginx_folder="/etc/nginx/conf.d"
+nginx_file="${path}.conf"
 servernginx="_servernginx"
 servernamed="_servernamed"
 servernamedd="_servernameed"
 ipprivate_node="_ipprivate_node_"
+
+echo "Sanity input. Cek apakah direktori atau file konfigurasi sudah aktif..."
 
 # Check if folder exists
 if [ -d "$home_path" ]; then
         echo "Domain/direktori ditemukan. Akun sudah aktif. Cek input."
         exit 1
 else
-        echo "Domain/direktori tidak ditemukan. Akun belum aktif. Melanjukan proses..."
+        echo "Domain/direktori di /home tidak ditemukan. Akun belum aktif. Melanjukan proses..."
 fi
 
-# Check if folder exists
-ssh "root@${servernginx}" "[ -f ${remote_directory}/${file_name} ]" > /dev/null 2>&1
+# Check if nginx file conf exists
+ssh "root@$servernginx" "[ -f $nginx_conf/$nginx_file ]" > /dev/null 2>&1
 
 if [ $? -eq 0 ]; then
-    echo "Folder exists on the remote server."
+		echo "Domain/direktori nginx ditemukan. Akun sudah aktif. Cek input."
+		exit 1
 else
-    echo "Folder does not exist on the remote server."
+		echo "Domain/direktori nginx tidak ditemukan. Akun belum aktif. Melanjukan proses..."
 fi
 
 echo
