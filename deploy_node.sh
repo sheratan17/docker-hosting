@@ -155,7 +155,6 @@ ssh root@$ip_named "mv /etc/named.conf /etc/named.conf.backup && exit"
 scp /home/docker-hosting/server-template/named.conf root@$ip_named:/etc/ || exit 1
 ssh root@$ip_named "mv /etc/named/_dns.db /etc/named/$domaintanpans.db && exit"
 
-
 # ubah bash script agar menggunakan IP DNS Server
 ssh root@$ip_named "sed -i "s/_dns/$domaintanpans/g" /etc/named/$domaintanpans.db && exit"
 ssh root@$ip_named "sed -i "s/_ipnamed/$ip_named/g" /etc/named/$domaintanpans.db && exit"
@@ -163,10 +162,10 @@ ssh root@$ip_named "sed -i "s/_ip_nameed/$ip_nameed/g" /etc/named/$domaintanpans
 ssh root@$ip_named "sed -i "s/_soa/$today/g" /etc/named/$domaintanpans.db && exit"
 ssh root@$ip_named "sed -i "s/_dns/$domaintanpans/g" /etc/named.conf && exit"
 ssh root@$ip_named "sed -i "s/_dns/$domaintanpans/g" /etc/named/_domain.db && exit"
-ssh root@$ip_named "sed -i "s/_ip_named/$ip_named/g" /etc/named/_domain.db && exit"
+#ssh root@$ip_named "sed -i "s/_ip_named/$ip_named/g" /etc/named/_domain.db && exit"
 ssh root@$ip_named "sed -i "s/_ip_nameed/$ip_nameed/g" /etc/named.conf && exit"
-ssh root@$ip_named "sed -i "s/_ip_nameed/$ip_nameed/g" /etc/named/_domain.db && exit"
-ssh root@$ip_named "sed -i "s/_servernginx/$ip_nginx/g" /etc/named/_domain.db && exit"
+#ssh root@$ip_named "sed -i "s/_ip_nameed/$ip_nameed/g" /etc/named/_domain.db && exit"
+#ssh root@$ip_named "sed -i "s/_servernginx/$ip_nginx/g" /etc/named/_domain.db && exit"
 
 ssh root@$ip_named "systemctl enable named && exit"
 ssh root@$ip_named "service named restart && exit"
@@ -195,10 +194,10 @@ ssh root@$ip_nameed "sed -i "s/_ip_nameed/$ip_nameed/g" /etc/named/$domaintanpan
 ssh root@$ip_nameed "sed -i "s/_soa/$today/g" /etc/named/$domaintanpans.db && exit"
 ssh root@$ip_nameed "sed -i "s/_dns/$domaintanpans/g" /etc/named.conf && exit"
 ssh root@$ip_nameed "sed -i "s/_dns/$domaintanpans/g" /etc/named/_domain.db && exit"
-ssh root@$ip_nameed "sed -i "s/_ip_named/$ip_named/g" /etc/named/_domain.db && exit"
-ssh root@$ip_nameed "sed -i "s/_ip_nameed/$ip_nameed/g" /etc/named.conf && exit"
+#ssh root@$ip_nameed "sed -i "s/_ip_named/$ip_named/g" /etc/named/_domain.db && exit"
+#ssh root@$ip_nameed "sed -i "s/_ip_nameed/$ip_nameed/g" /etc/named.conf && exit"
 ssh root@$ip_nameed "sed -i "s/_ip_nameed/$ip_nameed/g" /etc/named/_domain.db && exit"
-ssh root@$ip_nameed "sed -i "s/_servernginx/$ip_nginx/g" /etc/named/_domain.db && exit"
+#ssh root@$ip_nameed "sed -i "s/_servernginx/$ip_nginx/g" /etc/named/_domain.db && exit"
 ssh root@$ip_nameed "sed -i "s/_ip_named/$ip_named/g" /etc/named.conf && exit"
 
 ssh root@$ip_nameed "systemctl enable named && exit"
