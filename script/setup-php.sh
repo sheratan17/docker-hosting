@@ -338,20 +338,6 @@ zone "$path" {
 EOF"
 sudo ssh "$user@$servernamed" "systemctl restart named"
 
-if grep -q "$search_path" "$named_folder/$named_file"; then
-    echo "Word '$search_path' found in the file."
-    # Perform actions if the word is found
-    # Add your desired commands here
-    # For example:
-    # echo "Performing action..."
-else
-    echo "Word '$search_path' not found in the file."
-    # Perform actions if the word is not found
-    # Add your desired commands here
-    # For example:
-    # echo "Performing another action..."
-fi
-
 # SSL GAES
 if [[ "$cms" == "wp" && "$ssl" == "le" ]]; then
 	sudo ssh "$user@$servernginx" "cp /etc/nginx/conf.d/wp-template.conf.inc /etc/nginx/conf.d/$path.conf && sed -i "s/_domain/$path/g" /etc/nginx/conf.d/$path.conf && sed -i "s/_random80/$number80/g" /etc/nginx/conf.d/$path.conf && sed -i "s/_random81/$number81/g" /etc/nginx/conf.d/$path.conf && sed -i "s/_random82/$number82/g" /etc/nginx/conf.d/$path.conf && sed -i "s/_ipprivate_node/$ipprivate_node/g" /etc/nginx/conf.d/$path.conf && exit"
