@@ -321,15 +321,17 @@ zone "$path" {
 # end zone $path
 EOF"
 
+if [ "$cms" == "wp" ]; then
 echo "Membuat record DNS di DNS-1 server..."
 ssh "$user@$servernamed" "cat << EOF >> /etc/named/$path.db
 $path         			IN      A       $servernginx
-www                     IN      CNAME   _domain.
+www                     IN      CNAME   $path.
 pma                     IN      A       $servernginx
 file                    IN      A       $servernginx
 www.pma                 IN      CNAME   pma.$path.
 www.file                IN      CNAME   file.$path.
 EOF"
+fi
 
 sudo ssh "$user@$servernamed" "systemctl restart named"
 
@@ -348,17 +350,19 @@ zone "$path" {
 # end zone $path
 EOF"
 
-echo "Membuat record DNS di DNS-1 server..."
-ssh "$user@$servernamed" "cat << EOF >> /etc/named/$path.db
+if [ "$cms" == "wp" ]; then
+echo "Membuat record DNS di DNS-2 server..."
+ssh "$user@$servernamedd" "cat << EOF >> /etc/named/$path.db
 $path         			IN      A       $servernginx
-www                     IN      CNAME   _domain.
+www                     IN      CNAME   $path.
 pma                     IN      A       $servernginx
 file                    IN      A       $servernginx
 www.pma                 IN      CNAME   pma.$path.
 www.file                IN      CNAME   file.$path.
 EOF"
+fi
 
-sudo ssh "$user@$servernamed" "systemctl restart named"
+sudo ssh "$user@$servernamedd" "systemctl restart named"
 
 # SSL GAES
 if [[ "$cms" == "wp" && "$ssl" == "le" ]]; then
