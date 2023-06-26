@@ -326,7 +326,7 @@ EOF"
 if [ "$cms" == "wp" ]; then
 echo "Membuat record DNS di DNS-1 server..."
 ssh "$user@$servernamed" "cat << EOF >> /etc/named/$path.db
-$path					IN      A       $servernginx
+$path.					IN      A       $servernginx
 www                     IN      CNAME   $path.
 pma                     IN      A       $servernginx
 file                    IN      A       $servernginx
@@ -338,7 +338,7 @@ fi
 if [ "$cms" == "minio" ]; then
 echo "Membuat record DNS di DNS-1 server..."
 ssh "$user@$servernamed" "cat << EOF >> /etc/named/$path.db
-$path					IN      A       $servernginx
+$path.					IN      A       $servernginx
 www                     IN      CNAME   $path.
 EOF"
 fi
@@ -363,7 +363,7 @@ EOF"
 if [ "$cms" == "wp" ]; then
 echo "Membuat record DNS di DNS-2 server..."
 ssh "$user@$servernamedd" "cat << EOF >> /etc/named/$path.db
-$path					IN      A       $servernginx
+$path.					IN      A       $servernginx
 www                     IN      CNAME   $path.
 pma                     IN      A       $servernginx
 file                    IN      A       $servernginx
@@ -375,7 +375,7 @@ fi
 if [ "$cms" == "minio" ]; then
 echo "Membuat record DNS di DNS-2 server..."
 ssh "$user@$servernamedd" "cat << EOF >> /etc/named/$path.db
-$path					IN      A       $servernginx
+$path.					IN      A       $servernginx
 www                     IN      CNAME   $path.
 EOF"
 fi
