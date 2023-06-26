@@ -112,7 +112,8 @@ if [[ -z $cms || -z $path || -z $paket || -z $ssl ]]; then
 fi
 
 home_path="/home/$path"
-dns_folder="/etc/named"
+named_folder="/etc/named"
+named_file="${path}.db"
 nginx_folder="/etc/nginx/conf.d"
 nginx_file="${path}.conf"
 servernginx="_servernginx"
@@ -132,12 +133,24 @@ fi
 
 # Check if nginx file conf exists
 ssh "root@$servernginx" "[ -f $nginx_conf/$nginx_file ]" > /dev/null 2>&1
+nginx_exist=$?
 
-if [ $? -eq 0 ]; then
+if [ $nginx_exist -eq 0 ]; then
 		echo "Domain/direktori nginx ditemukan. Akun sudah aktif. Cek input."
 		exit 1
 else
 		echo "Domain/direktori nginx tidak ditemukan. Akun belum aktif. Melanjukan proses..."
+fi
+
+# Check if named file conf exists
+ssh "root@$servernamed" "[ -f $named_conf/$named_file ]" > /dev/null 2>&1
+named_exist=$?
+
+if [ $named_exist -eq 0 ]; then
+		echo "Domain/direktori named ditemukan. Akun sudah aktif. Cek input."
+		exit 1
+else
+		echo "Domain/direktori named tidak ditemukan. Akun belum aktif. Melanjukan proses..."
 fi
 
 echo
