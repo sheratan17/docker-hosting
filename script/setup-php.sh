@@ -112,8 +112,8 @@ if [[ -z $cms || -z $path || -z $paket || -z $ssl ]]; then
 fi
 
 home_path="/home/$path"
-dns_path="/etc/named"
-nginx_path="/etc/nginx/conf.d"
+dns_conf="/etc/named"
+nginx_conf="/etc/nginx/conf.d"
 servernginx="_servernginx"
 servernamed="_servernamed"
 servernamedd="_servernameed"
@@ -128,7 +128,7 @@ else
 fi
 
 # Check if folder exists
-ssh "root@${servernginx}" "[ -d ${nginx_path} ]" > /dev/null 2>&1
+ssh "root@${servernginx}" "[ -f ${remote_directory}/${file_name} ]" > /dev/null 2>&1
 
 if [ $? -eq 0 ]; then
     echo "Folder exists on the remote server."
