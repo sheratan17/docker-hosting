@@ -312,7 +312,7 @@ sudo ssh "$user@$servernamed" "sed -i "s/_domain/$path/g" /etc/named/$path.db &&
 sudo ssh "$user@$servernamed" "sed -i "s/_soa/$today/g" /etc/named/$path.db && exit"
 
 echo "Membuat input di DNS-1 server..."
-ssh "$user@$servernamed" "cat << EOF >> /etc/named.conf
+ssh "$user@$servernamed" "cat << EOF >> /etc/named/$path.db 
 # begin zone $path
 zone "$path" {
       type master;
@@ -320,6 +320,17 @@ zone "$path" {
 };
 # end zone $path
 EOF"
+
+echo "Membuat record DNS di DNS-1 server..."
+ssh "$user@$servernamed" "cat << EOF >> /etc/named/$path.db
+$path         			IN      A       $servernginx
+www                     IN      CNAME   _domain.
+pma                     IN      A       $servernginx
+file                    IN      A       $servernginx
+www.pma                 IN      CNAME   pma.$path.
+www.file                IN      CNAME   file.$path.
+EOF"
+
 sudo ssh "$user@$servernamed" "systemctl restart named"
 
 sudo ssh "$user@$servernamedd" "cp /etc/named/_domain.db /etc/named/$path.db && exit"
@@ -336,6 +347,17 @@ zone "$path" {
 };
 # end zone $path
 EOF"
+
+echo "Membuat record DNS di DNS-1 server..."
+ssh "$user@$servernamed" "cat << EOF >> /etc/named/$path.db
+$path         			IN      A       $servernginx
+www                     IN      CNAME   _domain.
+pma                     IN      A       $servernginx
+file                    IN      A       $servernginx
+www.pma                 IN      CNAME   pma.$path.
+www.file                IN      CNAME   file.$path.
+EOF"
+
 sudo ssh "$user@$servernamed" "systemctl restart named"
 
 # SSL GAES
