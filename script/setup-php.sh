@@ -312,7 +312,7 @@ sudo ssh "$user@$servernamed" "sed -i "s/_domain/$path/g" /etc/named/$path.db &&
 sudo ssh "$user@$servernamed" "sed -i "s/_soa/$today/g" /etc/named/$path.db && exit"
 
 echo "Membuat input di DNS-1 server..."
-ssh "$user@$servernamed" "cat << EOF >> /etc/named/$path.db 
+ssh "$user@$servernamed" "cat << EOF >> /etc/named.conf
 # begin zone $path
 zone "$path" {
       type master;
@@ -324,7 +324,7 @@ EOF"
 if [ "$cms" == "wp" ]; then
 echo "Membuat record DNS di DNS-1 server..."
 ssh "$user@$servernamed" "cat << EOF >> /etc/named/$path.db
-$path         			IN      A       $servernginx
+$path					IN      A       $servernginx
 www                     IN      CNAME   $path.
 pma                     IN      A       $servernginx
 file                    IN      A       $servernginx
@@ -353,7 +353,7 @@ EOF"
 if [ "$cms" == "wp" ]; then
 echo "Membuat record DNS di DNS-2 server..."
 ssh "$user@$servernamedd" "cat << EOF >> /etc/named/$path.db
-$path         			IN      A       $servernginx
+$path					IN      A       $servernginx
 www                     IN      CNAME   $path.
 pma                     IN      A       $servernginx
 file                    IN      A       $servernginx
