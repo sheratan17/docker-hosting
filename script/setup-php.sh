@@ -129,6 +129,7 @@ echo "Sanity input. Cek apakah direktori atau file konfigurasi sudah aktif..."
 # Check if folder exists
 if [ -d "$home_path" ]; then
         echo "Domain/direktori di /home ditemukan. Akun sudah aktif. Cek input."
+		echo ""
         exit 1
 else
         echo "Domain/direktori di /home tidak ditemukan. Akun belum aktif. Melanjukan proses..."
@@ -140,6 +141,7 @@ nginx_exist=$?
 
 if [ $nginx_exist -eq 0 ]; then
                 echo "Domain/direktori nginx ditemukan. Akun sudah aktif. Cek input."
+				echo ""
                 exit 1
 else
                 echo "Domain/direktori nginx tidak ditemukan. Akun belum aktif. Melanjukan proses..."
