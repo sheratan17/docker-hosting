@@ -120,7 +120,10 @@ servernginx="_servernginx"
 servernamed="_servernamed"
 servernamedd="_servernameed"
 ipprivate_node="_ipprivate_node_"
+search_path="$path"
+user="root"
 
+echo ""
 echo "Sanity input. Cek apakah direktori atau file konfigurasi sudah aktif..."
 
 # Check if folder exists
@@ -132,25 +135,30 @@ else
 fi
 
 # Cek apa sudah ada file config nginx
-ssh "root@$servernginx" "[ -f $nginx_folder/$nginx_file ]" > /dev/null 2>&1
+ssh "$user@$servernginx" "[ -f $nginx_folder/$nginx_file ]" > /dev/null 2>&1
 nginx_exist=$?
 
 if [ $nginx_exist -eq 0 ]; then
-		echo "Domain/direktori nginx ditemukan. Akun sudah aktif. Cek input."
-		exit 1
+                echo "Domain/direktori nginx ditemukan. Akun sudah aktif. Cek input."
+                exit 1
 else
-		echo "Domain/direktori nginx tidak ditemukan. Akun belum aktif. Melanjukan proses..."
+                echo "Domain/direktori nginx tidak ditemukan. Akun belum aktif. Melanjukan proses..."
 fi
 
 # Cek apa sudah ada file config named
-ssh "root@$servernamed" "[ -f $named_folder/$named_file ]" > /dev/null 2>&1
+ssh "$user@$servernamed" "[ -f $named_folder/$named_file ]" > /dev/null 2>&1
 named_exist=$?
 
+output=$(ssh "$user@$servernamed" "grep -q '$search_path' '$named_folder/$named_file' && echo found || echo not_found")
+
 if [ $named_exist -eq 0 ]; then
-		echo "Domain/direktori named ditemukan. Akun sudah aktif. Cek input."
-		exit 1
+                echo "Domain/direktori named ditemukan. Cek record DNS..."
+                if [ "$output" = "found" ]; then
+                echo "Record DNS '$search_path' sudah ditemukan di file, cek input."
+                exit 1
+                fi
 else
-		echo "Domain/direktori named tidak ditemukan. Akun belum aktif. Melanjukan proses..."
+                echo "Domain/direktori named atau Record DNS tidak ditemukan. Akun belum aktif. Melanjukan proses..."
 fi
 
 echo
@@ -330,6 +338,19 @@ zone "$path" {
 EOF"
 sudo ssh "$user@$servernamed" "systemctl restart named"
 
+if grep -q "$search_path" "$named_folder/$named_file"; then
+    echo "Word '$search_path' found in the file."
+    # Perform actions if the word is found
+    # Add your desired commands here
+    # For example:
+    # echo "Performing action..."
+else
+    echo "Word '$search_path' not found in the file."
+    # Perform actions if the word is not found
+    # Add your desired commands here
+    # For example:
+    # echo "Performing another action..."
+fi
 
 # SSL GAES
 if [[ "$cms" == "wp" && "$ssl" == "le" ]]; then
