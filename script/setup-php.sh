@@ -345,7 +345,7 @@ ssh "$user@$servernamedd" "cat << EOF >> /etc/named.conf
 zone "$path" {
       type slave;
       file \"/etc/named/$path.db\";
-      masters { _servernamed; };
+      masters { $servernamedd; };
 };
 # end zone $path
 EOF"
