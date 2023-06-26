@@ -12,7 +12,7 @@ function show_help {
     echo
     echo "Paket yang tersedia:"
     echo "1. P1 (1 Core, 1GB RAM, 10GB SSD)"
-    echo "2. P2 (2 Core, 2GB RAM, 20GB SSD)"
+    echo "2. P2 (2 Core, 2GB RAM, 25GB SSD)"
     echo
     echo "CMS yang tersedia:"
     echo "1. Wordpress (wp)"
@@ -99,7 +99,7 @@ do
         *)
         echo "Error: Input tidak dikenali '$key'"
         exit 1
-	show_help
+		show_help
         ;;
     esac
 done
@@ -112,6 +112,12 @@ if [[ -z $cms || -z $path || -z $paket || -z $ssl ]]; then
 fi
 
 home_path="/home/$path"
+dns_path="/etc/named"
+nginx_path="/etc/nginx/conf.d"
+servernginx="_servernginx"
+servernamed="_servernamed"
+servernamedd="_servernameed"
+ipprivate_node="_ipprivate_node_"
 
 # Check if folder exists
 if [ -d "$home_path" ]; then
@@ -119,6 +125,15 @@ if [ -d "$home_path" ]; then
         exit 1
 else
         echo "Domain/direktori tidak ditemukan. Akun belum aktif. Melanjukan proses..."
+fi
+
+# Check if folder exists
+ssh "root@${servernginx}" "[ -d ${nginx_path} ]" > /dev/null 2>&1
+
+if [ $? -eq 0 ]; then
+    echo "Folder exists on the remote server."
+else
+    echo "Folder does not exist on the remote server."
 fi
 
 echo
@@ -205,12 +220,12 @@ sudo sed -i "s/_groupid/$group_id/g" /home/$path/docker-compose.yml
 if [ "$paket" == "p1" ]; then
 	sudo sed -i "s/_memlimit/1G/g" /home/$path/docker-compose.yml
 	sudo sed -i "s/_cpulimit/1.0/g" /home/$path/docker-compose.yml
-	sudo setquota -u $path 0 1024000 0 0 -a /home
+	sudo setquota -u $path 0 10240000 0 0 -a /home
 	sudo echo "User $path sudah diaktifkan dan menggunakan $paket"
 elif [ "$paket" == "p2" ]; then
 	sudo sed -i "s/_memlimit/2G/g" /home/$path/docker-compose.yml
 	sudo sed -i "s/_cpulimit/2.0/g" /home/$path/docker-compose.yml
-	sudo setquota -u $path 0 2048000 0 0 -a /home
+	sudo setquota -u $path 0 25600000 0 0 -a /home
 	sudo echo "User $path sudah diaktifkan dan menggunakan $paket"
 else
 	sudo echo "Paket salah. Masukkan p1 atau p2."
@@ -266,10 +281,6 @@ fi
 today=$(date +"%Y%m%d")01
 echo "Membuat reverse proxy..."
 user="root"
-servernginx="_servernginx"
-servernamed="_servernamed"
-servernamedd="_servernameed"
-ipprivate_node="_ipprivate_node_"
 
 sudo ssh "$user@$servernamed" "cp /etc/named/_domain.db /etc/named/$path.db && exit"
 sudo ssh "$user@$servernamed" "sed -i "s/_domain/$path/g" /etc/named/$path.db && exit"
@@ -306,7 +317,7 @@ sudo ssh "$user@$servernamed" "systemctl restart named"
 # SSL GAES
 if [[ "$cms" == "wp" && "$ssl" == "le" ]]; then
 	sudo ssh "$user@$servernginx" "cp /etc/nginx/conf.d/wp-template.conf.inc /etc/nginx/conf.d/$path.conf && sed -i "s/_domain/$path/g" /etc/nginx/conf.d/$path.conf && sed -i "s/_random80/$number80/g" /etc/nginx/conf.d/$path.conf && sed -i "s/_random81/$number81/g" /etc/nginx/conf.d/$path.conf && sed -i "s/_random82/$number82/g" /etc/nginx/conf.d/$path.conf && sed -i "s/_ipprivate_node/$ipprivate_node/g" /etc/nginx/conf.d/$path.conf && exit"
-	# dibawah ini adalah menu untuk aktifkan SSL yang staging vs beneran
+	# dibawah ini adalah menu untuk aktifkan SSL yang staging vs production
 	#sudo ssh "$user@$servernginx" "certbot --nginx --agree-tos --redirect --hsts --staple-ocsp --must-staple --no-eff-email --force-renewal --email andi.triyadi@qwords.co.id -d $path -d www.$path -d file.$path -d www.file.$path -d pma.$path -d www.pma.$path && systemctl restart nginx"
 	sudo ssh "$user@$servernginx" "certbot --nginx --agree-tos --redirect --hsts --staple-ocsp --must-staple --no-eff-email --staging --reinstall --email andi.triyadi@qwords.co.id -d $path -d www.$path -d file.$path -d www.file.$path -d pma.$path -d www.pma.$path && systemctl restart nginx"
 	sudo ssh "$user@$servernginx" "sed -i 's/listen 443 ssl;/listen 443 ssl http2;/g' /etc/nginx/conf.d/$path.conf && exit"
