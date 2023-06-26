@@ -131,8 +131,8 @@ else
         echo "Domain/direktori di /home tidak ditemukan. Akun belum aktif. Melanjukan proses..."
 fi
 
-# Check if nginx file conf exists
-ssh "root@$servernginx" "[ -f $nginx_conf/$nginx_file ]" > /dev/null 2>&1
+# Cek apa sudah ada file config nginx
+ssh "root@$servernginx" "[ -f $nginx_folder/$nginx_file ]" > /dev/null 2>&1
 nginx_exist=$?
 
 if [ $nginx_exist -eq 0 ]; then
@@ -142,8 +142,8 @@ else
 		echo "Domain/direktori nginx tidak ditemukan. Akun belum aktif. Melanjukan proses..."
 fi
 
-# Check if named file conf exists
-ssh "root@$servernamed" "[ -f $named_conf/$named_file ]" > /dev/null 2>&1
+# Cek apa sudah ada file config named
+ssh "root@$servernamed" "[ -f $named_folder/$named_file ]" > /dev/null 2>&1
 named_exist=$?
 
 if [ $named_exist -eq 0 ]; then
