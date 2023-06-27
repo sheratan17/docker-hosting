@@ -92,6 +92,7 @@ mv /home/docker-hosting/script/delete-php.sh /home/
 mv /home/docker-hosting/script/changepkg-php.sh /home/
 mv /home/docker-hosting/script/suspend-php.sh /home/
 mv /home/docker-hosting/script/unsuspend-php.sh /home/
+mv /home/docker-hosting/script/changessl-php.sh /home/
 
 # Masukkan IP private server
 
@@ -116,6 +117,7 @@ ssh root@$ip_nginx 'sed -i "/http {/a \    server_tokens off;" /etc/nginx/nginx.
 sed -i "s/_servernginx/$ip_nginx/g" /home/setup-php.sh
 sed -i "s/_ipprivate_node_/$ipprivate_node/g" /home/setup-php.sh
 sed -i "s/_servernginx/$ip_nginx/g" /home/delete-php.sh
+sed -i "s/_servernginx/$ip_nginx/g" /home/changessl-php.sh
 
 # pasang modsec
 #scp -r /home/docker-hosting/server-template/modsec root@$ip_nginx:/etc/nginx/ || exit 1
