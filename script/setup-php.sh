@@ -122,6 +122,9 @@ servernamedd="_servernameed"
 ipprivate_node="_ipprivate_node_"
 search_path="$path"
 user="root"
+mysql_host="localhost"
+mysql_user="root"
+mysql_password="_mysqlrootpass"
 
 echo ""
 echo "Sanity input. Cek apakah direktori atau file konfigurasi sudah aktif..."
@@ -426,6 +429,13 @@ fi
 sudo ssh "$user@$servernamed" "systemctl restart named"
 sudo rm -f $path.crt
 sudo rm -f $path.key
+
+create_table_query="CREATE TABLE IF NOT EXISTS aktivasi (id INT AUTO_INCREMENT, domain VARCHAR(255), cms VARCHAR(255), package VARCHAR(255), cert VARCHAR(255), PRIMARY KEY (id));"
+insert_query="INSERT INTO aktivasi (domain, cms, package, cert) VALUES ('$domain', '$cms', '$pkg', '$encrypt');"
+
+mysql -u "$mysql_user" -p"$mysql_password" -D data_host -h"$mysql_host" -e "$create_table_query"
+mysql -u "$mysql_user" -p"$mysql_password" -D data_host -h"$mysql_host" -e "$insert_query"
+
 echo
 echo "Selesai. Docker aktif."
 echo

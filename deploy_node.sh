@@ -25,6 +25,10 @@ read -p "Masukkan IP PUBLIC server DNS-2: " ip_nameed
 read -p "Masukkan password root server DNS-2: " pass_nameed
 echo
 read -p "Masukkan ns1 yang akan DNS gunakan (format: ns1.domain.tld): " ns_named
+echo
+read -p "Masukkan IP PUBLIC server MySQL: " ip_mysql
+read -p "Masukkan password root server MySQL: " pass_mysql
+echo
 echo "Input lengkap. Memulai proses..."
 sleep 5
 echo
@@ -214,6 +218,18 @@ sed -i "s/_servernameed/$ip_nameed/g" /home/delete-php.sh
 
 echo "Server DNS selesai."
 echo
+
+echo "Memulai deploy server MySQL"
+sleep 3
+ssh-keyscan -t rsa $ip_mysql >> /root/.ssh/known_hosts
+sshpass -p "$pass_mysql" ssh-copy-id root@$ip_mysql
+ssh root@$ip_mysql "yum update -y && yum install mysql-server -y && exit"
+sed -i "s/_mysqlhost/$ip_mysql/g" /home/setup-php.sh
+sed -i "s/_mysqlrootpass/$pass_mysql/g" /home/setup-php.sh
+
+echo "Server MySQL selesai."
+echo
+
 echo "Menambahkan cronjob backup dan checkquota..."
 chmod +x /home/docker-hosting/script/quotacheck.sh
 chmod +x /home/docker-hosting/script/backup.sh
