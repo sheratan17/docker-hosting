@@ -428,7 +428,7 @@ sudo ssh "$user@$servernamed" "systemctl restart named"
 sudo rm -f $path.crt
 sudo rm -f $path.key
 
-insert_query="USE data_host; INSERT INTO aktivasi (domain, cms, package, cert) VALUES ('$domain', '$cms', '$paket', '$encrypt')"
+insert_query="USE data_host; INSERT INTO aktivasi (domain, cms, package, cert) VALUES ('$path', '$cms', '$paket', '$encrypt')"
 
 mysql --login-path=client -e "USE data_host; CREATE TABLE IF NOT EXISTS aktivasi (id INT AUTO_INCREMENT, domain VARCHAR(255), cms VARCHAR(255), package VARCHAR(255), cert VARCHAR(255), PRIMARY KEY (id))"
 mysql --login-path=client -e "$insert_query"
