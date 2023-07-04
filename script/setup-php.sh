@@ -124,7 +124,6 @@ search_path="$path"
 user="root"
 mysql_host="_mysqlhost"
 mysql_user="root"
-mysql_password="_mysqlrootpass"
 
 echo ""
 echo "Sanity input. Cek apakah direktori atau file konfigurasi sudah aktif..."
@@ -407,7 +406,6 @@ elif [[ "$cms" == "wp" && "$encrypt" == "mandiri" ]]; then
 	sudo ssh "$user@$servernginx" "systemctl restart nginx && exit"
 	echo "$path sudah terpasang SSL Mandiri (SSL Sendiri)"
 elif [[ "$cms" == "wp" && "$encrypt" == "nossl" ]]; then
-	sudo sh -c echo '"no ssl" >> /home/'$path'/info.txt'
 	sudo ssh "$user@$servernginx" "cp /etc/nginx/conf.d/wp-template.conf.inc /etc/nginx/conf.d/$path.conf && exit"
 	sudo ssh "$user@$servernginx" "sed -i "s/_domain/$path/g" /etc/nginx/conf.d/$path.conf && sed -i "s/_random80/$number80/g" /etc/nginx/conf.d/$path.conf && sed -i "s/_random81/$number81/g" /etc/nginx/conf.d/$path.conf && sed -i "s/_random82/$number82/g" /etc/nginx/conf.d/$path.conf && exit"
 	sudo ssh "$user@$servernginx" "systemctl restart nginx && exit"
@@ -430,11 +428,10 @@ sudo ssh "$user@$servernamed" "systemctl restart named"
 sudo rm -f $path.crt
 sudo rm -f $path.key
 
-create_table_query="CREATE TABLE IF NOT EXISTS aktivasi (id INT AUTO_INCREMENT, domain VARCHAR(255), cms VARCHAR(255), package VARCHAR(255), cert VARCHAR(255), PRIMARY KEY (id));"
-insert_query="INSERT INTO aktivasi (domain, cms, package, cert) VALUES ('$domain', '$cms', '$paket', '$encrypt');"
+insert_query="USE data_host; INSERT INTO aktivasi (domain, cms, package, cert) VALUES ('$domain', '$cms', '$paket', '$encrypt')"
 
-mysql -u "$mysql_user" -p"$mysql_password" -D data_host -h"$mysql_host" -e "$create_table_query"
-mysql -u "$mysql_user" -p"$mysql_password" -D data_host -h"$mysql_host" -e "$insert_query"
+mysql --login-path=client -e "USE data_host; CREATE TABLE IF NOT EXISTS aktivasi (id INT AUTO_INCREMENT, domain VARCHAR(255), cms VARCHAR(255), package VARCHAR(255), cert VARCHAR(255), PRIMARY KEY (id))
+mysql --login-path=client -e "$insert_query"
 
 echo
 echo "Selesai. Docker aktif."
