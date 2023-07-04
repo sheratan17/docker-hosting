@@ -99,7 +99,7 @@ do
         *)
         echo "Error: Input tidak dikenali '$key'"
         exit 1
-		show_help
+	show_help
         ;;
     esac
 done
@@ -129,7 +129,7 @@ echo "Sanity input. Cek apakah direktori atau file konfigurasi sudah aktif..."
 # Check if folder exists
 if [ -d "$home_path" ]; then
         echo "Domain/direktori di /home ditemukan. Akun sudah aktif. Cek input."
-		echo ""
+	echo ""
         exit 1
 else
         echo "Domain/direktori di /home tidak ditemukan. Akun belum aktif. Melanjukan proses..."
@@ -140,11 +140,11 @@ ssh "$user@$servernginx" "[ -f $nginx_folder/$nginx_file ]" > /dev/null 2>&1
 nginx_exist=$?
 
 if [ $nginx_exist -eq 0 ]; then
-                echo "Domain/direktori nginx ditemukan. Akun sudah aktif. Cek input."
-				echo ""
-                exit 1
+	echo "Domain/direktori nginx ditemukan. Akun sudah aktif. Cek input."
+	echo ""
+	exit 1
 else
-                echo "Domain/direktori nginx tidak ditemukan. Akun belum aktif. Melanjukan proses..."
+	echo "Domain/direktori nginx tidak ditemukan. Akun belum aktif. Melanjukan proses..."
 fi
 
 # Cek apa sudah ada file config named
@@ -154,13 +154,13 @@ named_exist=$?
 output=$(ssh "$user@$servernamed" "grep -q '$search_path' '$named_folder/$named_file' && echo found || echo not_found")
 
 if [ $named_exist -eq 0 ]; then
-                echo "Domain/direktori named ditemukan. Cek record DNS..."
-                if [ "$output" = "found" ]; then
-                echo "Record DNS '$search_path' sudah ditemukan di file, cek input."
-                exit 1
-                fi
+        echo "Domain/direktori named ditemukan. Cek record DNS..."
+	if [ "$output" = "found" ]; then
+	echo "Record DNS '$search_path' sudah ditemukan di file, cek input."
+	exit 1
+	fi
 else
-                echo "Domain/direktori named atau Record DNS tidak ditemukan. Akun belum aktif. Melanjukan proses..."
+	echo "Domain/direktori named atau Record DNS tidak ditemukan. Akun belum aktif. Melanjukan proses..."
 fi
 
 echo
@@ -426,13 +426,13 @@ sudo ssh "$user@$servernamed" "systemctl restart named"
 sudo rm -f $path.crt
 sudo rm -f $path.key
 
+# Buat query untuk database
 create_aktivasi_query="USE data_host; CREATE TABLE IF NOT EXISTS aktivasi (id INT AUTO_INCREMENT PRIMARY KEY, domain VARCHAR(255), cms VARCHAR(255), package VARCHAR(255), cert VARCHAR(255), PRIMARY KEY (id))"
 create_resource_query="USE data_host; CREATE TABLE IF NOT EXISTS docker_usage (id INT AUTO_INCREMENT PRIMARY KEY, container_name VARCHAR(255) NOT NULL, cpu_usage VARCHAR(50) NOT NULL, memory_usage VARCHAR(50) NOT NULL, timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP)"
 insert_aktivasi_query="USE data_host; INSERT INTO aktivasi (domain, cms, package, cert) VALUES ('$path', '$cms', '$paket', '$encrypt')"
 
 mysql --login-path=client -e "$create_aktivasi_query"
 mysql --login-path=client -e "$insert_aktivasi_query"
-
 
 echo
 echo "Selesai. Docker aktif."
