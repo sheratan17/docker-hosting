@@ -226,18 +226,21 @@ sshpass -p "$pass_mysql" ssh-copy-id root@$ip_mysql
 ssh root@$ip_mysql "yum update -y && yum install mysql-server nano expect -y && exit"
 ssh root@$ip_mysql "systemctl enable mysqld && service mysqld restart && exit"
 ssh root@$ip_mysql "mysql -uroot -e 'CREATE DATABASE data_host'"
-ssh root@$ip_mysql "cat << EOF >> /root/mysql_secure_install.expect
+expect_script=$(cat << 'EOF'
 #!/usr/bin/expect -f
+
 set timeout -1
-spawn mysql_secure_installation
+
+spawn /usr/bin/mysql_secure_installation
+
 expect "Would you like to setup VALIDATE PASSWORD component?"
 send "No\r"
 
 expect "New password:"
-send "$pass_mysql\r"
+send "_pass_mysql\r"
 
 expect "Re-enter new password:"
-send "$pass_mysql\r"
+send "_pass_mysql\r"
 
 expect "Remove anonymous users? (Press y|Y for Yes, any other key for No) :"
 send "y\r"
@@ -252,8 +255,10 @@ expect "Reload privilege tables now? (Press y|Y for Yes, any other key for No) :
 send "y\r"
 
 expect eof
-EOF"
-ssh root@$ip_mysql "chmod +x /root/mysql_secure_install.expect && sh /root/mysql_secure_install.expect && exit"
+EOF
+)
+ssh root@$ip_mysql "echo '$expect_script' > /root/mysql_secure_install.expect && chmod +x /root/mysql_secure_install.expect && exit"
+sed -i "s/_pass_mysql/$pass_mysql/g" /root/mysql_secure_install.expect
 sed -i "s/_mysqlhost/$ip_mysql/g" /home/setup-php.sh
 sed -i "s/_mysqlrootpass/$pass_mysql/g" /home/setup-php.sh
 
@@ -279,6 +284,6 @@ echo "SCRIPT DEPLOY SELESAI."
 echo
 echo "Mohon jalankan 'yum update' pada server Node Docker, MySQL, nginx, serta DNS, lalu restart."
 echo "Mohon menunggu 5-10 menit sebelum membuat container untuk melewati masa propagasi DNS Server."
-echo "Mohon jalankan 'myql_secure_installation' pada server MySQL"
+echo "Mohon jalankan './root/myql_secure_installation.expect' pada server MySQL lalu hapus file tersebut"
 echo
 exit 1
