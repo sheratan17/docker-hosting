@@ -68,7 +68,7 @@ do
         shift
         ;;
         --ssl=*)
-        ssl="${key#*=}"
+        encrypt="${key#*=}"
         if [[ $encrypt != "le" && $encrypt != "nossl" && $encrypt != "mandiri" ]]; then
             echo "Error: Input salah untuk --ssl. Gunakan le, mandiri atau nossl."
             exit 1
@@ -430,7 +430,7 @@ sudo rm -f $path.key
 
 insert_query="USE data_host; INSERT INTO aktivasi (domain, cms, package, cert) VALUES ('$domain', '$cms', '$paket', '$encrypt')"
 
-mysql --login-path=client -e "USE data_host; CREATE TABLE IF NOT EXISTS aktivasi (id INT AUTO_INCREMENT, domain VARCHAR(255), cms VARCHAR(255), package VARCHAR(255), cert VARCHAR(255), PRIMARY KEY (id))
+mysql --login-path=client -e "USE data_host; CREATE TABLE IF NOT EXISTS aktivasi (id INT AUTO_INCREMENT, domain VARCHAR(255), cms VARCHAR(255), package VARCHAR(255), cert VARCHAR(255), PRIMARY KEY (id))"
 mysql --login-path=client -e "$insert_query"
 
 echo
