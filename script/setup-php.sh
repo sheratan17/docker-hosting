@@ -122,8 +122,6 @@ servernamedd="_servernameed"
 ipprivate_node="_ipprivate_node_"
 search_path="$path"
 user="root"
-mysql_host="_mysqlhost"
-mysql_user="root"
 
 echo ""
 echo "Sanity input. Cek apakah direktori atau file konfigurasi sudah aktif..."
