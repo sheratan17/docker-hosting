@@ -223,7 +223,9 @@ echo "Memulai deploy server MySQL"
 sleep 3
 ssh-keyscan -t rsa $ip_mysql >> /root/.ssh/known_hosts
 sshpass -p "$pass_mysql" ssh-copy-id root@$ip_mysql
-ssh root@$ip_mysql "yum update -y && yum install mysql-server -y && exit"
+ssh root@$ip_mysql "yum update -y && yum install mysql-server nano expect -y && exit"
+ssh root@$ip_mysql "systemctl enable mysqld && service mysqld restart && exit"
+ssh root@$ip_mysql "mysql -uroot -e 'CREATE DATABASE data_host'"
 sed -i "s/_mysqlhost/$ip_mysql/g" /home/setup-php.sh
 sed -i "s/_mysqlrootpass/$pass_mysql/g" /home/setup-php.sh
 
@@ -247,7 +249,8 @@ docker image pull minio/minio:latest
 echo
 echo "SCRIPT DEPLOY SELESAI."
 echo
-echo "Mohon lakukan 'yum update' pada server Node Docker, nginx, serta DNS, lalu restart."
+echo "Mohon jalankan 'yum update' pada server Node Docker, MySQL, nginx, serta DNS, lalu restart."
 echo "Mohon menunggu 5-10 menit sebelum membuat container untuk melewati masa propagasi DNS Server."
+echo "Mohon jalankan 'myql_secure_installation' pada server MySQL"
 echo
 exit 1
