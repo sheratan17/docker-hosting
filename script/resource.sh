@@ -18,10 +18,11 @@ while IFS= read -r line; do
   domain=$(echo "$line" | awk '{print $1}')
   disk_usage=$(echo "$line" | awk '{print $3}')
   disk_usage_mb=$((disk_usage / 1024))
+  timestamp2=$(date +"%Y-%m-%d %H:%M:%S")
 
   # Exclude unwanted lines
   if [[ "$domain" != "root" && ! $domain =~ ^(Block|User|-+)$ ]]; then
-    query="USE docker; INSERT INTO disk (domain, disk_usage) VALUES ('$domain', $disk_usage_mb);"
+    query="USE docker; INSERT INTO disk (domain, disk_usage, timestamp) VALUES ('$domain', $disk_usage_mb, '$timestamp2');"
     mysql --login-path=client -e "$query"
   fi
 done <<< "$disk_quotas"
