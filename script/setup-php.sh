@@ -427,7 +427,7 @@ sudo rm -f $path.crt
 sudo rm -f $path.key
 
 # Buat query untuk database
-create_aktivasi_query="USE docker; CREATE TABLE IF NOT EXISTS aktivasi (id INT AUTO_INCREMENT PRIMARY KEY, domain VARCHAR(255), cms VARCHAR(255), package VARCHAR(255), cert VARCHAR(255), PRIMARY KEY (id))"
+create_aktivasi_query="USE docker; CREATE TABLE IF NOT EXISTS aktivasi (id INT AUTO_INCREMENT PRIMARY KEY, domain VARCHAR(255), cms VARCHAR(255), package VARCHAR(255), cert VARCHAR(255))"
 create_resource_query="USE docker; CREATE TABLE IF NOT EXISTS resource (id INT AUTO_INCREMENT PRIMARY KEY, container_name VARCHAR(255) NOT NULL, cpu_usage VARCHAR(50) NOT NULL, memory_usage VARCHAR(50) NOT NULL, disk_usage VARCHAR (50) NOT NULL, timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP)"
 insert_aktivasi_query="USE docker; INSERT INTO aktivasi (domain, cms, package, cert) VALUES ('$path', '$cms', '$paket', '$encrypt')"
 
