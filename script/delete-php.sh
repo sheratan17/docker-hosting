@@ -55,7 +55,9 @@ servernginx="_servernginx"
 servernamed="_servernamed"
 servernamedd="_servernameed"
 
-delete_query="USE data_host; DELETE FROM aktivasi WHERE domain = '$path'"
+delete_aktivasi_query="USE docker; DELETE FROM aktivasi WHERE domain = '$path'"
+delete_resource_query="USE docker; DELETE FROM resource WHERE domain = '$path'"
+
 
 sudo ssh "$user@$servernginx" "rm /etc/nginx/conf.d/$path.conf && exit"
 sudo ssh "$user@$servernginx" "rm -rf /home/$path/ && exit"
@@ -75,7 +77,8 @@ sudo rm -f /backup/$PREFIX.sql
 sudo rm -f /backup/$PREFIX.zip
 echo "Backup dihapus"
 echo "Hapus data di MySQL..."
-mysql --login-path=client -e "$delete_query"
+mysql --login-path=client -e "$delete_aktivasi_query"
+mysql --login-path=client -e "$delete_resource_query"
 echo "Data di MySQL dihapus"
 #systemctl restart php-fpm
 #systemctl restart httpd

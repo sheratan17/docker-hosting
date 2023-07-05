@@ -225,7 +225,7 @@ ssh-keyscan -t rsa $ip_mysql >> /root/.ssh/known_hosts
 sshpass -p "$pass_mysql" ssh-copy-id root@$ip_mysql
 ssh root@$ip_mysql "yum update -y && yum install mysql-server nano expect -y && exit"
 ssh root@$ip_mysql "systemctl enable mysqld && service mysqld restart && exit"
-ssh root@$ip_mysql "mysql -uroot -e 'CREATE DATABASE data_host'"
+ssh root@$ip_mysql "mysql -uroot -e 'CREATE DATABASE docker'"
 expect_mysqlsecure=$(cat << 'EOF'
 #!/usr/bin/expect -f
 
