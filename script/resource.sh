@@ -2,6 +2,7 @@
 domain=$(docker ps --format "{{.Names}}")
 
 for domain in $domain; do
+if [[ "$domain" != *_pma* && "$domain" != *_filebrowser* ]]; then
 cpu_usage=$(docker stats --no-stream --format "{{.CPUPerc}}" "$domain" | sed 's/%//')
 memory_usage=$(docker stats --no-stream --format "{{.MemUsage}}" "$domain" | awk -F'/' '{print $1}')
 timestamp=$(date +"%Y-%m-%d %H:%M:%S")
@@ -9,6 +10,7 @@ timestamp=$(date +"%Y-%m-%d %H:%M:%S")
 input_resource_query="USE docker; INSERT INTO resource (domain, cpu_usage, memory_usage, timestamp) VALUES ('$domain', '$cpu_usage', '$memory_usage', '$timestamp')"
 
 mysql --login-path=client -e "$input_resource_query"
+fi
 done
 
 disk_quotas=$(repquota -a | tail -n+3)
