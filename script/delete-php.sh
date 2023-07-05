@@ -30,6 +30,7 @@ if [[ -z $path ]]; then
 fi
 
 home_path="/home/$path"
+pathtanpatitik=$(echo "${path}" | sed 's/\.//g')
 
 # Check if folder exists
 if [ ! -d "$home_path" ]; then
@@ -56,7 +57,7 @@ servernamed="_servernamed"
 servernamedd="_servernameed"
 
 delete_aktivasi_query="USE docker; DELETE FROM aktivasi WHERE domain = '$path'"
-delete_resource_query="USE docker; DELETE FROM resource WHERE domain = '$path'"
+delete_resource_query="USE docker; DELETE FROM resource WHERE domain LIKE '$pathtanpatitik%'"
 
 
 sudo ssh "$user@$servernginx" "rm /etc/nginx/conf.d/$path.conf && exit"
