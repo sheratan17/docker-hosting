@@ -26,9 +26,6 @@ read -p "Masukkan password root server DNS-2: " pass_nameed
 echo
 read -p "Masukkan ns1 yang akan DNS gunakan (format: ns1.domain.tld): " ns_named
 echo
-#read -p "Masukkan IP PUBLIC server MySQL: " ip_mysql
-#read -p "Masukkan password root server MySQL: " pass_mysql
-echo
 echo "Input lengkap. Memulai proses..."
 sleep 5
 echo
@@ -204,7 +201,7 @@ ssh root@$ip_nameed "sed -i "s/_dns/$domaintanpans/g" /etc/named/_domain.db && e
 #ssh root@$ip_nameed "sed -i "s/_ip_nameed/$ip_nameed/g" /etc/named.conf && exit"
 ssh root@$ip_nameed "sed -i "s/_ip_nameed/$ip_nameed/g" /etc/named/_domain.db && exit"
 #ssh root@$ip_nameed "sed -i "s/_servernginx/$ip_nginx/g" /etc/named/_domain.db && exit"
-ssh root@$ip_nameed "sed -i "s/_ip_named/$ip_named/g" /etc/named.conf && exit"
+$ip_nameed "sed -i "s/_ip_named/$ip_named/g" /etc/named.conf && exit"
 
 ssh root@$ip_nameed "systemctl enable named && exit"
 ssh root@$ip_nameed "service named restart && exit"
@@ -218,68 +215,6 @@ sed -i "s/_servernameed/$ip_nameed/g" /home/delete-php.sh
 
 echo "Server DNS selesai."
 echo
-
-#echo "Memulai deploy server MySQL"
-#sleep 3
-#ssh-keyscan -t rsa $ip_mysql >> /root/.ssh/known_hosts
-#sshpass -p "$pass_mysql" ssh-copy-id root@$ip_mysql
-#ssh root@$ip_mysql "yum update -y && yum install mysql-server nano expect -y && exit"
-#ssh root@$ip_mysql "systemctl enable mysqld && service mysqld restart && exit"
-#ssh root@$ip_mysql "mysql -uroot -e 'CREATE DATABASE docker'"
-#expect_mysqlsecure=$(cat << 'EOF'
-#!/usr/bin/expect -f
-
-#set timeout -1
-
-#spawn /usr/bin/mysql_secure_installation
-
-#expect "Would you like to setup VALIDATE PASSWORD component?"
-#send "No\r"
-
-#expect "New password:"
-#send "_pass_mysql\r"
-
-#expect "Re-enter new password:"
-#send "_pass_mysql\r"
-
-#expect "Remove anonymous users? (Press y|Y for Yes, any other key for No) :"
-#send "y\r"
-
-#expect "Disallow root login remotely? (Press y|Y for Yes, any other key for No) :"
-#send "y\r"
-
-#expect "Remove test database and access to it? (Press y|Y for Yes, any other key for No) :"
-#send "y\r"
-
-#expect "Reload privilege tables now? (Press y|Y for Yes, any other key for No) :"
-#send "y\r"
-
-#expect eof
-#EOF
-#)
-
-#expect_mysqllogin=$(cat << 'EOF'
-#!/usr/bin/expect -f
-
-#set timeout -1
-
-#spawn mysql_config_editor set --login-path=client --host=localhost --user=root --password
-
-#expect "Enter password:"
-#send "_pass_mysql\r"
-
-#expect eof
-#EOF
-#)
-#ssh root@$ip_mysql "echo '$expect_mysqlsecure' > /root/mysql_secure_install.expect && chmod +x /root/mysql_secure_install.expect && exit"
-#ssh root@$ip_mysql "echo '$expect_mysqllogin' > /root/mysql_login.expect && chmod +x /root/mysql_login.expect && exit"
-#sed -i "s/_pass_mysql/$pass_mysql/g" /root/mysql_secure_install.expect
-#sed -i "s/_pass_mysql/$pass_mysql/g" /root/mysql_login.expect
-#sed -i "s/_mysqlhost/$ip_mysql/g" /home/setup-php.sh
-#sed -i "s/_mysqlrootpass/$pass_mysql/g" /home/setup-php.sh
-
-#echo "Server MySQL selesai."
-#echo
 
 echo "Menambahkan cronjob backup dan checkquota..."
 chmod +x /home/docker-hosting/script/quotacheck.sh
@@ -300,7 +235,5 @@ echo "SCRIPT DEPLOY SELESAI."
 echo
 echo "Mohon jalankan 'yum update' pada server Node Docker, MySQL, nginx, serta DNS, lalu restart."
 echo "Mohon menunggu 5-10 menit sebelum membuat container untuk melewati masa propagasi DNS Server."
-#echo "Mohon jalankan './root/myql_secure_installation.expect' pada server MySQL lalu hapus file tersebut"
-#echo "Mohon jalankan './root/myql_login.expect' pada server MySQL lalu hapus file tersebut"
 echo
 exit 1
