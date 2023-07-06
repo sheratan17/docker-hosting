@@ -1,18 +1,15 @@
 #!/bin/bash
 
 echo
-echo "Script untuk deploy Node Docker, server harus kosong."
-echo
-echo "Pastikan server nginx reverse proxy dan DNS sudah tersedia dan dalam kondisi baru"
-echo "Pastikan IP private Node Docker dan nginx reverse proxy sudah aktif dan dapat berkomunikasi"
+echo "Script untuk deploy Node Docker, server harus kosong dalam kondisi baru"
+echo "Pastikan IP private pada seluruh server sudah aktif dan dapat berkomunikasi"
 echo "Script ini akan membuat direktori /backup , pastikan direktori /backup tidak ada di server"
 echo
 echo "CTRL + C jika:"
-echo "- Ini bukan server kosong" 
-echo "- Server nginx dan DNS belum ada"
+echo "- Semua server bukan server baru/kosong" 
+echo "- Server belum lengkap"
 echo "- IP private belum bisa terhubung"
 echo
-sleep 5
 read -p "Masukkan IP PRIVATE server Node Docker: " ipprivate_node
 echo
 read -p "Masukkan IP PUBLIC server nginx reverse proxy: " ip_nginx
@@ -219,7 +216,7 @@ echo
 echo "Menambahkan cronjob backup dan checkquota..."
 chmod +x /home/docker-hosting/script/quotacheck.sh
 chmod +x /home/docker-hosting/script/backup.sh
-(crontab -l ; echo "0 1 * * * /home/docker-hosting/script/quotacheck.sh > /var/log/quotacheck.txt 2>&1") | crontab -
+(crontab -l ; echo "*/5 * * * * /home/docker-hosting/script/quotacheck.sh > /var/log/quotacheck.txt 2>&1") | crontab -
 (crontab -l ; echo "0 2 * * * /home/docker-hosting/script/backup.sh > /var/log/backup.txt 2>&1") | crontab -
 
 mkdir /backup
@@ -235,5 +232,6 @@ echo "SCRIPT DEPLOY SELESAI."
 echo
 echo "Mohon jalankan 'yum update' pada server Node Docker, MySQL, nginx, serta DNS, lalu restart."
 echo "Mohon menunggu 5-10 menit sebelum membuat container untuk melewati masa propagasi DNS Server."
+echo "Untuk proses installasi server Zabbix, silahkan cek petunjuk yang telah dibuat"
 echo
 exit 1
