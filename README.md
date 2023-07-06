@@ -7,29 +7,10 @@ Script yang tersedia:
 
 # Petunjuk
 1. Instal Almalinux 8
-2. Pastikan semua partisi pakai ext4 dan /home memiliki partisi yang berbeda (tidak disatukan sama / )
-3. Update OS
-4. Jalankan `deploy_node.sh` untuk menjalankan semua (sepertinya sih) perintah diatas atau `deploy_node_no_nginx_and_dns.sh` kalau sudah setup node nginx dan DNS (Jadi hanya setup + menghubungkan Node Docker saja)
-
-# Setup server nginx reverse
-1. Install Almalinux
-2. Install nginx
-3. Install epel-release
-4. Install certbot python3-certbot-nginx
-5. download `template.conf.inc` dan `template-mandiri.conf.inc` letakkan di `/etc/nginx/conf.d`
-6. Restart nginx
-
-ATAU
-
-Jalankan `deploy_node.sh` pada server Node Docker untuk menjalankan semua (sepertinya sih) perintah diatas
-
-# Setup server named
-1. Install named
-2. Setup DNS nya
-
-ATAU
-
-Jalankan `deploy_node.sh` pada server Node Docker untuk menjalankan semua (sepertinya sih) perintah diatas
+2. Untuk server Docker, pastikan semua partisi pakai ext4 dan /home memiliki partisi yang berbeda (tidak disatukan sama / )
+3. Untuk server sisanya (nginx, DNS, Zabbix) partisi /home tidak perlu dibedakan
+4. Update OS
+5. Jalankan `deploy_node.sh` untuk menjalankan semua (sepertinya sih) perintah diatas atau `deploy_node_no_nginx_and_dns.sh` kalau sudah setup node nginx dan DNS (Jadi hanya setup + menghubungkan Node Docker saja)
 
 # Pengembangan
 1. Script untuk update ssl dari le ke mandiri atau sebaliknya
