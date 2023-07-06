@@ -45,7 +45,7 @@ Jalankan `deploy_node.sh` pada server Node Docker untuk menjalankan semua (seper
 11. Hardening nginx reverse proxy :heavy_check_mark:
 12. Antivirus
 13. Custom image (Joomla, moodle, etc) :heavy_check_mark:
-14. Stats menggunakan: https://github.com/virtualzone/docker-container-stats
+14. Stats menggunakan zabbix (CPU, RAM, dan Disk Usage) :heavy_check_mark:
 15. Sanity input untuk aktivasi, suspend, unsuspend, dan delete :heavy_check_mark:
 
 # API
