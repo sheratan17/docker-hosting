@@ -1,30 +1,24 @@
 #!/bin/bash
-domain=$(docker ps --format "{{.Names}}")
+# Get a list of user directories in /home
+users=$(ls /home)
 
-for domain in $domain; do
-if [[ "$domain" != *_pma* && "$domain" != *_filebrowser* ]]; then
-cpu_usage=$(docker stats --no-stream --format "{{.CPUPerc}}" "$domain" | sed 's/%//')
-memory_usage=$(docker stats --no-stream --format "{{.MemUsage}}" "$domain" | awk -F'MiB /' '{print $1}')
-timestamp=$(date +"%Y-%m-%d %H:%M:%S")
-
-input_resource_query="USE docker; INSERT INTO resource (domain, cpu_usage, memory_usage, timestamp) VALUES ('$domain', '$cpu_usage', '$memory_usage', '$timestamp')"
-
-mysql --login-path=client -e "$input_resource_query"
-fi
+# Iterate over each user and retrieve their current and maximum disk quota usage
+quota_info=""
+for user in $users; do
+  # Check if the user exists
+  if id -u "$user" >/dev/null 2>&1; then
+    # Get the quota information for the user
+    quota_output=$(quota -u "$user")
+    # Extract the used quota and maximum quota values
+    used_quota=$(echo "$quota_output" | awk 'NR==3{print $2}')
+    max_quota=$(echo "$quota_output" | awk 'NR==3{print $4}')
+    # Append the quota info to the result
+    quota_info+="$user:$used_quota:$max_quota,"
+  fi
 done
 
-disk_quotas=$(repquota -a | tail -n+3)
+# Remove the trailing comma from the quota info
+quota_info=${quota_info%,}
 
-# Loop through each line of disk quotas and insert into the database
-while IFS= read -r line; do
-  domain=$(echo "$line" | awk '{print $1}')
-  disk_usage=$(echo "$line" | awk '{print $3}')
-  disk_usage_mb=$((disk_usage / 1024))
-  timestamp2=$(date +"%Y-%m-%d %H:%M:%S")
-
-  # Exclude unwanted lines
-  if [[ "$domain" != "root" && ! $domain =~ ^(Block|User|-+)$ ]]; then
-    query="USE docker; INSERT INTO disk (domain, disk_usage, timestamp) VALUES ('$domain', $disk_usage_mb, '$timestamp2');"
-    mysql --login-path=client -e "$query"
-  fi
-done <<< "$disk_quotas"
+# Print the quota information
+echo "$quota_info"
