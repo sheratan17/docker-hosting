@@ -55,7 +55,7 @@ systemctl enable docker
 systemctl start docker
 
 # Install zabbix-agent2
-wget -P https://repo.zabbix.com/zabbix/6.4/rhel/8/x86_64/zabbix-release-6.4-1.el8.noarch.rpm /root
+wget -P /root https://repo.zabbix.com/zabbix/6.4/rhel/8/x86_64/zabbix-release-6.4-1.el8.noarch.rpm
 rpm -Uvh /root/zabbix-release-6.4-1.el8.noarch.rpm
 dnf clean all
 dnf install zabbix-agent2 zabbix-agent2-plugin-*
