@@ -58,7 +58,7 @@ systemctl start docker
 wget -P /root https://repo.zabbix.com/zabbix/6.4/rhel/8/x86_64/zabbix-release-6.4-1.el8.noarch.rpm
 rpm -Uvh /root/zabbix-release-6.4-1.el8.noarch.rpm
 dnf clean all
-dnf install zabbix-agent2 zabbix-agent2-plugin-*
+dnf install zabbix-agent2 zabbix-agent2-plugin-* -y
 systemctl enable zabbix-agent2
 
 # install apache
@@ -86,6 +86,8 @@ firewall-cmd --reload
 
 # buat ssh-keygen
 #ssh-keygen -t rsa -N '' -f ~/.ssh/id_rsa <<< y
+
+systemctl daemon-reload
 
 echo "Selesai. Berikutnya download script lalu koneksikan server ini dengan nginx reverse proxy dan named..."
 sleep 3
