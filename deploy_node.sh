@@ -34,13 +34,19 @@ yum update -y
 yum install quota wget nano curl vim lsof git sshpass epel-release zip policycoreutils-python-utils -y
 
 # Aktifkan quota di /home
-line=$(grep "^UUID=.* /home " /etc/fstab)
-new_line=$(echo "$line" | sed 's/defaults/&,usrjquota=aquota.user,grpjquota=aquota.group,jqfmt=vfsv1/')
-sed -i "s|$line|$new_line|" /etc/fstab
-mount -o remount /home
-quotacheck -cugm /home
-quotaon -v /home
-quotaon -ap
+grep -q "usrjquota=aquota.user,grpjquota=aquota.group,jqfmt=vfsv1" /etc/fstab
+
+if [ $? -eq 0 ]; then
+  echo "/etc/fstab terdeteksi sudah ada quota."
+  else  
+  line=$(grep "^UUID=.* /home " /etc/fstab)
+  new_line=$(echo "$line" | sed 's/defaults/&,usrjquota=aquota.user,grpjquota=aquota.group,jqfmt=vfsv1/')
+  sed -i "s|$line|$new_line|" /etc/fstab
+  mount -o remount /home
+  quotacheck -cugm /home
+  quotaon -v /home
+  quotaon -ap
+fi
 
 # install docker
 dnf config-manager --add-repo=https://download.docker.com/linux/centos/docker-ce.repo
