@@ -198,7 +198,7 @@ ssh root@$ip_nameed "sed -i "s/_dns/$domaintanpans/g" /etc/named/_domain.db && e
 #ssh root@$ip_nameed "sed -i "s/_ip_nameed/$ip_nameed/g" /etc/named.conf && exit"
 ssh root@$ip_nameed "sed -i "s/_ip_nameed/$ip_nameed/g" /etc/named/_domain.db && exit"
 #ssh root@$ip_nameed "sed -i "s/_servernginx/$ip_nginx/g" /etc/named/_domain.db && exit"
-$ip_nameed "sed -i "s/_ip_named/$ip_named/g" /etc/named.conf && exit"
+ssh root@$ip_nameed "sed -i "s/_ip_named/$ip_named/g" /etc/named.conf && exit"
 
 ssh root@$ip_nameed "systemctl enable named && exit"
 ssh root@$ip_nameed "service named restart && exit"
