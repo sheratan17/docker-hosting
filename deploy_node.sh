@@ -108,14 +108,15 @@ mv /home/docker-hosting/script/user_quota.sh /etc/zabbix/scripts
 chmod +x /home/docker-hosting/script/user_quota.sh
 
 # Edit file config zabbix-agent2
+hostname=$(hostname)
 echo "UserParameter=quota.usage,/etc/zabbix/scripts/user_quota.sh" >> "/etc/zabbix/zabbix_agent2.conf"
+sed -i "s/Hostname=Zabbix server/Hostname=$hostname/" /etc/zabbix/zabbix_agent2.conf
 
 # Setting port zabbix-agent di node docker
 firewall-cmd --zone=public --add-port=10050/tcp --permanent
 firewall-cmd --reload
 
 # Masukkan IP private server
-
 sed -i "s/_ipprivate_node/$ipprivate_node/g" /home/docker-hosting/*-template/docker-compose.yml
 
 # Membuat nginx reverse proxy
