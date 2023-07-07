@@ -54,6 +54,12 @@ dnf install docker-ce docker-ce-cli containerd.io docker-compose-plugin -y
 systemctl enable docker
 systemctl start docker
 
+# Install zabbix-agent2
+rpm -Uvh https://repo.zabbix.com/zabbix/6.4/rhel/8/x86_64/zabbix-release-6.4-1.el8.noarch.rpm
+dnf clean all
+dnf install zabbix-agent2 zabbix-agent2-plugin-*
+systemctl enable zabbix-agent2
+
 # install apache
 #yum install httpd php php-json -y
 
@@ -83,8 +89,8 @@ firewall-cmd --reload
 echo "Selesai. Berikutnya download script lalu koneksikan server ini dengan nginx reverse proxy dan named..."
 sleep 3
 
-# deploy nginx
-echo "Memulai deploy nginx..."
+# deploy file docker-hosting
+echo "Memulai deploy script docker-hosting..."
 echo "Download script..."
 echo "Menunggu input key ke github"
 #sleep 30
@@ -97,6 +103,16 @@ mv /home/docker-hosting/script/changepkg-php.sh /home/
 mv /home/docker-hosting/script/suspend-php.sh /home/
 mv /home/docker-hosting/script/unsuspend-php.sh /home/
 mv /home/docker-hosting/script/changessl-php.sh /home/
+mkdir /etc/zabbix/scripts
+mv /home/docker-hosting/script/user_quota.sh /etc/zabbix/scripts
+chmod +x /home/docker-hosting/script/user_quota.sh
+
+# Edit file config zabbix-agent2
+echo "UserParameter=quota.usage,/etc/zabbix/scripts/user_quota.sh" >> "/etc/zabbix/zabbix_agent2.conf"
+
+# Setting port zabbix-agent di node docker
+firewall-cmd --zone=public --add-port=10050/tcp --permanent
+firewall-cmd --reload
 
 # Masukkan IP private server
 
