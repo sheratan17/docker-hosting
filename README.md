@@ -13,7 +13,7 @@ Script yang tersedia:
 5. Jalankan `deploy_node.sh` untuk menjalankan semua (sepertinya sih) perintah diatas atau `deploy_node_no_nginx_and_dns.sh` kalau sudah setup node nginx dan DNS (Jadi hanya setup + menghubungkan Node Docker saja)
 
 # Pengembangan
-1. Script untuk update ssl dari le ke mandiri atau sebaliknya
+1. Script untuk update ssl dari le ke mandiri ~~atau sebaliknya~~ :heavy_check_mark:
 2. PHP GUI yang lebih baik
 3. SELINUX :heavy_check_mark:
 4. Integrasi dengan DNS  :heavy_check_mark:
@@ -28,6 +28,7 @@ Script yang tersedia:
 13. Custom image (Joomla, moodle, etc) :heavy_check_mark:
 14. Stats menggunakan zabbix (CPU, RAM, dan Disk Usage) :heavy_check_mark:
 15. Sanity input untuk aktivasi, suspend, unsuspend, dan delete :heavy_check_mark:
+16. Script yang lebih modular
 
 # API
 1. curl JSON request create dengan SSL mandiri<br>
