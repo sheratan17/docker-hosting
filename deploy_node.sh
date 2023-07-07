@@ -105,7 +105,7 @@ mv /home/docker-hosting/script/unsuspend-php.sh /home/
 mv /home/docker-hosting/script/changessl-php.sh /home/
 mkdir /etc/zabbix/scripts
 mv /home/docker-hosting/script/user_quota.sh /etc/zabbix/scripts
-chmod +x /home/docker-hosting/script/user_quota.sh
+chmod +x /etc/zabbix/scripts/user_quota.sh
 
 # Edit file config zabbix-agent2
 hostname=$(hostname)
