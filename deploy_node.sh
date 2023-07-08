@@ -61,6 +61,21 @@ dnf clean all
 dnf install zabbix-agent2 zabbix-agent2-plugin-* -y
 systemctl enable zabbix-agent2
 
+# Install Fail2Ban
+dnf install fail2ban fail2ban-firewalld -y
+cp /etc/fail2ban/jail.conf /etc/fail2ban/jail.local
+mv /etc/fail2ban/jail.d/00-firewalld.conf /etc/fail2ban/jail.d/00-firewalld.local
+touch /etc/fail2ban/jail.d/sshd.local
+cat << EOF >> /etc/fail2ban/jail.d/sshd.local
+# 3x Gagal, ban 1 jam 
+[sshd]
+enabled = true
+bantime = 1h
+maxretry = 3
+EOF
+systemctl enable fail2ban
+systemctl restart fail2ban
+
 # install apache
 #yum install httpd php php-json -y
 
@@ -130,7 +145,16 @@ ssh-keyscan -t rsa $ip_nginx >> /root/.ssh/known_hosts
 
 sshpass -p "$pass_nginx" ssh-copy-id root@$ip_nginx
 ssh root@$ip_nginx "yum update -y && yum install epel-release -y && exit"
-ssh root@$ip_nginx "yum install nginx nano lsof certbot python3-certbot-nginx policycoreutils-python-utils -y && exit"
+ssh root@$ip_nginx "yum install nginx nano lsof certbot python3-certbot-nginx policycoreutils-python-utils fail2ban fail2ban-firewalld -y && exit"
+ssh root@$ip_nginx "cp /etc/fail2ban/jail.conf /etc/fail2ban/jail.local && mv /etc/fail2ban/jail.d/00-firewalld.conf /etc/fail2ban/jail.d/00-firewalld.local && touch /etc/fail2ban/jail.d/sshd.local && exit"
+ssh root@$ip_nginx "cat << EOF >> /etc/fail2ban/jail.d/sshd.local
+# 3x Gagal, ban 1 jam  
+[sshd]
+enabled = true
+bantime = 1h
+maxretry = 3
+EOF"
+ssh root@$ip_nginx "systemctl enable fail2ban && systemctl restart fail2ban"
 
 # download script dan update config di nginx reverse
 sed -i "s/_ipprivate_node/$ipprivate_node/g" /home/docker-hosting/server-template/*.conf.inc
