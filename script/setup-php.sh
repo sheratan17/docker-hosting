@@ -153,7 +153,7 @@ named_exist=$?
 output=$(ssh "$user@$servernamed" "grep -q '$search_path' '$named_folder/$named_file' && echo found || echo not_found")
 
 if [ $named_exist -eq 0 ]; then
-        echo "Domain/direktori named ditemukan. Cek record DNS..."
+	echo "Domain/direktori named ditemukan. Cek record DNS..."
 	if [ "$output" = "found" ]; then
 	echo "Record DNS '$search_path' sudah ditemukan di file, cek input."
 	exit 1
