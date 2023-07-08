@@ -41,17 +41,6 @@ ssl=""
 keypath=""
 crtpath=""
 cms=""
-home_path="/home/$path"
-named_folder="/etc/named"
-named_file="${path}.db"
-nginx_folder="/etc/nginx/conf.d"
-nginx_file="${path}.conf"
-servernginx="_servernginx"
-servernamed="_servernamed"
-servernamedd="_servernameed"
-ipprivate_node="_ipprivate_node_"
-search_path="$path"
-user="root"
 
 # Buat menu dan deteksi input
 while [[ $# -gt 0 ]]
@@ -121,6 +110,19 @@ if [[ -z $cms || -z $path || -z $paket || -z $encrypt ]]; then
     show_help
     exit 1
 fi
+
+# Deklarasi variabel 2
+home_path="/home/$path"
+named_folder="/etc/named"
+named_file="${path}.db"
+nginx_folder="/etc/nginx/conf.d"
+nginx_file="${path}.conf"
+servernginx="_servernginx"
+servernamed="_servernamed"
+servernamedd="_servernameed"
+ipprivate_node="_ipprivate_node_"
+search_path="$path"
+user="root"
 
 echo ""
 echo "Sanity input. Cek apakah direktori atau file konfigurasi sudah aktif..."
