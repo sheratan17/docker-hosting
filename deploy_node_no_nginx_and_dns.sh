@@ -61,6 +61,21 @@ dnf clean all
 dnf install zabbix-agent2 zabbix-agent2-plugin-* -y
 systemctl enable zabbix-agent2
 
+# Install Fail2Ban
+dnf install fail2ban fail2ban-firewalld -y
+cp /etc/fail2ban/jail.conf /etc/fail2ban/jail.local
+mv /etc/fail2ban/jail.d/00-firewalld.conf /etc/fail2ban/jail.d/00-firewalld.local
+touch /etc/fail2ban/jail.d/sshd.local
+cat << EOF >> /etc/fail2ban/jail.d/sshd.local
+# 3x Gagal, ban 1 jam 
+[sshd]
+enabled = true
+bantime = 1h
+maxretry = 3
+EOF
+systemctl enable fail2ban
+systemctl restart fail2ban
+
 # install apache
 #yum install httpd php php-json -y
 
