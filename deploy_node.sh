@@ -104,7 +104,7 @@ firewall-cmd --reload
 
 systemctl daemon-reload
 
-echo "Selesai. Berikutnya download script lalu koneksikan server ini dengan nginx reverse proxy dan named..."
+echo "Selesai. Berikutnya download script lalu koneksikan server ini dengan nginx reverse proxy dan DNS Server..."
 sleep 3
 
 # deploy file docker-hosting
