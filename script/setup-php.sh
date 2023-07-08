@@ -132,7 +132,7 @@ if [ -d "$home_path" ]; then
 	echo ""
         exit 1
 else
-        echo "Domain/direktori di /home tidak ditemukan. Akun belum aktif. Melanjukan proses..."
+        echo "Domain/direktori di /home tidak ditemukan. Akun belum aktif. Melanjutkan proses..."
 fi
 
 # Cek apa sudah ada file config nginx
@@ -144,7 +144,7 @@ if [ $nginx_exist -eq 0 ]; then
 	echo ""
 	exit 1
 else
-	echo "Domain/direktori nginx tidak ditemukan. Akun belum aktif. Melanjukan proses..."
+	echo "Domain/direktori nginx tidak ditemukan. Akun belum aktif. Melanjutkan proses..."
 fi
 
 # Cek apa sudah ada file config named
@@ -160,11 +160,9 @@ if [ $named_exist -eq 0 ]; then
 	exit 1
 	fi
 else
-	echo "Domain/direktori named atau Record DNS tidak ditemukan. Akun belum aktif. Melanjukan proses..."
+	echo "Domain/direktori named atau Record DNS tidak ditemukan. Akun belum aktif. Melanjutkan proses..."
 fi
 
-echo
-echo "CMS: $cms | Domain: $path, | Paket: $paket, | SSL: $encrypt"
 echo
 echo "Input crt: $crtpath | Input key: $keypath"
 
@@ -283,6 +281,7 @@ echo "Quota selesai."
 echo
 echo "Domain: ${path}"
 echo "Script: ${cms}"
+echo "SSL: ${encrypt}"
 if [ "$cms" == "wp" ]; then
 	echo "Database name: wordpress"
 	echo "Password root MySQL: ${db_root_password}"
