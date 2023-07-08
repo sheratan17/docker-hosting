@@ -7,8 +7,8 @@ Script yang tersedia:
 
 # Petunjuk
 1. Instal Almalinux 8
-2. Untuk server Docker, pastikan semua partisi pakai ext4 dan /home memiliki partisi yang berbeda (tidak disatukan sama / )
-3. Untuk server sisanya (nginx, DNS, Zabbix) partisi /home tidak perlu dibedakan
+2. Untuk server Docker, pastikan semua partisi pakai `ext4` dan `/home` memiliki partisi yang berbeda (tidak disatukan dengan partisi `/` )
+3. Untuk server sisanya (nginx, DNS, Zabbix) partisi `/home` tidak perlu dibedakan
 4. Update OS
 5. Jalankan `deploy_node.sh` untuk menjalankan semua (sepertinya sih) perintah diatas atau `deploy_node_no_nginx_and_dns.sh` kalau sudah setup node nginx dan DNS (Jadi hanya setup + menghubungkan Node Docker saja)
 
@@ -30,7 +30,7 @@ Script yang tersedia:
 15. Sanity input untuk aktivasi, suspend, unsuspend, dan delete :heavy_check_mark:
 16. Script yang lebih modular
 
-# API
+# API (BROKEN - NEED FIX)
 1. curl JSON request create dengan SSL mandiri<br>
 `curl -X POST -H 'Content-Type: application/json' -d '{"--d": "fikara.my.id", "--p": "p1", "--ssl": "mandiri", "--crtpath": "/var/www/html/fikara.my.id.crt", "--keypath": "/var/www/html/fikara.my.id.key"}' http://docker.fastcloud.id/api-create.php`
 2. curl JSON request create dengan SSL Let's Encrypt (ganti le dengan nossl kalau tidak mau pakai ssl)<br>
