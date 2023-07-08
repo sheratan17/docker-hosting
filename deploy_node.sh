@@ -156,6 +156,9 @@ maxretry = 3
 EOF"
 ssh root@$ip_nginx "systemctl enable fail2ban && systemctl restart fail2ban"
 
+# Buka port 9090 untuk Minio
+ssh root@$ip_nginx "firewall-cmd --zone=public --add-port=9090/tcp --permanent && firewall-cmd --reload"
+
 # download script dan update config di nginx reverse
 sed -i "s/_ipprivate_node/$ipprivate_node/g" /home/docker-hosting/server-template/*.conf.inc
 scp /home/docker-hosting/server-template/*.conf.inc root@$ip_nginx:/etc/nginx/conf.d || exit 1
