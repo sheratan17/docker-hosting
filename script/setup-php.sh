@@ -387,8 +387,8 @@ sudo ssh "$user@$servernamedd" "systemctl restart named"
 if [[ "$cms" == "wp" && "$encrypt" == "le" ]]; then
 	sudo ssh "$user@$servernginx" "cp /etc/nginx/conf.d/wp-template.conf.inc /etc/nginx/conf.d/$path.conf && sed -i "s/_domain/$path/g" /etc/nginx/conf.d/$path.conf && sed -i "s/_random80/$number80/g" /etc/nginx/conf.d/$path.conf && sed -i "s/_random81/$number81/g" /etc/nginx/conf.d/$path.conf && sed -i "s/_random82/$number82/g" /etc/nginx/conf.d/$path.conf && sed -i "s/_ipprivate_node/$ipprivate_node/g" /etc/nginx/conf.d/$path.conf && exit"
 	# dibawah ini adalah menu untuk aktifkan SSL yang staging vs production
-	#sudo ssh "$user@$servernginx" "certbot --nginx --agree-tos --redirect --hsts --staple-ocsp --must-staple --no-eff-email --force-renewal --email andi.triyadi@qwords.co.id -d $path -d www.$path -d file.$path -d www.file.$path -d pma.$path -d www.pma.$path && systemctl restart nginx"
-	sudo ssh "$user@$servernginx" "certbot --nginx --agree-tos --redirect --hsts --staple-ocsp --must-staple --no-eff-email --staging --reinstall --email andi.triyadi@qwords.co.id -d $path -d www.$path -d file.$path -d www.file.$path -d pma.$path -d www.pma.$path && systemctl restart nginx"
+	#sudo ssh "$user@$servernginx" "certbot --nginx --agree-tos --redirect --hsts --no-eff-email --force-renewal --email andi.triyadi@qwords.co.id -d $path -d www.$path -d file.$path -d www.file.$path -d pma.$path -d www.pma.$path && systemctl restart nginx"
+	sudo ssh "$user@$servernginx" "certbot --nginx --agree-tos --redirect --hsts --no-eff-email --staging --reinstall --email andi.triyadi@qwords.co.id -d $path -d www.$path -d file.$path -d www.file.$path -d pma.$path -d www.pma.$path && systemctl restart nginx"
 	sudo ssh "$user@$servernginx" "sed -i 's/listen 443 ssl;/listen 443 ssl http2;/g' /etc/nginx/conf.d/$path.conf && exit"
 	sudo ssh "$user@$servernginx" "systemctl restart nginx && exit"
 	echo "$path sudah terpasang Let's Encrypt"
@@ -413,7 +413,7 @@ elif [[ "$cms" == "wp" && "$encrypt" == "nossl" ]]; then
 	echo "$path tidak menggunakan SSL"
 elif [[ "$cms" == "minio" && "$encrypt" == "le" ]]; then	
 	sudo ssh "$user@$servernginx" "cp /etc/nginx/conf.d/minio-template.conf.inc /etc/nginx/conf.d/$path.conf && sed -i "s/_domain/$path/g" /etc/nginx/conf.d/$path.conf && sed -i "s/_randomminio/$numberminio/g" /etc/nginx/conf.d/$path.conf && sed -i "s/_randommini/$numbermini/g" /etc/nginx/conf.d/$path.conf && exit"
-	sudo ssh "$user@$servernginx" "certbot --nginx --agree-tos --redirect --hsts --staple-ocsp --must-staple --no-eff-email --staging --reinstall --email andi.triyadi@qwords.co.id -d $path -d www.$path && systemctl restart nginx"
+	sudo ssh "$user@$servernginx" "certbot --nginx --agree-tos --redirect --hsts --no-eff-email --staging --reinstall --email andi.triyadi@qwords.co.id -d $path -d www.$path && systemctl restart nginx"
 	sudo ssh "$user@$servernginx" "sed -i 's/listen 443 ssl;/listen 443 ssl http2;/g' /etc/nginx/conf.d/$path.conf && exit"
 	sudo ssh "$user@$servernginx" "systemctl restart nginx && exit"
 	echo "$path sudah terpasang Let's Encrypt"
