@@ -15,7 +15,7 @@ sudo ssh "$user@$servernginx" "certbot --nginx --agree-tos --redirect --hsts --n
 fi
 
 if [ "$cms" == "minio" ]; then
-sudo ssh "$user@$servernginx" "certbot --nginx --agree-tos --redirect --hsts --no-eff-email --staging --reinstall --email $email -d $path -d www.$path && systemctl restart nginx"
+sudo ssh "$user@$servernginx" "certbot --nginx --agree-tos --redirect --hsts --no-eff-email --staging --reinstall --email $email -d $path -d www.$path -d s3.$path -d www.s3.$path && systemctl restart nginx"
 fi
 
 sudo ssh "$user@$servernginx" "sed -i 's/listen 443 ssl;/listen 443 ssl http2;/g' /etc/nginx/conf.d/$path.conf && exit"

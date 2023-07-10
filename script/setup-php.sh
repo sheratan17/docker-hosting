@@ -129,11 +129,11 @@ echo "Sanity input. Cek apakah direktori atau file konfigurasi sudah aktif..."
 
 # Check if folder exists
 if [ -d "$home_path" ]; then
-        echo "Domain/direktori di /home ditemukan. Akun sudah aktif. Cek input."
+    echo "Domain/direktori di /home ditemukan. Akun sudah aktif. Cek input."
 	echo ""
-        exit 1
+    exit 1
 else
-        echo "Domain/direktori di /home tidak ditemukan. Akun belum aktif. Melanjutkan proses..."
+	echo "Domain/direktori di /home tidak ditemukan. Akun belum aktif. Melanjutkan proses..."
 fi
 
 # Cek apa sudah ada file config nginx
@@ -341,6 +341,8 @@ echo "Membuat record DNS di DNS-1 server..."
 ssh "$user@$servernamed" "cat << EOF >> /etc/named/$path.db
 $path.					IN      A       $servernginx
 www                     IN      CNAME   $path.
+s3.$path.				IN		A		$servernginx
+www.s3					IN		CNAME	$path.
 EOF"
 fi
 
@@ -378,6 +380,8 @@ echo "Membuat record DNS di DNS-2 server..."
 ssh "$user@$servernamedd" "cat << EOF >> /etc/named/$path.db
 $path.					IN      A       $servernginx
 www                     IN      CNAME   $path.
+s3.$path.				IN		A		$servernginx
+www.s3					IN		CNAME	$path.
 EOF"
 fi
 
@@ -413,7 +417,7 @@ elif [[ "$cms" == "wp" && "$encrypt" == "nossl" ]]; then
 	echo "$path tidak menggunakan SSL"
 elif [[ "$cms" == "minio" && "$encrypt" == "le" ]]; then	
 	sudo ssh "$user@$servernginx" "cp /etc/nginx/conf.d/minio-template.conf.inc /etc/nginx/conf.d/$path.conf && sed -i "s/_domain/$path/g" /etc/nginx/conf.d/$path.conf && sed -i "s/_randomminio/$numberminio/g" /etc/nginx/conf.d/$path.conf && sed -i "s/_randommini/$numbermini/g" /etc/nginx/conf.d/$path.conf && exit"
-	sudo ssh "$user@$servernginx" "certbot --nginx --agree-tos --redirect --hsts --no-eff-email --staging --reinstall --email andi.triyadi@qwords.co.id -d $path -d www.$path && systemctl restart nginx"
+	sudo ssh "$user@$servernginx" "certbot --nginx --agree-tos --redirect --hsts --no-eff-email --staging --reinstall --email andi.triyadi@qwords.co.id -d $path -d www.$path -d s3.$path -d www.s3.$path && systemctl restart nginx"
 	sudo ssh "$user@$servernginx" "sed -i 's/listen 443 ssl;/listen 443 ssl http2;/g' /etc/nginx/conf.d/$path.conf && exit"
 	sudo ssh "$user@$servernginx" "systemctl restart nginx && exit"
 	echo "$path sudah terpasang Let's Encrypt"
