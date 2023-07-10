@@ -248,8 +248,8 @@ enabled = true
 bantime = 1h
 maxretry = 3
 EOF"
-
 ssh root@$ip_nginx "systemctl enable fail2ban && systemctl restart fail2ban"
+
 scp /home/docker-hosting/server-template/_domain.db root@$ip_nameed:/etc/named || exit 1
 scp /home/docker-hosting/server-template/_dns.db root@$ip_nameed:/etc/named || exit 1
 scp /home/docker-hosting/server-template/_named.conf root@$ip_nameed:/etc/ || exit 1
