@@ -107,20 +107,24 @@ systemctl daemon-reload
 echo "Selesai. Berikutnya download script lalu koneksikan server ini dengan nginx reverse proxy dan DNS Server..."
 sleep 3
 
-# deploy file docker-hosting
-echo "Memulai deploy script docker-hosting..."
-echo "Download script..."
-echo "Menunggu input key ke github"
-#sleep 30
-ssh-keyscan -t rsa github.com >> /root/.ssh/known_hosts
-cd /home
-git clone git@github.com:sheratan17/docker-hosting.git
-mv /home/docker-hosting/script/setup-php.sh /home/
-mv /home/docker-hosting/script/delete-php.sh /home/
-mv /home/docker-hosting/script/changepkg-php.sh /home/
-mv /home/docker-hosting/script/suspend-php.sh /home/
-mv /home/docker-hosting/script/unsuspend-php.sh /home/
-mv /home/docker-hosting/script/changessl-php.sh /home/
+if [ -d "/home/docker-hosting" ]; then
+  echo "Direktori /home/docker-hosting ditemukan. Skip clone."
+else
+  # deploy file docker-hosting
+  echo "Memulai deploy script docker-hosting..."
+  echo "Download script..."
+  echo "Menunggu input key ke github"
+  #sleep 30
+  ssh-keyscan -t rsa github.com >> /root/.ssh/known_hosts
+  cd /home
+  git clone git@github.com:sheratan17/docker-hosting.git
+  mv /home/docker-hosting/script/setup-php.sh /home/
+  mv /home/docker-hosting/script/delete-php.sh /home/
+  mv /home/docker-hosting/script/changepkg-php.sh /home/
+  mv /home/docker-hosting/script/suspend-php.sh /home/
+  mv /home/docker-hosting/script/unsuspend-php.sh /home/
+  mv /home/docker-hosting/script/changessl-php.sh /home/
+fi
 mkdir /etc/zabbix/scripts
 mv /home/docker-hosting/script/user_quota.sh /etc/zabbix/scripts
 chmod +x /etc/zabbix/scripts/user_quota.sh
