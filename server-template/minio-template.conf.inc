@@ -18,8 +18,8 @@ server {
 }
 
 server {
-  listen 9090;
-  server_name _domain www._domain;
+  listen 80;
+  server_name s3._domain www.s3._domain;
   location / {
     proxy_pass http://_ipprivate_node:_randommini;
 
