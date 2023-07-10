@@ -200,7 +200,7 @@ domaintanpans=$(echo $ns_named | sed 's/ns1\.//')
 ssh-keyscan -t rsa $ip_named >> /root/.ssh/known_hosts
 sshpass -p "$pass_named" ssh-copy-id root@$ip_named
 
-ssh root@$ip_named "yum update -y && yum install bind nano lsof bind-utils policycoreutils-python-utils -y && exit"
+ssh root@$ip_named "yum update -y && yum install bind nano lsof bind-utils policycoreutils-python-utils fail2ban fail2ban-firewalld -y && exit"
 
 scp /home/docker-hosting/server-template/_domain.db root@$ip_named:/etc/named || exit 1
 scp /home/docker-hosting/server-template/_dns.db root@$ip_named:/etc/named || exit 1
@@ -222,13 +222,23 @@ ssh root@$ip_named "service named restart && exit"
 ssh root@$ip_named "firewall-cmd --zone=public --add-service=dns --permanent && exit"
 ssh root@$ip_named "firewall-cmd --reload && exit"
 
+ssh root@$ip_named "cp /etc/fail2ban/jail.conf /etc/fail2ban/jail.local && mv /etc/fail2ban/jail.d/00-firewalld.conf /etc/fail2ban/jail.d/00-firewalld.local && touch /etc/fail2ban/jail.d/sshd.local && exit"
+ssh root@$ip_named "cat << EOF >> /etc/fail2ban/jail.d/sshd.local
+# 3x Gagal, ban 1 jam  
+[sshd]
+enabled = true
+bantime = 1h
+maxretry = 3
+EOF"
+ssh root@$ip_named "systemctl enable fail2ban && systemctl restart fail2ban"
+
 echo "Memulai deploy server DNS-2..."
 sleep 3
 
 ssh-keyscan -t rsa $ip_nameed >> /root/.ssh/known_hosts
 sshpass -p "$pass_nameed" ssh-copy-id root@$ip_nameed
 
-ssh root@$ip_nameed "yum update -y && yum install bind nano lsof bind-utils policycoreutils-python-utils -y && exit"
+ssh root@$ip_nameed "yum update -y && yum install bind nano lsof bind-utils policycoreutils-python-utils fail2ban fail2ban-firewalld -y && exit"
 
 scp /home/docker-hosting/server-template/_domain.db root@$ip_nameed:/etc/named || exit 1
 scp /home/docker-hosting/server-template/_dns.db root@$ip_nameed:/etc/named || exit 1
@@ -251,6 +261,16 @@ ssh root@$ip_nameed "systemctl enable named && exit"
 ssh root@$ip_nameed "service named restart && exit"
 ssh root@$ip_nameed "firewall-cmd --zone=public --add-service=dns --permanent && exit"
 ssh root@$ip_nameed "firewall-cmd --reload && exit"
+
+ssh root@$ip_nameed "cp /etc/fail2ban/jail.conf /etc/fail2ban/jail.local && mv /etc/fail2ban/jail.d/00-firewalld.conf /etc/fail2ban/jail.d/00-firewalld.local && touch /etc/fail2ban/jail.d/sshd.local && exit"
+ssh root@$ip_nameed "cat << EOF >> /etc/fail2ban/jail.d/sshd.local
+# 3x Gagal, ban 1 jam  
+[sshd]
+enabled = true
+bantime = 1h
+maxretry = 3
+EOF"
+ssh root@$ip_nameed "systemctl enable fail2ban && systemctl restart fail2ban"
 
 sed -i "s/_servernamed/$ip_named/g" /home/setup-php.sh
 sed -i "s/_servernameed/$ip_nameed/g" /home/setup-php.sh
