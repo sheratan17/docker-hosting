@@ -65,10 +65,11 @@ sudo ssh "$user@$servernginx" "rm /etc/nginx/conf.d/$path.conf && exit"
 sudo ssh "$user@$servernginx" "rm -rf /home/$path/ && exit"
 sudo ssh "$user@$servernginx" "systemctl restart nginx && exit"
 echo "Reverse proxy dihapus"
-echo "Hapus DNS..."
+echo "Hapus DNS-1..."
 sudo ssh "$user@$servernamed" "rm /etc/named/$path.db && exit"
 sudo ssh "$user@$servernamed" "sed -i '/# begin zone $path/,/# end zone $path/d' /etc/named.conf"
 sudo ssh "$user@$servernamed" "systemctl restart named && exit"
+echo "Hapus DNS-2..."
 sudo ssh "$user@$servernamedd" "rm /etc/named/$path.db && exit"
 sudo ssh "$user@$servernamedd" "sed -i '/# begin zone $path/,/# end zone $path/d' /etc/named.conf"
 sudo ssh "$user@$servernamedd" "systemctl restart named && exit"
@@ -78,11 +79,6 @@ sudo sed -i "/${PREFIX}_db/d" /home/docker-hosting/script/backup.sh
 sudo rm -f /backup/$PREFIX.sql
 sudo rm -f /backup/$PREFIX.zip
 echo "Backup dihapus"
-#echo "Hapus data di MySQL..."
-#mysql --login-path=client -e "$delete_aktivasi_query"
-#mysql --login-path=client -e "$delete_resource_query"
-#mysql --login-path=client -e "$delete_disk_query"
-#echo "Data di MySQL dihapus"
 #systemctl restart php-fpm
 #systemctl restart httpd
 exit 1
