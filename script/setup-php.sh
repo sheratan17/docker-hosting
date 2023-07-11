@@ -11,24 +11,19 @@ function show_help {
     echo "---------------created by Andi--"
     echo
     echo "Paket yang tersedia:"
-    echo "1. P1 (1 Core, 1GB RAM, 10GB SSD)"
-    echo "2. P2 (2 Core, 2GB RAM, 25GB SSD)"
+    echo "1. p1 (1 Core, 1GB RAM, 10GB SSD)"
+    echo "2. p2 (2 Core, 2GB RAM, 25GB SSD)"
     echo
     echo "CMS yang tersedia:"
     echo "1. Wordpress (wp)"
     echo "2. Minio (minio)"
     echo
-    echo "Perintah: ./setup-php.sh --cms=<cms> --d=<domain> --p=<package> --ssl=<ssl> --crtpath=<absolute path for crt> --keypath=<absolute path for key> [--h]"
+    echo "Perintah: ./setup-php.sh --cms=<cms> --d=<domain> --p=<package> [--h]"
     echo
     echo "Penjelasan:"
     echo "  --cms=<cms>             CMS yang akan dipasang, contoh: --cms=wp"
     echo "  --d=<domain>            Nama domain yang akan dipasang."
     echo "  --p=<package>           Paket hosting yang akan digunakan."
-    echo "  --ssl=<ssl>             Status SSL, Gunakan "le" untuk Let's Encrypt, "mandiri" jika ada SSL sendiri, atau "nossl" jika tanpa SSL"
-    echo "                          --crtpath dan --keypath harus ada jika pakai --ssl=mandiri"
-    echo "  --crtpath=<alamat crt>  --crtpath dan --keypath haruslah alamat absolute, contoh /var/www/html/domain.crt"
-    echo "  --keypath=<alamat key>  dan namanya harus domain.crt/.key, contoh qwords.co.id.crt | qwords.co.id.key"
-    echo
     echo "  --h                     Tampilkan menu ini."
     echo
     exit 1
@@ -37,9 +32,6 @@ function show_help {
 # Deklarasi variabel
 path=""
 paket=""
-ssl=""
-keypath=""
-crtpath=""
 cms=""
 
 # Buat menu dan deteksi input
@@ -53,7 +45,7 @@ do
             echo "Error: Input salah untuk --cms"
             exit 1
         fi
-	shift
+		shift
         ;;
     --d=*)
         path="${key#*=}"
@@ -258,11 +250,6 @@ echo "Quota selesai."
 echo
 echo "Domain: ${path}"
 echo "Script: ${cms}"
-if [ "$encrypt" == "mandiri" ]; then
-        echo "SSL: Mandiri"
-        else
-        echo "SSL: None/LE"
-fi
 if [ "$cms" == "wp" ]; then
 	echo "Database name: wordpress"
 	echo "Password root MySQL: ${db_root_password}"
@@ -344,7 +331,7 @@ EOF"
 
 sudo ssh "$user@$servernamedd" "systemctl restart named"
 
-# Aktivasi SSL dan template nginx
+# Aktivasi template nginx
 if [ "$cms" == "wp" ]; then
 	sudo ssh "$user@$servernginx" "cp /etc/nginx/conf.d/wp-template.conf.inc /etc/nginx/conf.d/$path.conf && exit"
 	sudo ssh "$user@$servernginx" "sed -i "s/_domain/$path/g" /etc/nginx/conf.d/$path.conf && sed -i "s/_random80/$number80/g" /etc/nginx/conf.d/$path.conf && sed -i "s/_random81/$number81/g" /etc/nginx/conf.d/$path.conf && sed -i "s/_random82/$number82/g" /etc/nginx/conf.d/$path.conf && exit"
