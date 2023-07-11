@@ -131,9 +131,6 @@ else
 	echo "Domain/direktori named atau Record DNS tidak ditemukan. Akun belum aktif. Melanjutkan proses..."
 fi
 
-echo
-echo "Input crt: $crtpath | Input key: $keypath"
-
 # Setting path & add user
 pathtanpatitik=$(echo "${path}" | sed 's/\.//g')
 sudo /usr/sbin/adduser -m $path
@@ -181,7 +178,6 @@ if [ "$cms" == "wp" ]; then
 	sudo sed -i "s/_random81/$number81/g" /home/$path/docker-compose.yml
 	sudo sed -i "s/_random82/$number82/g" /home/$path/docker-compose.yml
 	echo "Setting docker compose selesai."
-	echo
 	echo "Membuat script backup..."
 	sudo sh -c 'echo "docker exec _containerdb /usr/bin/mysqldump -u root --password=_containerpassword wordpress > /backup/'$path'.sql" >> /home/docker-hosting/script/backup.sh'
 	sudo sh -c 'echo "zip -r /home/'$path'.zip /home/'$path'/sitedata && mv /home/'$path'.zip /backup &&  wait" >> /home/docker-hosting/script/backup.sh '
@@ -336,12 +332,10 @@ if [ "$cms" == "wp" ]; then
 	sudo ssh "$user@$servernginx" "cp /etc/nginx/conf.d/wp-template.conf.inc /etc/nginx/conf.d/$path.conf && exit"
 	sudo ssh "$user@$servernginx" "sed -i "s/_domain/$path/g" /etc/nginx/conf.d/$path.conf && sed -i "s/_random80/$number80/g" /etc/nginx/conf.d/$path.conf && sed -i "s/_random81/$number81/g" /etc/nginx/conf.d/$path.conf && sed -i "s/_random82/$number82/g" /etc/nginx/conf.d/$path.conf && exit"
 	sudo ssh "$user@$servernginx" "systemctl restart nginx && exit"
-	echo "$path tidak menggunakan SSL"
 fi
 if [ "$cms" == "minio" ]; then
 	sudo ssh "$user@$servernginx" "cp /etc/nginx/conf.d/minio-template.conf.inc /etc/nginx/conf.d/$path.conf && sed -i "s/_domain/$path/g" /etc/nginx/conf.d/$path.conf && sed -i "s/_randomminio/$numberminio/g" /etc/nginx/conf.d/$path.conf && sed -i "s/_randommini/$numbermini/g" /etc/nginx/conf.d/$path.conf && exit"
 	sudo ssh "$user@$servernginx" "systemctl restart nginx && exit"
-	echo "$path tidak menggunakan SSL"
 fi
 
 echo
