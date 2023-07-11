@@ -279,7 +279,11 @@ echo "Quota selesai."
 echo
 echo "Domain: ${path}"
 echo "Script: ${cms}"
-echo "SSL: ${encrypt}"
+if [ "$encrypt" == "mandiri" ]; then
+        echo "SSL: Mandiri"
+        else
+        echo "SSL: None/LE"
+fi
 if [ "$cms" == "wp" ]; then
 	echo "Database name: wordpress"
 	echo "Password root MySQL: ${db_root_password}"
@@ -361,7 +365,7 @@ EOF"
 
 sudo ssh "$user@$servernamedd" "systemctl restart named"
 
-# SSL GAES
+# Aktivasi SSL dan template nginx
 if [[ "$cms" == "wp" && "$encrypt" == "mandiri" ]]; then
 	echo "Membuat file config dan transfer key serta crt ke nginx reverse"
 	sudo ssh "$user@$servernginx" "mkdir /home/$path && exit"
