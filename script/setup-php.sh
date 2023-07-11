@@ -55,11 +55,11 @@ do
         fi
 	shift
         ;;
-        --d=*)
+    --d=*)
         path="${key#*=}"
         shift
         ;;
-        --p=*)
+	--p=*)
         paket="${key#*=}"
         if [[ $paket != "p1" && $paket != "p2" ]]; then
             echo "Error: Input salah untuk --p. Gunakan p1 atau p2."
@@ -67,35 +67,14 @@ do
         fi
         shift
         ;;
-        --ssl=*)
-        encrypt="${key#*=}"
-        if [[ $encrypt == "mandiri" ]]; then
-            if [[ $# -lt 3 || "${2:0:2}" != "--" || "${3:0:2}" != "--" ]]; then
-                echo "Error: --keypath dan --crtpath dibutuhkan saat --ssl=mandiri."
-                exit 1
-            fi
-            keypath="${2#*=}"
-            crtpath="${3#*=}"
-            shift 2
-        fi
-        shift
-        ;;
-        --keypath=*)
-        keypath="${key#*=}"
-        shift
-        ;;
-        --crtpath=*)
-        crtpath="${key#*=}"
-        shift
-        ;;
-        --h)
+	--h)
         show_help
         shift
         ;;
         *)
         echo "Error: Input tidak dikenali '$key'"
         exit 1
-	show_help
+		show_help
         ;;
     esac
 done
@@ -366,25 +345,10 @@ EOF"
 sudo ssh "$user@$servernamedd" "systemctl restart named"
 
 # Aktivasi SSL dan template nginx
-if [[ "$cms" == "wp" && "$encrypt" == "mandiri" ]]; then
-	echo "Membuat file config dan transfer key serta crt ke nginx reverse"
-	sudo ssh "$user@$servernginx" "mkdir /home/$path && exit"
-	sudo scp $crtpath ${user}@${servernginx}:/home/$path || exit 1
-	sudo scp $keypath ${user}@${servernginx}:/home/$path || exit 1
-	sudo rm -f $path.crt
-	sudo rm -f $path.key
-	sudo ssh "$user@$servernginx" "cp /etc/nginx/conf.d/wp-template-mandiri.conf.inc /etc/nginx/conf.d/$path.conf && exit"
-	sudo ssh "$user@$servernginx" "sed -i "s/_domain/$path/g" /etc/nginx/conf.d/$path.conf && sed -i "s/_random80/$number80/g" /etc/nginx/conf.d/$path.conf && sed -i "s/_random81/$number81/g" /etc/nginx/conf.d/$path.conf && sed -i "s/_random82/$number82/g" /etc/nginx/conf.d/$path.conf && sed -i "s/_ipprivate_node/$ipprivate_node/g" /etc/nginx/conf.d/$path.conf && exit"
-	sudo ssh "$user@$servernginx" sed -i "s/_ipprivate_node/$ipprivate_node/g" /etc/nginx/conf.d/$path.conf && exit
-	sudo ssh "$user@$servernginx" "systemctl restart nginx && exit"
-	echo "$path sudah terpasang SSL Mandiri (SSL Sendiri)"
-fi
 if [ "$cms" == "wp" ]; then
 	sudo ssh "$user@$servernginx" "cp /etc/nginx/conf.d/wp-template.conf.inc /etc/nginx/conf.d/$path.conf && exit"
 	sudo ssh "$user@$servernginx" "sed -i "s/_domain/$path/g" /etc/nginx/conf.d/$path.conf && sed -i "s/_random80/$number80/g" /etc/nginx/conf.d/$path.conf && sed -i "s/_random81/$number81/g" /etc/nginx/conf.d/$path.conf && sed -i "s/_random82/$number82/g" /etc/nginx/conf.d/$path.conf && exit"
 	sudo ssh "$user@$servernginx" "systemctl restart nginx && exit"
-	sudo rm -f $crtpath.crt
-	sudo rm -f $keypath.key
 	echo "$path tidak menggunakan SSL"
 fi
 if [ "$cms" == "minio" ]; then
@@ -392,13 +356,6 @@ if [ "$cms" == "minio" ]; then
 	sudo ssh "$user@$servernginx" "systemctl restart nginx && exit"
 	echo "$path tidak menggunakan SSL"
 fi
-if [[ "$cms" == "minio" && "$encrypt" == "mandiri" ]]; then
-	echo "TO DO LIST"
-fi
-
-sudo ssh "$user@$servernamed" "systemctl restart named"
-sudo rm -f $path.crt
-sudo rm -f $path.key
 
 echo
 echo "Selesai. Docker aktif."
