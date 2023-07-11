@@ -43,9 +43,9 @@ if [ ! -z "$cpu_limit" ]; then
     docker update --cpuset-cpus="$cpu_limit" ${container_name}_web
         docker update --cpuset-cpus="$cpu_limit" ${container_name}_db
     if [ $? -eq 0 ]; then
-        echo "CPU limit for container '$container_name' changed to $cpu_limit shares."
+        echo "CPU untuk '$container_name' sudah berubah menjadi $cpu_limit core(s)."
     else
-        echo "Error: Failed to update CPU limit for container '$container_name'."
+        echo "Error: Addon gagal '$container_name'."
     fi
 fi
 
@@ -54,8 +54,8 @@ if [ ! -z "$ram_limit" ]; then
     docker update --memory="$ram_limit" --memory-swap="$ram_limit" ${container_name}_web
 docker update --memory="$ram_limit" --memory-swap="$ram_limit" ${container_name}_db
     if [ $? -eq 0 ]; then
-        echo "RAM limit for container '$container_name' changed to $ram_limit."
+        echo "RAM untuk '$container_name' sudah berubah menjadi $ram_limit."
     else
-        echo "Error: Failed to update RAM limit for container '$container_name'."
+        echo "Error: Addon gagal '$container_name'."
     fi
 fi

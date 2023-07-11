@@ -124,6 +124,7 @@ else
   mv /home/docker-hosting/script/suspend-php.sh /home/
   mv /home/docker-hosting/script/unsuspend-php.sh /home/
   mv /home/docker-hosting/script/changessl-php.sh /home/
+  mv /home/docker-hosting/script/addon-php.sh /home/
 fi
 mkdir /etc/zabbix/scripts
 mv /home/docker-hosting/script/user_quota.sh /etc/zabbix/scripts
