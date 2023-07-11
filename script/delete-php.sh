@@ -56,11 +56,6 @@ servernginx="_servernginx"
 servernamed="_servernamed"
 servernamedd="_servernameed"
 
-#delete_aktivasi_query="USE docker; DELETE FROM aktivasi WHERE domain = '$path'"
-#delete_resource_query="USE docker; DELETE FROM resource WHERE domain LIKE '$pathtanpatitik%'"
-#delete_disk_query="USE docker; DELETE FROM disk WHERE domain LIKE '$path'"
-
-
 sudo ssh "$user@$servernginx" "rm /etc/nginx/conf.d/$path.conf && exit"
 sudo ssh "$user@$servernginx" "rm -rf /home/$path/ && exit"
 sudo ssh "$user@$servernginx" "systemctl restart nginx && exit"
