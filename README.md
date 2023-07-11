@@ -29,6 +29,7 @@ Script yang tersedia:
 14. Stats menggunakan zabbix (CPU, RAM, dan Disk Usage) :heavy_check_mark:
 15. Sanity input untuk aktivasi, suspend, unsuspend, dan delete :heavy_check_mark:
 16. Script yang lebih modular
+17. SSL untuk port 9090 REST Endpoint Minio :heavy_check_mark:
 
 # API (BROKEN - NEED FIX)
 1. curl JSON request create dengan SSL mandiri<br>
